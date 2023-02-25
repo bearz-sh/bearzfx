@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    
+  <PropertyGroup>
+    <BaseRepoUrl>https://github.com/Bearzdev/Bearz/</BaseRepoUrl>
+    <BaseTreeUrl>https://github.com/Bearzdev/Bearz/tree/main/Bearz-dotnet</BaseTreeUrl>
+  </PropertyGroup> 
+  <PropertyGroup>
+    <Company>Bearz.Dev</Company>
+    <Version>0.1.0</Version>
+    <Copyright>©️ 2010-2021 Bearz.Dev</Copyright>
+    <RepositoryUrl>https://github.com/Bearzdev/Bearz.git</RepositoryUrl> 
+    <RepositoryType>git</RepositoryType> 
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <LangVersion>preview</LangVersion>
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <!-- Warnings that should be enabled for releasing to the web -->
+  <PropertyGroup>
+    <NoWarn>1591;1057</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CoreFx>net7.0</CoreFx>
+    <CoreTestFx>$(CoreFx)</CoreTestFx>
+
+    <NetFx>net472</NetFx>
+    <NetTestFx>$(NetFx)</NetTestFx>
+  
+    <NetStandard>netstandard2.0</NetStandard>
+
+    <SourceGeneratorFx>netstandard2.0</SourceGeneratorFx>
+    <SourceGeneratorTestFx>netstandard2.0</SourceGeneratorTestFx>
+
+    <LibFx>netstandard2.0;net6.0;$(CoreFx)</LibFx>
+    <LibTestFx>$(CoreFx);$(NetFx)</LibTestFx>
+    
+    <!-- for cases when netstandard2.0 is not supported, but functionality is supported in net472 or greater -->
+    <NetCoreLibFx>$(NetFx);net6.0;$(CoreFx)</NetCoreLibFx>
+    <NetCoreLibTestFx>$(CoreFx);$(NetFx)</NetCoreLibTestFx>
+
+    <Windows>false</Windows>
+    <Linux>false</Linux>
+    <MacOs>false</MacOs>
+    <InternalDir>$(MSBuildThisFileDirectory)/netfx/internal/</InternalDir>
+    <NetLegacy>false</NetLegacy>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SecurityPrincipalWindowsVersion>6.0.0-preview.5.21301.5</SecurityPrincipalWindowsVersion>
+    <DiagnosticSourceVersion>7.0.0-rc.2.22472.3</DiagnosticSourceVersion>
+    <MemoryVersion>4.5.5</MemoryVersion>
+    <SystemTextJsonVersion>7.0.1</SystemTextJsonVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="($(TargetFramework.StartsWith('net4')) OR  $(TargetFramework.StartsWith('netstandard2.0')) OR $(TargetFramework.StartsWith('netstandard1')))">
+    <DefineConstants>$(DefineConstants);NETLEGACY</DefineConstants>
+    <NetLegacy>true</NetLegacy>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
+    <Windows>true</Windows>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <DefineConstants>$(DefineConstants);DARWIN</DefineConstants>
+      <MacOs>true</MacOs>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+    <DefineConstants>$(DefineConstants);LINUX</DefineConstants>
+    <Linux>true</Linux> 
+  </PropertyGroup>
+    
+
+  <ItemGroup Condition="$(MSBuildProjectFile.Contains('Tests'))">
+    <PackageReference Include="AltCover" Version="*-*" PrivateAssets="all"/>
+  </ItemGroup>
+    
+  <ItemGroup>
+    <PackageReference Include="ReflectionAnalyzers" PrivateAssets="all" />
+      
+    <PackageReference Include="SecurityCodeScan.VS2019"  PrivateAssets="all"/>
+    <PackageReference Include="StyleCop.Analyzers"  PrivateAssets="all"/>
+    <PackageReference Include="SonarAnalyzer.CSharp" PrivateAssets="all"/>
+    <PackageReference Include="Text.Analyzers"  PrivateAssets="all"/>
+    <PackageReference Include="AsyncFixer" PrivateAssets="all"/>
+    <!-- <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="*" PrivateAssets="all" /> -->
+    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers"  PrivateAssets="all"/>
+    <PackageReference Include="Roslynator.Analyzers"   PrivateAssets="all"/>
+    <PackageReference Include="Nullable"  PrivateAssets="all" />
+
+    <PackageReference Include="Nerdbank.GitVersioning"
+                  PrivateAssets="all" />
+  </ItemGroup>
+</Project>
