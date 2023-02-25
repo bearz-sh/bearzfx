@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(LibFx)</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Xunit.Attributes</RootNamespace>
+    <!-- 
+       Dotnet/msbuild needs IsTestProject false, otherwise it creates errors
+       about not finding the testhost.dll by assuming this project is a test
+       project.
+     -->
+    <IsTestProject>false</IsTestProject>
+    <Description>
+A test framework that extends Xunit.net to enable dependency injection, 
+skipptable attributes, and extensible Asserts with extension methods. The
+Bearz.Xunit.Attributes project contains attributes that extends the Fact
+Attribute and auto tags the test so that the tests can be filtered by the
+given tag e.g. `-filter tag=unit`. 
+
+- **UnitTestAttribute** - Marks a test method as a unit test.
+- **IntegrationTestAttribute** - Marks a test method as an integration test.
+- **FunctionalTestAttribute** - Marks a test method as a functional test.
+- **UITestAttribute** - Marks a test method as a User Interface test.
+- **RequireOsArchitecturesAttribute** - Marks the required arch(es) for a test to
+  run; otherwise, the test is skipped.
+- **RequiredOsPlatformsAttribute** - Marks the required platform(s) for a test to
+  run; otherwise, the test is skipped.
+- **RequiredTargetFrameworkAttribute** - Marks the required target framework(s)
+  for a test to run; otherwise, the test is skipped. 
+
+The `SkipptableTraitAttribute` may be inherited to create new attributes that
+can be used to skip tests.
+
+Examples can be found in the project's test source code.
+    </Description>
+    <PackageProjectUrl>$(BaseTreeUrl)Xunit.Attributes</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\Xunit.Asserts\src\Sdk\DynamicSkipToken.cs" Link="DynamicSkipToken.cs" />
+  </ItemGroup>
+
+
+    <ItemGroup>
+    <PackageReference Include="NuGet.Frameworks" />
+    <PackageReference Include="xunit.core" />
+  </ItemGroup>
+</Project>

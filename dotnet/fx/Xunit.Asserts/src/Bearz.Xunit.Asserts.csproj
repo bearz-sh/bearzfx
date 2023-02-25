@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(LibFx)</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Xunit</RootNamespace>
+    <Description>
+  A test framework that extends Xunit.net to enable dependency injection, 
+  skipptable attributes, and extensible Asserts with extension methods. The
+  Bearz.Xunit.Asserts project contains the `IAssert` interface and `FlexAssert`
+  class. The interface can be used with dependency injection.
+
+  FlexAssert has static property called `Default` which can be used to get
+  the default instance.  Using an instance rather than a static class enables
+  extension methods to be added to the IAssert interface or FlexAssert class.
+
+  The asserts include methods to test `Span&lt;T&gt;` and `Memory&lt;T&gt;`
+  data and `FlexAssert.Skip` to dynamically skip a test in addition to the
+  default asserts provided by Xunit.
+
+  Examples can be found in the project's test source code.
+    </Description>
+    <PackageProjectUrl>$(BaseTreeUrl)Xunit.Asserts</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Memory" />
+    <PackageReference Include="System.Threading.Tasks.Extensions"  />
+    <PackageReference Include="xunit.assert" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,63 @@
+shebang := if os() == 'windows' {
+  'pwsh.exe'
+} else {
+  '/usr/bin/env pwsh'
+}
+
+set dotenv-load
+
+add-local-nuget-feed: 
+    #!{{ shebang }}
+
+    $data = "$HOME/.local/share"
+    if($IsWindows) {
+        $data = "$HOME/AppData/Local"
+    }
+
+    if($IsMacOS) {
+        $data = "$HOME/Library/Application Support"
+    }
+
+    if(Test-Path "./user.env") {
+        just nuget-local-feed --dotenv-path = "./user.env" 
+    }
+
+    if (!$ENV:NUGET_LOCAL_FEED) {
+        $ENV:NUGET_LOCAL_FEED = "$data/Bearz/nuget/packages"
+    }
+
+    $dir = (Resolve-Path $ENV:NUGET_LOCAL_FEED).Path
+    if(!Test-Path $dir) {
+        New-Item -ItemType Directory -Path $dir
+    }
+
+    $sources = $(dotnet nuget list source) -join "`n"
+    if($sources -notmatch "bearz-local") {
+        dotnet nuget add source $dir -n "bearz-local"
+    }
+
+new-console PROJECT: 
+    #!{{ shebang }}
+    $p = "{{ PROJECT }}"
+    Write-host "test"
+    Write-host "$p"
+    $dest = "./$p/$p/src"
+    dotnet new sln -n $p -o "./$p"
+    dotnet new console -n $p -o "./$p/$p/src"
+    dotnet sln "./$p/$p.sln" add "./$p/$p/src/$p.csproj"
+
+install-templates: 
+    #!{{ shebang }}
+    $templates = Get-Item "./tpl/*"
+    foreach($template in $templates) {
+        $templatePath = (Resolve-Path $template).Path
+        dotnet new -i $templatePath
+    }
+
+uninstall-templates: 
+    #!{{ shebang }}
+    $templates = Get-Item "./tpl/*"
+    foreach($template in $templates) {
+        $templatePath = (Resolve-Path $template).Path
+        dotnet new -u $templatePath
+    }

@@ -1,0 +1,292 @@
+#if NETSTANDARD2_0 || NET6_0_OR_GREATER
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
+#if NET7_0_OR_GREATER
+
+#elif NET6_0 || NETSTANDARD2_0
+
+using LibraryImport = System.Runtime.InteropServices.DllImportAttribute;
+#endif
+
+namespace Bearz.Std.Unix;
+
+[SuppressMessage(
+    "StyleCop.CSharp.NamingRules",
+    "SA1300:Element should begin with upper-case letter")]
+public static partial class UnixUser
+{
+    private const string Libc = "libc";
+
+    public static bool IsRoot => EffectiveUserId is 0;
+
+    public static int? UserId
+    {
+        get
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return null;
+
+            return (int)getuid();
+        }
+    }
+
+    public static int? EffectiveUserId
+    {
+        get
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return null;
+
+            return (int)getuid();
+        }
+    }
+
+    public static unsafe UnixUserInfo? GetUserInfo(string userName)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            return null;
+
+        Passwd? passwd;
+
+        // First try with a buffer that should suffice for 99% of cases.
+        // Note: on CentOS/RedHat 7.1 systems, getpwnam_r returns 'user not found' if the buffer is too small
+        // see https://bugs.centos.org/view.php?id=7324
+        const int BufLen = Passwd.InitialBufferSize;
+        byte* stackBuf = stackalloc byte[BufLen];
+        if (TryGetPasswd(userName, stackBuf, BufLen, out passwd))
+        {
+            if (passwd == null)
+                return default;
+
+            var p = passwd.Value;
+
+            return new UnixUserInfo
+            {
+                Name = Marshal.PtrToStringAnsi((IntPtr)p.Name),
+                Password = Marshal.PtrToStringAnsi((IntPtr)p.Password),
+                UserId = (int)p.UserId,
+                GroupId = (int)p.GroupId,
+                HomeDirectory = Marshal.PtrToStringAnsi((IntPtr)p.HomeDirectory),
+                Shell = Marshal.PtrToStringAnsi((IntPtr)p.Shell),
+            };
+        }
+
+        // Fallback to heap allocations if necessary, growing the buffer until
+        // we succeed.  TryGetPasswd will throw if there's an unexpected error.
+        int lastBufLen = BufLen;
+        while (true)
+        {
+            lastBufLen *= 2;
+            byte[] heapBuf = new byte[lastBufLen];
+            fixed (byte* buf = &heapBuf[0])
+            {
+                if (TryGetPasswd(userName, buf, heapBuf.Length, out passwd))
+                {
+                    if (passwd == null)
+                        return default;
+
+                    var p = passwd.Value;
+
+                    return new UnixUserInfo
+                    {
+                        Name = Marshal.PtrToStringAnsi((IntPtr)p.Name),
+                        Password = Marshal.PtrToStringAnsi((IntPtr)p.Password),
+                        UserId = (int)p.UserId,
+                        GroupId = (int)p.GroupId,
+                        HomeDirectory = Marshal.PtrToStringAnsi((IntPtr)p.HomeDirectory),
+                        Shell = Marshal.PtrToStringAnsi((IntPtr)p.Shell),
+                    };
+                }
+            }
+        }
+    }
+
+    public static unsafe (int? UserId, int? GroupId) GetUserAndGroupIds(string userName)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            return (null, null);
+
+        Passwd? passwd;
+
+        // First try with a buffer that should suffice for 99% of cases.
+        // Note: on CentOS/RedHat 7.1 systems, getpwnam_r returns 'user not found' if the buffer is too small
+        // see https://bugs.centos.org/view.php?id=7324
+        const int BufLen = Passwd.InitialBufferSize;
+        byte* stackBuf = stackalloc byte[BufLen];
+        if (TryGetPasswd(userName, stackBuf, BufLen, out passwd))
+        {
+            if (passwd == null)
+                return (null, null);
+
+            return ((int)passwd.Value.UserId, (int)passwd.Value.GroupId);
+        }
+
+        // Fallback to heap allocations if necessary, growing the buffer until
+        // we succeed.  TryGetPasswd will throw if there's an unexpected error.
+        int lastBufLen = BufLen;
+        while (true)
+        {
+            lastBufLen *= 2;
+            byte[] heapBuf = new byte[lastBufLen];
+            fixed (byte* buf = &heapBuf[0])
+            {
+                if (TryGetPasswd(userName, buf, heapBuf.Length, out passwd))
+                {
+                    if (passwd == null)
+                        return (null, null);
+
+                    return ((int)passwd.Value.UserId, (int)passwd.Value.GroupId);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets the user name associated to the specified UID.
+    /// </summary>
+    /// <param name="uid">The user ID.</param>
+    /// <returns>On success, return a string with the user name associated to the specified UID. On failure, returns an empty string.</returns>
+    internal static unsafe string GetUserNameFromPasswd(uint uid)
+    {
+        // First try with a buffer that should suffice for 99% of cases.
+        string? username;
+        const int BufLen = Passwd.InitialBufferSize;
+        byte* stackBuf = stackalloc byte[BufLen];
+        if (TryGetUserNameFromPasswd(uid, stackBuf, BufLen, out username))
+        {
+            return username ?? string.Empty;
+        }
+
+        // Fallback to heap allocations if necessary, growing the buffer until
+        // we succeed.  TryGetUserNameFromPasswd will throw if there's an unexpected error.
+        int lastBufLen = BufLen;
+        while (true)
+        {
+            lastBufLen *= 2;
+            byte[] heapBuf = new byte[lastBufLen];
+            fixed (byte* buf = &heapBuf[0])
+            {
+                if (TryGetUserNameFromPasswd(uid, buf, heapBuf.Length, out username))
+                {
+                    return username ?? string.Empty;
+                }
+            }
+        }
+    }
+
+    private static unsafe bool TryGetUserNameFromPasswd(uint uid, byte* buf, int bufLen, out string? username)
+    {
+        // Call getpwuid_r to get the passwd struct
+        Passwd passwd;
+        int error = GetPwUidR(uid, out passwd, buf, bufLen);
+
+        // If the call succeeds, give back the user name retrieved
+        if (error == 0)
+        {
+            Debug.Assert(passwd.Name != null, "name is not null");
+            username = Marshal.PtrToStringUTF8((IntPtr)passwd.Name);
+            return true;
+        }
+
+        // If the current user's entry could not be found, give back null,
+        // but still return true (false indicates the buffer was too small).
+        if (error == -1)
+        {
+            username = null;
+            return true;
+        }
+
+        var errorInfo = new ErrorInfo(error);
+
+        // If the call failed because the buffer was too small, return false to
+        // indicate the caller should try again with a larger buffer.
+        if (errorInfo.Error == Error.ERANGE)
+        {
+            username = null;
+            return false;
+        }
+
+        // Otherwise, fail.
+        throw new IOException(errorInfo.GetErrorMessage(), errorInfo.RawErrno);
+    }
+
+    [DllImport(Libc, SetLastError = true)]
+    private static extern uint getuid();
+
+    [DllImport(Libc, SetLastError = true)]
+    private static extern uint geteuid();
+
+    [DllImport(Libc, SetLastError = true)]
+    private static extern uint getgid();
+
+    [DllImport(Libc, SetLastError = true)]
+    private static extern uint getegid();
+
+    private static unsafe bool TryGetPasswd(string name, byte* buf, int bufLen, out Passwd? passwd)
+    {
+        // Call getpwnam_r to get the passwd struct
+        Passwd tempPasswd;
+        int error = GetPwNamR(name, out tempPasswd, buf, bufLen);
+
+        // If the call succeeds, give back the passwd retrieved
+        if (error == 0)
+        {
+            passwd = tempPasswd;
+            return true;
+        }
+
+        // If the current user's entry could not be found, give back null,
+        // but still return true as false indicates the buffer was too small.
+        if (error == -1)
+        {
+            passwd = null;
+            return true;
+        }
+
+        var errorInfo = new ErrorInfo(error);
+
+        // If the call failed because the buffer was too small, return false to
+        // indicate the caller should try again with a larger buffer.
+        if (errorInfo.Error == Error.ERANGE)
+        {
+            passwd = null;
+            return false;
+        }
+
+        // Otherwise, fail.
+        throw new Win32Exception(errorInfo.RawErrno, errorInfo.GetErrorMessage());
+    }
+
+#if NET7_0
+    [LibraryImport(Libraries.SystemNative, EntryPoint = "SystemNative_GetPwNamR", StringMarshalling = StringMarshalling.Utf8, SetLastError = false)]
+    internal static unsafe partial int GetPwNamR(string name, out Passwd pwd, byte* buf, int bufLen);
+
+    [LibraryImport(Libraries.SystemNative, EntryPoint = "SystemNative_GetPwUidR", SetLastError = false)]
+    internal static unsafe partial int GetPwUidR(uint uid, out Passwd pwd, byte* buf, int bufLen);
+
+#else
+    [DllImport(Libraries.SystemNative, EntryPoint = "SystemNative_GetPwNamR", SetLastError = false)]
+    internal static unsafe partial int GetPwNamR(string name, out Passwd pwd, byte* buf, int bufLen);
+    
+    [LibraryImport(Libraries.SystemNative, EntryPoint = "SystemNative_GetPwUidR", SetLastError = false)]
+    internal static unsafe partial int GetPwUidR(uint uid, out Passwd pwd, byte* buf, int bufLen);
+#endif
+
+    internal unsafe struct Passwd
+    {
+        internal const int InitialBufferSize = 256;
+
+        internal byte* Name;
+        internal byte* Password;
+        internal uint  UserId;
+        internal uint  GroupId;
+        internal byte* UserInfo;
+        internal byte* HomeDirectory;
+        internal byte* Shell;
+    }
+}
+
+#endif

@@ -3,11 +3,11 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="AltCover" Version="8.6.14" />
     <PackageVersion Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.2" />
     <PackageVersion Include="ClosedXML" Version="0.100.3" />
     <PackageVersion Include="CloudFlare.Client" Version="6.1.4" />
     <PackageVersion Include="EFCore.NamingConventions" Version="7.0.0" />
-    <PackageVersion Include="Etcd.Microsoft.Extensions.Configuration" Version="2.0.1" />
     <PackageVersion Include="Etcd.Microsoft.Extensions.Configuration" Version="2.0.1" />
     <PackageVersion Include="FluentBuilder" Version="0.7.0" />
     <PackageVersion Include="Handlebars.Net" Version="2.1.2" />
@@ -67,7 +67,7 @@
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="8.51.0.59060" />
     <PackageVersion Include="Text.Analyzers" Version="3.3.4-beta1.22559.1" />
     <PackageVersion Include="AsyncFixer" Version="1.6.0" />
-    <PackageVersion Include="xunit.assert" Version="3.4.0" />
+    <PackageVersion Include="xunit.assert" Version="2.4.1" />
     <PackageVersion Include="xunit.abstractions" Version="2.4.1" />
     <PackageVersion Include="xunit.core" Version="2.4.1" />
     <PackageVersion Include="xunit" Version="2.4.1" />

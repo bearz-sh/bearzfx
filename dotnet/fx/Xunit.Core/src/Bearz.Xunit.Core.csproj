@@ -1,0 +1,36 @@
+<!--suppress MsbuildTargetFrameworkTagInspection -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(LibFx)</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Bearz.Xunit.Core</RootNamespace>
+    <Description>
+    A test framework that extends Xunit.net to enable dependency injection, 
+  skipptable attributes, and extensible Asserts with extension methods. The
+  Bearz.Xunit.Core project references Bearz.Xunit.Attributes and
+  Bearz.Xunit.Attributes projects and then enables dependency injection
+  on top of the Xunit.net framework.
+
+  The asserts include newer methods for to test `Span` and `Memory` data.
+
+  Dependency injection is enabled for test methods and constructors using the 
+  `IServiceProvider` interface. Custom dependency injection containers can be used
+  through Attributes on given test methods and tests.
+
+  Examples can be found in the project's test source code.
+    </Description>
+    <PackageProjectUrl>$(BaseTreeUrl)Xunit.Core</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Xunit.Asserts\src\Bearz.Xunit.Asserts.csproj" />
+    <ProjectReference Include="..\..\Xunit.Attributes\src\Bearz.Xunit.Attributes.csproj" />
+  </ItemGroup>
+</Project>

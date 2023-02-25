@@ -49,7 +49,7 @@
     <Windows>false</Windows>
     <Linux>false</Linux>
     <MacOs>false</MacOs>
-    <InternalDir>$(MSBuildThisFileDirectory)/netfx/internal/</InternalDir>
+    <InternalDir>$(MSBuildThisFileDirectory)/fx/Internal/src</InternalDir>
     <NetLegacy>false</NetLegacy>
   </PropertyGroup>
   <PropertyGroup>
@@ -81,7 +81,7 @@
     
 
   <ItemGroup Condition="$(MSBuildProjectFile.Contains('Tests'))">
-    <PackageReference Include="AltCover" Version="*-*" PrivateAssets="all"/>
+    <PackageReference Include="altcover" PrivateAssets="all"/>
   </ItemGroup>
     
   <ItemGroup>
