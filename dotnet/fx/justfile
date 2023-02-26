@@ -12,9 +12,15 @@ export SLN := root_dir + "/" + sln
 
 set dotenv-load
 
+fail: 
+    #!{{ shebang }}
+    Write-Host "Failed"
+    exit 1
+
 restore: 
     #!{{ shebang }}
     dotnet restore $ENV:SLN
+    exit $LASTEXITCODE
 
 build PROJECT='': 
     #!{{ shebang }}
@@ -31,6 +37,7 @@ build PROJECT='':
     Write-Host $p
 
     dotnet build $p --no-restore
+    exit $LASTEXITCODE
     
 test PROJECT='': 
     #!{{ shebang }}
@@ -48,6 +55,7 @@ test PROJECT='':
      Write-Host $p 
 
     dotnet test $p --no-build --no-restore
+    exit $LASTEXITCODE
 
 add-local-nuget-feed: 
     #!{{ shebang }}

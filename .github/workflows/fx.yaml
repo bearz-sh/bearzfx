@@ -14,6 +14,9 @@ on:
 jobs: 
   build:
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: "${{ env.ROOT_DIR }}"
     strategy:
       matrix:
         include:
@@ -28,6 +31,7 @@ jobs:
         uses: extractions/setup-just@v1
 
       - name: Sparse checkout
+        working-directory: ${{ github.workspace }}
         shell: bash
         run: |
           REPO="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
@@ -55,10 +59,14 @@ jobs:
         shell: bash 
         run: |
           ls 
-          ls ./dotnet
 
       - name: Restore
         shell: bash
         working-directory: "${{ env.ROOT_DIR }}"
         run: |
           just restore
+
+      - name: Fail
+        working-directory: "${{ env.ROOT_DIR }}"
+        run: |
+          just fail
