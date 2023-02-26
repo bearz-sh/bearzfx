@@ -1,8 +1,6 @@
 using Xunit;
 using Xunit.Abstractions;
 
-[assembly: BearzTestFramework]
-
 namespace Tests;
 
 public class DependencyInjectionTests

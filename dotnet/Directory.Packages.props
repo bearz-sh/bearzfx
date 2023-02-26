@@ -49,6 +49,7 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageVersion Include="Microsoft.TestPlatform.ObjectModel" Version="16.11.0" />
     <PackageVersion Include="Roslynator.Analyzers" Version="4.2.0" />
     <PackageVersion Include="DotNetAnalyzers.DocumentationAnalyzers" Version="1.0.0-beta.59" />
     <PackageVersion Include="ReflectionAnalyzers" Version="0.3.1" />
@@ -57,6 +58,7 @@
     <PackageVersion Include="System.CommandLine.Hosting" Version="0.4.0-alpha.22272.1" />
     <PackageVersion Include="System.ComponentModel.Composition" Version="7.0.0" />
     <PackageVersion Include="System.Memory" Version="4.5.5" />
+    <PackageVersion Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
     <PackageVersion Include="System.Runtime.Loader" Version="4.3.0" />
     <PackageVersion Include="System.Security.Principal.Windows" Version="6.0.0-preview.5.21301.5" />
     <PackageVersion Include="System.Text.Json" Version="7.0.0" />

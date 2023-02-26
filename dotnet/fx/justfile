@@ -4,7 +4,50 @@ shebang := if os() == 'windows' {
   '/usr/bin/env pwsh'
 }
 
+sln := "Fx.sln"
+root_dir := justfile_directory()
+export ROOT_DIR := root_dir
+export DOTNET_CONFIGURATION := env_var_or_default("DOTNET_CONFIGURATION", "DEBUG")
+export SLN := root_dir + "/" + sln
+
 set dotenv-load
+
+restore: 
+    #!{{ shebang }}
+    dotnet restore $ENV:SLN
+
+build PROJECT='': 
+    #!{{ shebang }}
+    $p = "{{ PROJECT }}"
+    $p = if($p) { 
+        $subDir = "src"
+        if($p.EndsWith("Tests")) {
+            $subDir = "tests"
+        } 
+      
+        [IO.Path]::Combine($ENV:ROOT_DIR, $p, $subDir, "Bearz.$p.csproj")
+     } else { $ENV:SLN }
+     
+    Write-Host $p
+
+    dotnet build $p --no-restore
+    
+test PROJECT='': 
+    #!{{ shebang }}
+    $p = "{{ PROJECT }}"
+    $p = if($p) { 
+        $subDir = "$p"
+        if(!$p.EndsWith("Tests")) {
+            $p = "$p.Tests"
+        } 
+      
+        [IO.Path]::Combine($ENV:ROOT_DIR, $subDir, "test", "Bearz.$p.csproj")
+     } else { $ENV:SLN }
+     
+     Test-Path $p
+     Write-Host $p 
+
+    dotnet test $p --no-build --no-restore
 
 add-local-nuget-feed: 
     #!{{ shebang }}

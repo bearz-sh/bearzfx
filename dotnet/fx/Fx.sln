@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Xunit.Asserts", "Xunit.Asse
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Xunit.Asserts", "Xunit.Asserts\src\Bearz.Xunit.Asserts.csproj", "{1625E738-DA37-4078-9033-EB53F616C981}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mettle.Xunit.Asserts.Tests", "Xunit.Asserts\test\Mettle.Xunit.Asserts.Tests.csproj", "{FADA29CA-EFA9-4343-A249-FC4CEF619E10}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Xunit.Attributes", "Xunit.Attributes", "{40453F10-7E8F-4A08-9D86-EC020CF5567C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Xunit.Attributes", "Xunit.Attributes\src\Bearz.Xunit.Attributes.csproj", "{8C5EA773-1219-4E3A-9014-FD2961957930}"
@@ -29,6 +27,26 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Standard", "Standard", "{61
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Standard", "Standard\src\Bearz.Standard.csproj", "{FE138BCD-B455-49DD-B332-20405F26DF50}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{A2A9520C-841A-4221-AB91-7CCA91A05FC9}"
+	ProjectSection(SolutionItems) = preProject
+		..\Directory.Build.props = ..\Directory.Build.props
+		..\Directory.Build.targets = ..\Directory.Build.targets
+		..\Directory.Packages.props = ..\Directory.Packages.props
+		..\LICENSE.md = ..\LICENSE.md
+		..\omnisharp.json = ..\omnisharp.json
+		..\README.md = ..\README.md
+		..\version.json = ..\version.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".project", ".project", "{1D3B5A08-EE5D-433E-AB43-3B865184A7B0}"
+	ProjectSection(SolutionItems) = preProject
+		justfile = justfile
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Standard.Tests", "Standard\test\Bearz.Standard.Tests.csproj", "{70BCD794-EDDD-4D6E-BC04-63F33F30F004}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Xunit.Asserts.Tests", "Xunit.Asserts\test\Bearz.Xunit.Asserts.Tests.csproj", "{12ACC2FB-BD2A-41BA-85C5-429FBBADDC06}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,10 +60,6 @@ Global
 		{1625E738-DA37-4078-9033-EB53F616C981}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1625E738-DA37-4078-9033-EB53F616C981}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1625E738-DA37-4078-9033-EB53F616C981}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FADA29CA-EFA9-4343-A249-FC4CEF619E10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FADA29CA-EFA9-4343-A249-FC4CEF619E10}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FADA29CA-EFA9-4343-A249-FC4CEF619E10}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FADA29CA-EFA9-4343-A249-FC4CEF619E10}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8C5EA773-1219-4E3A-9014-FD2961957930}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8C5EA773-1219-4E3A-9014-FD2961957930}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C5EA773-1219-4E3A-9014-FD2961957930}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -70,15 +84,24 @@ Global
 		{FE138BCD-B455-49DD-B332-20405F26DF50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE138BCD-B455-49DD-B332-20405F26DF50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE138BCD-B455-49DD-B332-20405F26DF50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70BCD794-EDDD-4D6E-BC04-63F33F30F004}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70BCD794-EDDD-4D6E-BC04-63F33F30F004}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70BCD794-EDDD-4D6E-BC04-63F33F30F004}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70BCD794-EDDD-4D6E-BC04-63F33F30F004}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12ACC2FB-BD2A-41BA-85C5-429FBBADDC06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12ACC2FB-BD2A-41BA-85C5-429FBBADDC06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12ACC2FB-BD2A-41BA-85C5-429FBBADDC06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12ACC2FB-BD2A-41BA-85C5-429FBBADDC06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1625E738-DA37-4078-9033-EB53F616C981} = {0AD6CFDB-8E98-4B6B-8EF3-C39FA4711DF4}
-		{FADA29CA-EFA9-4343-A249-FC4CEF619E10} = {0AD6CFDB-8E98-4B6B-8EF3-C39FA4711DF4}
 		{8C5EA773-1219-4E3A-9014-FD2961957930} = {40453F10-7E8F-4A08-9D86-EC020CF5567C}
 		{30C63647-6374-4721-8D6E-66370C1D52E8} = {40453F10-7E8F-4A08-9D86-EC020CF5567C}
 		{B4FDF2CE-D710-491D-81C0-525DB05FABBC} = {19C6AAC2-3FFB-4305-9961-CC3CAB33568D}
 		{E118B257-19EC-4931-86EC-9AE2DAC91E0B} = {19C6AAC2-3FFB-4305-9961-CC3CAB33568D}
 		{367CC244-CA1E-492E-8273-2BB84720A018} = {C9D23130-398B-4BD4-81B9-BC1A5522339C}
 		{FE138BCD-B455-49DD-B332-20405F26DF50} = {618913C1-B27D-4C20-AEEF-C59D075BFE7B}
+		{70BCD794-EDDD-4D6E-BC04-63F33F30F004} = {618913C1-B27D-4C20-AEEF-C59D075BFE7B}
+		{12ACC2FB-BD2A-41BA-85C5-429FBBADDC06} = {0AD6CFDB-8E98-4B6B-8EF3-C39FA4711DF4}
 	EndGlobalSection
 EndGlobal

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>$(LibFx)</TargetFrameworks>
+    <TargetFrameworks>$(LibFx);net461</TargetFrameworks>
     <Nullable>enable</Nullable>
     <RootNamespace>Xunit.Attributes</RootNamespace>
     <!-- 
@@ -49,6 +49,7 @@ Examples can be found in the project's test source code.
 
     <ItemGroup>
     <PackageReference Include="NuGet.Frameworks" />
+    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" />
     <PackageReference Include="xunit.core" />
   </ItemGroup>
 </Project>

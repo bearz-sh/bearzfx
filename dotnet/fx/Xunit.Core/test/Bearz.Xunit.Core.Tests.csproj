@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,6 +26,11 @@
     <ProjectReference Include="..\..\Xunit.Asserts\src\Bearz.Xunit.Asserts.csproj" />
     <ProjectReference Include="..\..\Xunit.Attributes\src\Bearz.Xunit.Attributes.csproj" />
     <ProjectReference Include="..\src\Bearz.Xunit.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="Xunit.BearzTestFramework">
+    </AssemblyAttribute>
   </ItemGroup>
 
 </Project>
