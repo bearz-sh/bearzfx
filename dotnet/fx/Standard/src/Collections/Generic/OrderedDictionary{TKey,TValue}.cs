@@ -30,6 +30,7 @@ namespace Bearz.Collections.Generic;
 /// </remarks>
 /// <typeparam name="TKey">The type of the key to look up values.</typeparam>
 /// <typeparam name="TValue">The type of the value to store.</typeparam>
+// TODO: add debugger view
 [SuppressMessage(
     "Critical Code Smell",
     "S3218:Inner class members should not shadow outer class \"static\" or type members")]
@@ -167,7 +168,7 @@ public class OrderedDictionary<TKey, TValue> : Dictionary<TKey, TValue>,
     {
         get
         {
-            if (index < 0 || index < this.Count)
+            if (index < 0 || index > this.Count - 1)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             return this.orderedValues[index].Value;
@@ -175,7 +176,7 @@ public class OrderedDictionary<TKey, TValue> : Dictionary<TKey, TValue>,
 
         set
         {
-            if (index < 0 || index < this.Count)
+            if (index < 0 || index > this.Count - 1)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             var kvp = this.orderedValues[index];
@@ -291,29 +292,64 @@ public class OrderedDictionary<TKey, TValue> : Dictionary<TKey, TValue>,
             throw new ArgumentOutOfRangeException(nameof(index));
 
         var key = this.orderedValues[index].Key;
-        base.Remove(key);
         this.RemoveAtInternal(index);
+        base.Remove(key);
     }
 
     public new bool Remove(TKey key)
     {
+        var c = this.Count;
         if (!base.Remove(key))
         {
             return false;
         }
 
-        var index = this.IndexOf(key);
-        this.RemoveAtInternal(index);
+        var index = this.IndexOf(key, c);
+        this.RemoveAtInternal(index, c);
         return true;
     }
 
     bool IDictionary<TKey, TValue>.Remove(TKey key)
         => this.Remove(key);
 
+    private int IndexOf(TKey key, int count)
+    {
+        for (var i = 0; i < count; i++)
+        {
+            if (this.Comparer.Equals(this.orderedValues[i].Key, key))
+                return i;
+        }
+
+        return -1;
+    }
+
+    private void RemoveAtInternal(int index, int count)
+    {
+        this.version++;
+        var copy = new KeyValuePair<TKey, TValue>[this.orderedValues.Length];
+        if (index == 0)
+        {
+            Array.Copy(this.orderedValues, 1, copy, 0, count - 1);
+            this.orderedValues = copy;
+            return;
+        }
+
+        Array.Copy(this.orderedValues, 0, copy, 0, index);
+        Array.Copy(this.orderedValues, index + 1, copy, index, count - (index + 1));
+        this.orderedValues = copy;
+    }
+
     private void RemoveAtInternal(int index)
     {
         this.version++;
         var copy = new KeyValuePair<TKey, TValue>[this.orderedValues.Length];
+        if (index == 0)
+        {
+            Array.Copy(this.orderedValues, 1, copy, 0, this.Count - 1);
+            this.orderedValues = copy;
+            return;
+        }
+
         Array.Copy(this.orderedValues, 0, copy, 0, index);
         Array.Copy(this.orderedValues, index + 1, copy, index, this.Count - (index + 1));
         this.orderedValues = copy;
@@ -410,13 +446,15 @@ public class OrderedDictionary<TKey, TValue> : Dictionary<TKey, TValue>,
         }
 
         public bool Contains(TValue item)
-        {
-            throw new NotImplementedException();
-        }
+            => this.dictionary.ContainsValue(item);
 
         public void CopyTo(TValue[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            var enumerator = new OrderedEnumerator(this.dictionary);
+            while (enumerator.MoveNext() && arrayIndex < array.Length)
+            {
+                array[arrayIndex++] = enumerator.Current;
+            }
         }
 
         public bool Remove(TValue item)
@@ -453,7 +491,7 @@ public class OrderedDictionary<TKey, TValue> : Dictionary<TKey, TValue>,
                 if (this.position >= this.dictionary.Count)
                     return false;
 
-                this.Current = this.dictionary.orderedValues[++this.position].Value;
+                this.Current = this.dictionary.orderedValues[this.position].Value;
                 return true;
             }
 
@@ -499,13 +537,15 @@ public class OrderedDictionary<TKey, TValue> : Dictionary<TKey, TValue>,
         }
 
         public bool Contains(TKey item)
-        {
-            throw new NotImplementedException();
-        }
+            => this.dictionary.ContainsKey(item);
 
         public void CopyTo(TKey[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            var enumerator = new OrderedEnumerator(this.dictionary);
+            while (enumerator.MoveNext() && arrayIndex < array.Length)
+            {
+                array[arrayIndex++] = enumerator.Current;
+            }
         }
 
         public bool Remove(TKey item)
@@ -541,7 +581,7 @@ public class OrderedDictionary<TKey, TValue> : Dictionary<TKey, TValue>,
                 if (this.position >= this.dictionary.Count)
                     return false;
 
-                this.Current = this.dictionary.orderedValues[++this.position].Key;
+                this.Current = this.dictionary.orderedValues[this.position].Key;
                 return true;
             }
 
