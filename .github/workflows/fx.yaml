@@ -2,6 +2,7 @@ name: fx
 
 env:
   ROOT_DIR: "${{ github.workspace }}/dotnet/fx"
+  DOTNET_CONFIGURATION: "RELEASE"
 
 on:
   workflow_dispatch:
@@ -27,10 +28,10 @@ jobs:
           - os: windows-latest
 
     steps:
-      - name: Install Just
+      - name: ⬇️ Install Just
         uses: extractions/setup-just@v1
 
-      - name: Sparse checkout
+      - name: ⬇️ Sparse checkout
         working-directory: ${{ github.workspace }}
         shell: bash
         run: |
@@ -57,16 +58,13 @@ jobs:
 
       - name: "Ls"
         shell: bash 
-        run: |
-          ls 
+        run: ls 
 
-      - name: Restore
-        shell: bash
-        working-directory: "${{ env.ROOT_DIR }}"
-        run: |
-          just restore
+      - name: ♻️ Restore
+        run: just restore
 
-      - name: Fail
-        working-directory: "${{ env.ROOT_DIR }}"
-        run: |
-          just fail
+      - name: 🏭 Build
+        run: just build
+
+      - name: 🧪 Test
+        run: just test
