@@ -2,6 +2,68 @@ namespace Bearz.Extra.Collections;
 
 public static class EnumerableExtensions
 {
+    public static Span<T> ToSpan<T>(this IEnumerable<T> self, Span<T> destination, int index, int length)
+    {
+        int i = 0;
+        int s1 = length - 1;
+        int s2 = destination.Length - 1;
+        foreach (var t in self.Skip(index).Take(length))
+        {
+            if (i == s1 || i == s2)
+                break;
+
+            if (i < index)
+                continue;
+
+            destination[i] = t;
+
+            i++;
+        }
+
+        return destination;
+    }
+
+    public static Span<T> ToSpan<T>(IEnumerable<T> self)
+    {
+        if (self is T[] array)
+            return array.AsSpan();
+
+        if (self is IList<T> list)
+        {
+            var copy = new T[list.Count];
+            list.CopyTo(copy, 0);
+            return copy.AsSpan();
+        }
+
+        if (self is IReadOnlyCollection<T> readOnlyCollection)
+        {
+            var copy = new Span<T>(new T[readOnlyCollection.Count]);
+            int i = 0;
+            foreach (var t in self)
+            {
+                copy[i] = t;
+                i++;
+            }
+
+            return copy;
+        }
+
+        if (self is ICollection<T> collection)
+        {
+            var copy = new Span<T>(new T[collection.Count]);
+            int i = 0;
+            foreach (var t in self)
+            {
+                copy[i] = t;
+                i++;
+            }
+
+            return copy;
+        }
+
+        return self.ToArray().AsSpan();
+    }
+
     public static bool EqualTo<T>(this IEnumerable<T>? left, IEnumerable<T>? right, IComparer<T> comparer)
     {
         if (left == null && right == null)

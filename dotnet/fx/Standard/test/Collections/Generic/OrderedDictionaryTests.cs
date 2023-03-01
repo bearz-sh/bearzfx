@@ -2,7 +2,7 @@ using Bearz.Collections.Generic;
 
 namespace Tests;
 
-public class OrderedDictionaryTests
+public static class OrderedDictionaryTests
 {
     [UnitTest]
     public static void Ctor(IAssert assert)

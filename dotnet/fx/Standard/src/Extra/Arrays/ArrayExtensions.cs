@@ -1,4 +1,8 @@
+using System.Buffers;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+using Bearz.Extra.Memory;
 
 namespace Bearz.Extra.Arrays;
 
@@ -12,7 +16,7 @@ public static class ArrayExtensions
     /// <param name="length">The number of items to clear.</param>
     /// <typeparam name="T">The item type in the array.</typeparam>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Clear<T>(this T[] array, int index = 0, int? length = null)
+    public static void Clear<T>(this T[] array, int index = 0, int length = -1)
     {
         if (array == null)
             throw new ArgumentNullException(nameof(array));
@@ -20,130 +24,38 @@ public static class ArrayExtensions
         if (index < 0)
             throw new ArgumentOutOfRangeException(nameof(index));
 
-        length ??= array.Length;
+        if (length < 0)
+            length = array.Length;
 
-        System.Array.Clear(array, index, length.Value);
+        System.Array.Clear(array, index, length);
     }
 
-    /// <summary>
-    /// Creates new array of a given size and copies the items
-    /// of the current array into the new array.
-    /// </summary>
-    /// <param name="array">The array to be resized.</param>
-    /// <param name="length">The size of the new array.</param>
-    /// <typeparam name="T">The type of the item.</typeparam>
-    /// <returns>A new array with the given <paramref name="length" />.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T[] Resize<T>(this T[] array, int length)
+    public static bool EqualTo<T>(this T[]? array, T[]? other)
+        => ArrayOps.Equal(array, other);
+
+    public static bool EqualTo<T>(this T[]? array, T[]? other, IEqualityComparer<T> comparer)
+        => ArrayOps.Equal(array, other, comparer);
+
+    public static bool EqualTo<T>(this T[]? array, T[]? other, Comparison<T> comparer)
+        => ArrayOps.Equal(array, other, comparer);
+
+    public static bool EqualTo<T>(this T[]? array, T[]? other, IComparer<T> comparer)
+        => ArrayOps.Equal(array, other, comparer);
+
+    public static Span<T> Slice<T>(this T[] array, int start)
+        => Slice(array, start, array.Length - start);
+
+    public static Span<T> Slice<T>(this T[] array, int start, int length)
     {
         if (array == null)
             throw new ArgumentNullException(nameof(array));
 
-        if (length < 1)
+        if (start < 0)
+            throw new ArgumentOutOfRangeException(nameof(start));
+
+        if ((start + length) > array.Length)
             throw new ArgumentOutOfRangeException(nameof(length));
 
-        var next = new T[length];
-        Array.Copy(array, next, Math.Min(array.Length, next.Length));
-
-        return next;
-    }
-
-    /// <summary>
-    /// Copies the current array into a larger array.
-    /// </summary>
-    /// <param name="array">The array to copy.</param>
-    /// <param name="growthSize">The number of items more than the current length.</param>
-    /// <typeparam name="T">The type of items in the array.</typeparam>
-    /// <returns>A resized array.</returns>
-    public static T[] Grow<T>(this T[] array, int growthSize = 1)
-    {
-        if (array is null)
-            throw new ArgumentNullException(nameof(array));
-
-        return Resize(array, array.Length + growthSize);
-    }
-
-    /// <summary>
-    /// Grow the array by increments of the given block size.
-    /// </summary>
-    /// <param name="array">The array to grow.</param>
-    /// <param name="length">The minimum length that number of blocks must meet or exceed.</param>
-    /// <param name="blockSize">The increment size that the length must be a multiple.</param>
-    /// <typeparam name="T">The type of items in the array.</typeparam>
-    /// <returns>A larger copy of the given array.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T[] GrowBy<T>(this T[] array, int length = -1, int blockSize = 16)
-    {
-        if (length < 0)
-            length = array.Length + blockSize;
-
-        if (array == null)
-            throw new ArgumentNullException(nameof(array));
-
-        if (blockSize < 1)
-            throw new ArgumentOutOfRangeException(nameof(blockSize));
-
-        int blocks = array.Length / blockSize;
-        int size = blocks * blockSize;
-        if (size <= length)
-        {
-            while (size < length)
-            {
-                blocks++;
-                size = blocks * blockSize;
-            }
-        }
-
-        return Resize(array, blocks * blockSize);
-    }
-
-    /// <summary>
-    /// Creates a smaller copy of the given array.
-    /// </summary>
-    /// <param name="array">The array to copy.</param>
-    /// <param name="shrinkRate">The number of items less than the current length.</param>
-    /// <typeparam name="T">The type of items in the array.</typeparam>
-    /// <returns>The smaller array.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T[] Shrink<T>(this T[] array, int shrinkRate = 1)
-    {
-        if (array is null)
-            throw new ArgumentNullException(nameof(array));
-
-        return Resize(array, array.Length - shrinkRate);
-    }
-
-    /// <summary>
-    /// Shrinks the array by increments of the given block size.
-    /// </summary>
-    /// <param name="array">The array to grow.</param>
-    /// <param name="length">The maxmimum length that number of blocks must meet or be less than.</param>
-    /// <param name="blockSize">The increment size that the length must be a multiple.</param>
-    /// <typeparam name="T">The array type.</typeparam>
-    /// <returns>A larger copy of the given array.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T[] ShrinkBy<T>(this T[] array, int length = -1, int blockSize = 16)
-    {
-        if (length < 0)
-            length = array.Length - blockSize;
-
-        if (array == null)
-            throw new ArgumentNullException(nameof(array));
-
-        if (blockSize < 1)
-            throw new ArgumentOutOfRangeException(nameof(blockSize));
-
-        int blocks = array.Length / blockSize;
-        int size = blocks * blockSize;
-        if (size >= length)
-        {
-            while (size > length)
-            {
-                blocks--;
-                size = blocks * blockSize;
-            }
-        }
-
-        return Resize(array, blocks * blockSize);
+        return array.AsSpan().Slice(start, length);
     }
 }
