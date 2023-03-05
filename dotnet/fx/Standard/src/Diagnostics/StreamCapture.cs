@@ -32,6 +32,9 @@ public class StreamCapture : IProcessCapture, IDisposable
 
     public StreamCapture(FileStream stream, Encoding? encoding, int bufferSize, bool leaveOpen)
     {
+        if (bufferSize < 1)
+            bufferSize = 4096;
+
         this.writer = new StreamWriter(stream, encoding ?? Encoding.Default, bufferSize, leaveOpen);
     }
 
@@ -52,6 +55,9 @@ public class StreamCapture : IProcessCapture, IDisposable
 
     public StreamCapture(Stream stream, Encoding? encoding, int bufferSize, bool leaveOpen)
     {
+        if (bufferSize < 1)
+            bufferSize = 4096;
+
         this.writer = new StreamWriter(stream, encoding ?? Encoding.Default, bufferSize, leaveOpen);
     }
 

@@ -1,9 +1,61 @@
 using System.Buffers;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Bearz.Extra.Arrays;
 
 public static class ArrayOps
 {
+    /// <summary>
+    /// Concatenates the two arrays into a single new array.
+    /// </summary>
+    /// <param name="array1">The first array to concatenate.</param>
+    /// <param name="array2">The second array to concatenate.</param>
+    /// <typeparam name="T">The type of the elements in the array.</typeparam>
+    /// <returns>A new array.</returns>
+    public static T[] Concat<T>(T[] array1, T[] array2)
+    {
+        var result = new T[array1.Length + array2.Length];
+        Array.Copy(array1, result, array1.Length);
+        Array.Copy(array2, 0, result, array1.Length, array2.Length);
+        return result;
+    }
+
+    /// <summary>
+    /// Concatenates the two arrays into a single new array.
+    /// </summary>
+    /// <param name="array1">The first array to concatenate.</param>
+    /// <param name="array2">The second array to concatenate.</param>
+    /// <param name="array3">The third array to concatenate.</param>
+    /// <typeparam name="T">The type of the elements in the array.</typeparam>
+    /// <returns>A new array.</returns>
+    public static T[] Concat<T>(T[] array1, T[] array2, T[] array3)
+    {
+        var result = new T[array1.Length + array2.Length + array3.Length];
+        Array.Copy(array1, result, array1.Length);
+        Array.Copy(array2, 0, result, array1.Length, array2.Length);
+        Array.Copy(array3, 0, result, array1.Length + array2.Length, array3.Length);
+        return result;
+    }
+
+    /// <summary>
+    /// Concatenates multiple arrays into a single new array.
+    /// </summary>
+    /// <param name="arrays">The array of arrays to concatenate.</param>
+    /// <typeparam name="T">The type of the elements in the array.</typeparam>
+    /// <returns>A new array.</returns>
+    public static T[] Concat<T>(params T[][] arrays)
+    {
+        var result = new T[arrays.Sum(a => a.Length)];
+        var offset = 0;
+        foreach (var array in arrays)
+        {
+            Array.Copy(array, 0, result, offset, array.Length);
+            offset += array.Length;
+        }
+
+        return result;
+    }
+
     /// <summary>
     /// Pops the last item in the array and returns it.
     /// </summary>
@@ -140,7 +192,7 @@ public static class ArrayOps
     /// <param name="array">The one dimensional array reference to resize.</param>
     /// <param name="newSize">The size of the new array.</param>
     /// <typeparam name="T">The type of the elements in the array.</typeparam>
-    public static void Resize<T>(ref T[]? array, int newSize)
+    public static void Resize<T>([NotNull] ref T[]? array, int newSize)
     {
         Array.Resize(ref array, newSize);
     }
@@ -155,7 +207,7 @@ public static class ArrayOps
     /// Thrown when the amount added to the length is less than zero
     /// or exceeds the maximum length of an array.
     /// </exception>
-    public static void Grow<T>(ref T[]? array, int amount = 1)
+    public static void Grow<T>([NotNull] ref T[]? array, int amount = 1)
     {
         var l = array?.Length ?? 0;
         var newSize = l + amount;
@@ -183,7 +235,7 @@ public static class ArrayOps
     /// <param name="blockSize">The number of items to grow the array.</param>
     /// <typeparam name="T">The type of the elements in the array.</typeparam>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the block size is less than one.</exception>
-    public static void GrowBy<T>(ref T[]? array, int length = -1, int blockSize = 16)
+    public static void GrowBy<T>([NotNull] ref T[]? array, int length = -1, int blockSize = 16)
     {
         var l = array?.Length ?? 0;
         if (length < 0)
@@ -203,7 +255,7 @@ public static class ArrayOps
             }
         }
 
-        Resize(ref array, blocks * blockSize);
+        Array.Resize(ref array, blocks * blockSize);
     }
 
     /// <summary>
@@ -212,7 +264,7 @@ public static class ArrayOps
     /// <param name="array">The one dimensional array reference to resize.</param>
     /// <param name="amount">The additional amount to grow the array against the current length.</param>
     /// <typeparam name="T">The type of the elements in the array.</typeparam>
-    public static void Shrink<T>(ref T[]? array, int amount = 1)
+    public static void Shrink<T>([NotNull] ref T[]? array, int amount = 1)
     {
         var l = array?.Length ?? 0;
         var newSize = l - amount;
@@ -232,20 +284,34 @@ public static class ArrayOps
         Resize(ref array, newSize);
     }
 
-    public static void ShrinkBy<T>(ref T[]? array, int length = -1, int blockSize = 16)
+    /// <summary>
+    /// Shrinks the array to closest multiple of the block size when evaluated against the length.
+    /// </summary>
+    /// <param name="array">The one dimensional array reference to resize.</param>
+    /// <param name="minimumLength">The length of the array to target.</param>
+    /// <param name="blockSize">The number of items to shrink the array.</param>
+    /// <typeparam name="T">The type of the elements in the array.</typeparam>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the block size is less than one.</exception>
+    public static void ShrinkBy<T>([NotNull] ref T[]? array, int minimumLength = -1, int blockSize = 16)
     {
         var l = array?.Length ?? 0;
-        if (length < 0)
-            length = l - blockSize;
+        if (minimumLength < 0)
+            minimumLength = l - blockSize;
+
+        if (minimumLength == l)
+        {
+            array ??= new T[minimumLength];
+            return;
+        }
 
         if (blockSize < 1)
             throw new ArgumentOutOfRangeException(nameof(blockSize));
 
         int blocks = l / blockSize;
         int size = blocks * blockSize;
-        if (size >= length)
+        if (size >= minimumLength)
         {
-            while (size > length)
+            while (size > minimumLength)
             {
                 blocks--;
                 size = blocks * blockSize;

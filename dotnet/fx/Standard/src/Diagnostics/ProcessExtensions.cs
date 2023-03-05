@@ -18,6 +18,12 @@ public static class ProcessExtensions
     public static Process Run(this Process process)
     {
         process.Start();
+        if (process.StartInfo.RedirectStandardOutput)
+            process.BeginOutputReadLine();
+
+        if (process.StartInfo.RedirectStandardError)
+            process.BeginErrorReadLine();
+
         process.WaitForExit();
         return process;
     }
@@ -25,6 +31,12 @@ public static class ProcessExtensions
     public static Process Run(this Process process, int timeout)
     {
         process.Start();
+        if (process.StartInfo.RedirectStandardOutput)
+            process.BeginOutputReadLine();
+
+        if (process.StartInfo.RedirectStandardError)
+            process.BeginErrorReadLine();
+
         process.WaitForExit(timeout);
         if (!process.HasExited)
         {
@@ -38,6 +50,12 @@ public static class ProcessExtensions
     public static async Task<Process> RunAsync(this Process process, CancellationToken cancellationToken = default)
     {
         process.Start();
+        if (process.StartInfo.RedirectStandardOutput)
+            process.BeginOutputReadLine();
+
+        if (process.StartInfo.RedirectStandardError)
+            process.BeginErrorReadLine();
+
         await process.WaitForExitAsync(cancellationToken)
             .ConfigureAwait(false);
 
