@@ -4,7 +4,7 @@ namespace Bearz.Extra.IO;
 
 public static class FileInfoExtensions
 {
-    public static string FormatFileSize(
+    public static string FormatByteSize(
         this long length,
         ByteMeasurement format = ByteMeasurement.Auto)
     {
@@ -25,13 +25,13 @@ public static class FileInfoExtensions
         return string.Format(CultureInfo.InvariantCulture, "{0:0.##} {1}", l, sizes[order]);
     }
 
-    public static string FormatFileSize(
+    public static string FormatFileLength(
         this FileInfo info,
         ByteMeasurement format = ByteMeasurement.Auto)
     {
         if (info is null)
             throw new ArgumentNullException(nameof(info));
 
-        return FormatFileSize(info.Length, format);
+        return FormatByteSize(info.Length, format);
     }
 }
