@@ -261,6 +261,56 @@ public static partial class Env
         return true;
     }
 
+    public static void Set(
+        IReadOnlyDictionary<string, string> values,
+        bool overwrite = true,
+        EnvironmentVariableTarget target = EnvironmentVariableTarget.Process)
+    {
+        if (overwrite)
+        {
+            foreach (var kvp in values)
+            {
+                Environment.SetEnvironmentVariable(kvp.Key, kvp.Value, target);
+            }
+
+            return;
+        }
+
+        var existing = GetAll(target);
+        foreach (var kvp in values)
+        {
+            if (existing.ContainsKey(kvp.Key))
+                continue;
+
+            Environment.SetEnvironmentVariable(kvp.Key, kvp.Value, target);
+        }
+    }
+
+    public static void Set(
+        IDictionary<string, string> values,
+        bool overwrite = true,
+        EnvironmentVariableTarget target = EnvironmentVariableTarget.Process)
+    {
+        if (overwrite)
+        {
+            foreach (var kvp in values)
+            {
+                Environment.SetEnvironmentVariable(kvp.Key, kvp.Value, target);
+            }
+
+            return;
+        }
+
+        var existing = GetAll(target);
+        foreach (var kvp in values)
+        {
+            if (existing.ContainsKey(kvp.Key))
+                continue;
+
+            Environment.SetEnvironmentVariable(kvp.Key, kvp.Value, target);
+        }
+    }
+
     public static void Set(string name, string value, EnvironmentVariableTarget target = EnvironmentVariableTarget.Process)
     {
         Environment.SetEnvironmentVariable(name, value, target);
