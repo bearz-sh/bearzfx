@@ -56,6 +56,17 @@ namespace Bearz.Security.Cryptography
             }
         }
 
+        public ReadOnlySpan<byte> Decrypt(ReadOnlySpan<byte> data)
+        {
+            return this.Decrypt(data, Array.Empty<byte>(), null);
+        }
+
+        public byte[] Decrypt(byte[] encryptedData)
+        {
+            var result = this.Decrypt(encryptedData, Array.Empty<byte>(), null);
+            return result.ToArray();
+        }
+
         /// <summary>
         /// Decrypts encrypted data and returns the decrypted bytes.
         /// </summary>
@@ -262,6 +273,16 @@ namespace Bearz.Security.Cryptography
             var span = this.Encrypt(blob, privateKey, symmetricKey, symmetricKeyEncryptionProvider);
             return span.ToArray();
 #endif
+        }
+
+        public ReadOnlySpan<byte> Encrypt(ReadOnlySpan<byte> data)
+        {
+            return this.Encrypt(data, Array.Empty<byte>(),  Array.Empty<byte>(), null);
+        }
+
+        public byte[] Encrypt(byte[] data)
+        {
+            return this.EncryptBytes(data, Array.Empty<byte>(), Array.Empty<byte>(), null);
         }
 
         /// <summary>

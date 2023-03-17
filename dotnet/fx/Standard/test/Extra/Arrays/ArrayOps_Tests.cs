@@ -159,11 +159,11 @@ public static class ArrayOps_Tests
         ShrinkBy(ref array, 16);
 
         assert.Equal(16, array.Length);
-        
+
         array = new int[32];
         ShrinkBy(ref array, 0);
         assert.Equal(16, array.Length);
-        
+
         array = new int[32];
         ShrinkBy(ref array, 32);
         assert.Equal(32, array.Length);

@@ -79,6 +79,26 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security.Cryptography", "Se
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Security.Cryptography", "Security.Cryptography\src\Bearz.Security.Cryptography.csproj", "{EF3AB13E-BC78-410F-BED3-AD96FF23FBA5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templating", "Templating", "{41AF9D58-DA12-464C-B7AA-C76E3B53DE57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Templating", "Templating\src\Bearz.Templating.csproj", "{631A6C30-EBE2-483F-A704-126A4B0DCC5E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templating.Handlebars", "Templating.Handlebars", "{73545B6D-CE22-4528-A1DA-125E344C718D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Templating.Handlebars", "Templating.Handlebars\src\Bearz.Templating.Handlebars.csproj", "{D84FEBCA-961D-4780-8692-AF4A9A130EB0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templating.Handlebars.Configuration", "Templating.Handlebars.Configuration", "{1BFB55E5-9A63-40CB-8549-5E1F601D2B5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Templating.Handlebars.Configuration", "Templating.Handlebars.Configuration\src\Bearz.Templating.Handlebars.Configuration.csproj", "{2B015C1A-8948-4B1D-8A68-66C299758E86}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions.Secrets.Abstractions", "Extensions.Secrets.Abstractions", "{A4CDC0A7-9307-4338-B0CD-BBC4F3B488B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Extensions.Secrets.Abstractions", "Extensions.Secrets.Abstractions\src\Bearz.Extensions.Secrets.Abstractions.csproj", "{A4C5A061-A8A0-482D-A990-8E98EACD2ACA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions.Secrets", "Extensions.Secrets", "{D94DA2EB-E348-464D-918D-38EAB377B1FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Extensions.Secrets", "Extensions.Secrets\src\Bearz.Extensions.Secrets.csproj", "{419A5A34-0FCB-4862-8623-9B4EA6832DA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -156,6 +176,26 @@ Global
 		{EF3AB13E-BC78-410F-BED3-AD96FF23FBA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF3AB13E-BC78-410F-BED3-AD96FF23FBA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF3AB13E-BC78-410F-BED3-AD96FF23FBA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{631A6C30-EBE2-483F-A704-126A4B0DCC5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{631A6C30-EBE2-483F-A704-126A4B0DCC5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{631A6C30-EBE2-483F-A704-126A4B0DCC5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{631A6C30-EBE2-483F-A704-126A4B0DCC5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D84FEBCA-961D-4780-8692-AF4A9A130EB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D84FEBCA-961D-4780-8692-AF4A9A130EB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D84FEBCA-961D-4780-8692-AF4A9A130EB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D84FEBCA-961D-4780-8692-AF4A9A130EB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B015C1A-8948-4B1D-8A68-66C299758E86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B015C1A-8948-4B1D-8A68-66C299758E86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B015C1A-8948-4B1D-8A68-66C299758E86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B015C1A-8948-4B1D-8A68-66C299758E86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4C5A061-A8A0-482D-A990-8E98EACD2ACA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4C5A061-A8A0-482D-A990-8E98EACD2ACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4C5A061-A8A0-482D-A990-8E98EACD2ACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4C5A061-A8A0-482D-A990-8E98EACD2ACA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{419A5A34-0FCB-4862-8623-9B4EA6832DA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{419A5A34-0FCB-4862-8623-9B4EA6832DA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{419A5A34-0FCB-4862-8623-9B4EA6832DA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{419A5A34-0FCB-4862-8623-9B4EA6832DA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1625E738-DA37-4078-9033-EB53F616C981} = {0AD6CFDB-8E98-4B6B-8EF3-C39FA4711DF4}
@@ -175,5 +215,10 @@ Global
 		{CABE159E-1712-4718-BC85-66C47F9DBC61} = {E8A59112-A0B5-4643-9EF8-1DD188785D16}
 		{8363FFBF-B096-4BCD-888E-6F607B42D329} = {375E735C-2911-4F1F-8FB3-189720311D9F}
 		{EF3AB13E-BC78-410F-BED3-AD96FF23FBA5} = {D4042906-DF19-4D0E-9968-C55E537F47A1}
+		{631A6C30-EBE2-483F-A704-126A4B0DCC5E} = {41AF9D58-DA12-464C-B7AA-C76E3B53DE57}
+		{D84FEBCA-961D-4780-8692-AF4A9A130EB0} = {73545B6D-CE22-4528-A1DA-125E344C718D}
+		{2B015C1A-8948-4B1D-8A68-66C299758E86} = {1BFB55E5-9A63-40CB-8549-5E1F601D2B5A}
+		{A4C5A061-A8A0-482D-A990-8E98EACD2ACA} = {A4CDC0A7-9307-4338-B0CD-BBC4F3B488B2}
+		{419A5A34-0FCB-4862-8623-9B4EA6832DA8} = {D94DA2EB-E348-464D-918D-38EAB377B1FB}
 	EndGlobalSection
 EndGlobal

@@ -13,9 +13,9 @@ public class CommentConverter : IYamlTypeConverter
     public object? ReadYaml(IParser parser, Type type)
     {
         var comment = new Comment();
-        while (parser.Current is YamlDotNet.Core.Events.Comment)
+        while (parser.Current is YamlDotNet.Core.Events.Comment commentEvent)
         {
-            comment.Add(parser.Current.ToString());
+            comment.Add(commentEvent.Value);
             parser.MoveNext();
         }
 

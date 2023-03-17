@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Bearz.Security.Cryptography
 {
-    public interface ISymmetricEncryptionProvider : IDisposable
+    public interface ISymmetricEncryptionProvider : IEncryptionProvider, IDisposable
     {
         ReadOnlySpan<byte> Encrypt(
             ReadOnlySpan<byte> data,
