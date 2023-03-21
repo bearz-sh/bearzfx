@@ -1,12 +1,22 @@
-﻿namespace Bearz.Diagnostics;
+﻿using System.Diagnostics;
+
+namespace Bearz.Diagnostics;
 
 public class ActionCapture : IProcessCapture
 {
-    private readonly Action<string> action;
+    private readonly Action<string, Process> action;
 
-    public ActionCapture(Action<string> action)
-        => this.action = action;
+    private readonly Action<Process>? onComplete;
 
-    public void WriteLine(string value)
-        => this.action(value);
+    public ActionCapture(Action<string, Process> action, Action<Process>? onComplete = null)
+    {
+        this.action = action;
+        this.onComplete = onComplete;
+    }
+
+    public void OnNext(string value, Process process)
+        => this.action(value, process);
+
+    public void OnComplete(Process process)
+        => this.onComplete?.Invoke(process);
 }

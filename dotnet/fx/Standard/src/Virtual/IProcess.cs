@@ -26,7 +26,7 @@ public interface IProcess
         string fileName,
         CommandArgs? args,
         string? cwd = null,
-        IEnumerable<KeyValuePair<string, string>>? env = null,
+        IEnumerable<KeyValuePair<string, string?>>? env = null,
         Stdio stdout = Stdio.Inherit,
         Stdio stderr = Stdio.Inherit);
 
@@ -34,7 +34,7 @@ public interface IProcess
         string fileName,
         CommandArgs? args,
         string? cwd = null,
-        IEnumerable<KeyValuePair<string, string>>? env = null,
+        IEnumerable<KeyValuePair<string, string?>>? env = null,
         Stdio stdout = Stdio.Inherit,
         Stdio stderr = Stdio.Inherit,
         CancellationToken cancellationToken = default);

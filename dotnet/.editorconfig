@@ -362,6 +362,7 @@ dotnet_naming_style.s_camelcase.required_suffix =
 dotnet_naming_style.s_camelcase.word_separator = 
 dotnet_naming_style.s_camelcase.capitalization = camel_case
 
+dotnet_code_quality.enable_platform_analyzer_on_pre_net5_target = true
 
 # analyzer rules
 dotnet_diagnostic.IDE0045.severity = none # if statement can be simplified should be ignored

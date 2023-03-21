@@ -88,7 +88,7 @@ public static class ProcessExtensionsTests
         process.StartInfo.Arguments = "--version";
 
         var list = new List<string>();
-        process.RedirectTo((line) => list.Add(line));
+        process.RedirectTo((line, _) => list.Add(line));
 
         var r = process.Run();
         assert.Equal(0, r.ExitCode);

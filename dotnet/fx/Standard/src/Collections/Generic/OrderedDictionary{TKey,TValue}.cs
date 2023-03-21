@@ -35,8 +35,8 @@ namespace Bearz.Collections.Generic;
     "Critical Code Smell",
     "S3218:Inner class members should not shadow outer class \"static\" or type members")]
 public class OrderedDictionary<TKey, TValue> : Dictionary<TKey, TValue>,
-    IReadOnlyDictionary<TKey, TValue>,
-    IDictionary<TKey, TValue>
+    IReadOnlyOrderedDictionary<TKey, TValue>,
+    IOrderedDictionary<TKey, TValue>
     where TKey : notnull
 {
     private int version = 0;

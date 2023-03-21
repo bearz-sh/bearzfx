@@ -14,7 +14,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisLevel>7</AnalysisLevel>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
     <LangVersion>preview</LangVersion>

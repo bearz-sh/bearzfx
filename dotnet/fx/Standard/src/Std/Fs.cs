@@ -30,7 +30,7 @@ public static partial class Fs
         }
     }
 
-    public static FileAttributes Stat(string path)
+    public static FileAttributes Attr(string path)
         => File.GetAttributes(path);
 
 #if NET6_0_OR_GREATER

@@ -1,3 +1,6 @@
+using System.Runtime.Versioning;
+using System.Security;
+
 using Bearz.Diagnostics;
 
 namespace Bearz.Std;
@@ -12,13 +15,33 @@ public class CommandStartInfo
 
     public string? Cwd { get; set; }
 
-    public IDictionary<string, string>? Env { get; set; }
+    public IDictionary<string, string?>? Env { get; set; }
 
     public Stdio StdOut { get; set; }
 
     public Stdio StdErr { get; set; }
 
     public Stdio StdIn { get; set; }
+
+    public string? User { get; set; }
+
+    public string? Verb { get; set; }
+
+    [SupportedOSPlatform("windows")]
+    [CLSCompliant(false)]
+    public SecureString? Password { get; set; }
+
+    [SupportedOSPlatform("windows")]
+    public string? PasswordInClearText { get; set; }
+
+    [SupportedOSPlatform("windows")]
+    public string? Domain { get; set; }
+
+    public bool LoadUserProfile { get; set; } = false;
+
+    public bool CreateNoWindow { get; set; } = true;
+
+    public bool UseShellExecute { get; set; } = false;
 
     protected internal IReadOnlyList<IProcessCapture> StdOutRedirects
     {

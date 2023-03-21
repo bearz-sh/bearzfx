@@ -2,5 +2,7 @@
 
 public interface IProcessCapture
 {
-    void WriteLine(string value);
+    void OnNext(string value, System.Diagnostics.Process process);
+
+    void OnComplete(System.Diagnostics.Process process);
 }

@@ -1,9 +1,10 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 // ReSharper disable IntroduceOptionalParameters.Global
 namespace Bearz.Diagnostics;
 
-public class StreamCapture : IProcessCapture, IDisposable
+public class StreamCapture : IProcessCapture
 {
     private readonly TextWriter writer;
 
@@ -61,21 +62,16 @@ public class StreamCapture : IProcessCapture, IDisposable
         this.writer = new StreamWriter(stream, encoding ?? Encoding.Default, bufferSize, leaveOpen);
     }
 
-    public void WriteLine(string value)
+    public void OnNext(string value, Process process)
     {
-        this.writer.WriteLine(value);
+        this.writer.Write(value);
     }
 
-    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
-    public void Dispose()
+    public void OnComplete(Process process)
     {
-        this.Dispose(true);
-        GC.SuppressFinalize(this);
-    }
+        this.writer.Flush();
 
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!disposing || !this.shouldDispose)
+        if (!this.shouldDispose)
             return;
 
         this.writer.Dispose();

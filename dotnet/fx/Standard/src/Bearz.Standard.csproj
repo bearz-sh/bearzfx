@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="$(InternalDir)/Index.cs" Link="Index.cs" />
     <Compile Include="$(InternalDir)/Range.cs" Link="Range.cs" />
+    <Compile Include="$(InternalDir)/Runtime/Versioning/PlatformAttributes.cs" Link="PlatformAttributes.cs" />
   </ItemGroup>
 
   <ItemGroup>

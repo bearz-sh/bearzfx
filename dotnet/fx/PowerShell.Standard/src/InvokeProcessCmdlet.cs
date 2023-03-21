@@ -37,7 +37,7 @@ public class InvokeProcessCmdlet : PSCmdlet
 
     [Alias("Env", "e")]
     [Parameter]
-    public Hashtable? Environment { get; set; }
+    public IDictionary? Environment { get; set; }
 
     [Alias("Cwd", "Wd")]
     [Parameter]
@@ -54,7 +54,7 @@ public class InvokeProcessCmdlet : PSCmdlet
 
     protected override void ProcessRecord()
     {
-        Dictionary<string, string>? env = null;
+        Dictionary<string, string?>? env = null;
 
         if (this.Executable.IsNullOrWhiteSpace())
             throw new PSArgumentNullException(nameof(this.Executable));
@@ -74,16 +74,22 @@ public class InvokeProcessCmdlet : PSCmdlet
 
         if (this.Environment != null)
         {
-            env = new Dictionary<string, string>();
+            env = new Dictionary<string, string?>();
             foreach (var key in this.Environment.Keys)
             {
                 if (key is string name)
                 {
-                    var value = this.Environment[name] as string;
+                    var value = this.Environment[name];
                     if (value is null)
+                    {
+                        env[name] = null;
                         continue;
+                    }
 
-                    env[name] = value;
+                    if (value is string str)
+                    {
+                        env[name] = str;
+                    }
                 }
             }
         }

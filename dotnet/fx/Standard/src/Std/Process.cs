@@ -37,7 +37,7 @@ public static class Process
         string fileName,
         CommandArgs? args,
         string? cwd = null,
-        IEnumerable<KeyValuePair<string, string>>? env = null,
+        IEnumerable<KeyValuePair<string, string?>>? env = null,
         Stdio stdout = Stdio.Inherit,
         Stdio stderr = Stdio.Inherit)
     {
@@ -61,7 +61,7 @@ public static class Process
         string fileName,
         CommandArgs? args,
         string? cwd = null,
-        IEnumerable<KeyValuePair<string, string>>? env = null,
+        IEnumerable<KeyValuePair<string, string?>>? env = null,
         Stdio stdout = Stdio.Inherit,
         Stdio stderr = Stdio.Inherit,
         CancellationToken cancellationToken = default)
@@ -82,7 +82,7 @@ public static class Process
         return cmd.OutputAsync(cancellationToken);
     }
 
-    public static Command CreateCommand(string fileName, CommandStartInfo? startInfo)
+    public static Command CreateCommand(string fileName, CommandStartInfo? startInfo = null)
     {
         return new(fileName, startInfo);
     }
@@ -90,6 +90,14 @@ public static class Process
     public static Proc CreateProcess()
     {
         return new();
+    }
+
+    public static Proc CreateProcess(ProcessStartInfo startInfo)
+    {
+        return new()
+        {
+            StartInfo = startInfo,
+        };
     }
 
     public static void Kill(int pid)

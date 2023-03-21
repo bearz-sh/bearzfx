@@ -1,4 +1,7 @@
-﻿namespace Bearz.Diagnostics;
+﻿using System.Diagnostics;
+
+namespace Bearz.Diagnostics;
+
 public class CollectionCapture : IProcessCapture
 {
     private readonly ICollection<string> collection;
@@ -13,9 +16,14 @@ public class CollectionCapture : IProcessCapture
         this.collection = collection;
     }
 
-    public void WriteLine(string value)
+    public void OnNext(string value, Process process)
     {
         this.collection.Add(value);
+    }
+
+    public void OnComplete(Process process)
+    {
+        // do nothing
     }
 
     public IReadOnlyList<string> ToReadOnlyList()

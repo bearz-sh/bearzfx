@@ -88,8 +88,8 @@ public static class ProcessExtensions
         return process;
     }
 
-    public static Process RedirectTo(this Process process, Action<string> action)
-        => RedirectTo(process, new ActionCapture(action));
+    public static Process RedirectTo(this Process process, Action<string, Process> action, Action<Process>? onComplete = null)
+        => RedirectTo(process, new ActionCapture(action, onComplete));
 
     public static Process RedirectTo(this Process process, ICollection<string> lines)
         => RedirectTo(process, new CollectionCapture(lines));
@@ -135,20 +135,19 @@ public static class ProcessExtensions
         {
             if (args.Data == null)
             {
-                if (capture is IDisposable disposable)
-                    disposable.Dispose();
+                capture.OnComplete(process);
 
                 return;
             }
 
-            capture.WriteLine(args.Data);
+            capture.OnNext(args.Data, process);
         };
 
         return process;
     }
 
-    public static Process RedirectErrorTo(this Process process, Action<string> action)
-        => RedirectErrorTo(process, new ActionCapture(action));
+    public static Process RedirectErrorTo(this Process process, Action<string, Process> action, Action<Process>? onComplete = null)
+        => RedirectErrorTo(process, new ActionCapture(action, onComplete));
 
     public static Process RedirectErrorTo(this Process process, ICollection<string> lines)
         => RedirectErrorTo(process, new CollectionCapture(lines));
@@ -194,13 +193,15 @@ public static class ProcessExtensions
         {
             if (args.Data == null)
             {
+                capture.OnComplete(process);
+
                 if (capture is IDisposable disposable)
                     disposable.Dispose();
 
                 return;
             }
 
-            capture.WriteLine(args.Data);
+            capture.OnNext(args.Data, process);
         };
 
         return process;

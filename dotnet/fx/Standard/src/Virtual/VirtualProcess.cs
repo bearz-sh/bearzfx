@@ -42,7 +42,7 @@ public class VirtualProcess : IProcess
     {
         startInfo ??= new CommandStartInfo() { StdOut = Stdio.Inherit, StdErr = Stdio.Inherit, };
         startInfo.Cwd ??= this.env.Cwd;
-        var data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var data = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
         foreach (var kvp in this.env.List())
         {
             data[kvp.Key] = kvp.Value;
@@ -75,7 +75,7 @@ public class VirtualProcess : IProcess
         string fileName,
         CommandArgs? args,
         string? cwd = null,
-        IEnumerable<KeyValuePair<string, string>>? env = null,
+        IEnumerable<KeyValuePair<string, string?>>? env = null,
         Stdio stdout = Stdio.Inherit,
         Stdio stderr = Stdio.Inherit)
     {
@@ -98,7 +98,7 @@ public class VirtualProcess : IProcess
         string fileName,
         CommandArgs? args,
         string? cwd = null,
-        IEnumerable<KeyValuePair<string, string>>? env = null,
+        IEnumerable<KeyValuePair<string, string?>>? env = null,
         Stdio stdout = Stdio.Inherit,
         Stdio stderr = Stdio.Inherit,
         CancellationToken cancellationToken = default)

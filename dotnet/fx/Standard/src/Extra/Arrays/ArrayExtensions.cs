@@ -55,7 +55,7 @@ public static class ArrayExtensions
 
         return new ArraySegment<T>(array, start, length);
     }
-    
+
     /// <summary>
     /// Concatenates the two arrays into a single new array.
     /// </summary>

@@ -3,26 +3,26 @@ using System.Reflection;
 
 namespace Bearz.Reflection;
 
-public static class DelegateFactory
+public static class DelegateExtensions
 {
-    public static Delegate Create(PropertyInfo propertyInfo, bool createGetter)
+    public static Delegate CreateDelegate(PropertyInfo propertyInfo, bool createGetter)
     {
         return createGetter
-            ? CreateGetter(propertyInfo)
-            : CreateSetter(propertyInfo);
+            ? CreateGetDelegate(propertyInfo)
+            : CreateSetDelegate(propertyInfo);
     }
 
-    public static Delegate Create(FieldInfo fieldInfo, bool createGetter)
+    public static Delegate CreateDelegate(FieldInfo fieldInfo, bool createGetter)
     {
         return createGetter
-            ? CreateGetter(fieldInfo)
-            : CreateSetter(fieldInfo);
+            ? CreateGetDelegate(fieldInfo)
+            : CreateSetDelegate(fieldInfo);
     }
 
-    public static Delegate Create(ConstructorInfo constructorInfo)
-        => Create(constructorInfo, null);
+    public static Delegate CreateDelegate(this ConstructorInfo constructorInfo)
+        => CreateDelegate(constructorInfo, null);
 
-    public static Delegate Create(ConstructorInfo constructorInfo, IEnumerable<ParameterInfo>? parameters)
+    public static Delegate CreateDelegate(this ConstructorInfo constructorInfo, IEnumerable<ParameterInfo>? parameters)
     {
         var argumentsExpression = Expression.Parameter(typeof(object[]), "arguments");
         var argumentExpressions = new List<Expression>();
@@ -51,10 +51,10 @@ public static class DelegateFactory
             .Compile();
     }
 
-    public static Delegate Create(MethodInfo methodInfo)
-        => Create(methodInfo, null);
+    public static Delegate CreateDelegate(this MethodInfo methodInfo)
+        => CreateDelegate(methodInfo, null);
 
-    public static Delegate Create(MethodInfo methodInfo, IEnumerable<ParameterInfo>? parameters)
+    public static Delegate CreateDelegate(this MethodInfo methodInfo, IEnumerable<ParameterInfo>? parameters)
     {
         var instanceExpression = Expression.Parameter(typeof(object), "obj");
         var argumentsExpression = Expression.Parameter(typeof(object[]), "arguments");
@@ -73,7 +73,7 @@ public static class DelegateFactory
         }
 
         UnaryExpression? unary = null;
-        if (!methodInfo.IsStatic && methodInfo.ReflectedType != null)
+        if (methodInfo is { IsStatic: false, ReflectedType: { } })
         {
             unary = Expression.Convert(instanceExpression, methodInfo.ReflectedType);
         }
@@ -111,7 +111,7 @@ public static class DelegateFactory
         }
     }
 
-    public static Delegate CreateGetter(FieldInfo fieldInfo)
+    public static Delegate CreateGetDelegate(this FieldInfo fieldInfo)
     {
         if (fieldInfo.IsStatic)
         {
@@ -133,7 +133,7 @@ public static class DelegateFactory
         }
     }
 
-    public static Delegate CreateGetter(PropertyInfo propertyInfo)
+    public static Delegate CreateGetDelegate(this PropertyInfo propertyInfo)
     {
         if (!propertyInfo.CanRead)
             throw new InvalidOperationException($"Property {propertyInfo.Name} prohibits reading the value.");
@@ -179,7 +179,7 @@ public static class DelegateFactory
         }
     }
 
-    public static Delegate CreateSetter(FieldInfo fieldInfo)
+    public static Delegate CreateSetDelegate(this FieldInfo fieldInfo)
     {
         if (fieldInfo.IsStatic)
         {
@@ -207,7 +207,7 @@ public static class DelegateFactory
         }
     }
 
-    public static Delegate CreateSetter(PropertyInfo propertyInfo)
+    public static Delegate CreateSetDelegate(this PropertyInfo propertyInfo)
     {
         if (!propertyInfo.CanWrite)
             throw new InvalidOperationException($"Property {propertyInfo.Name} prohibits writing the value.");
