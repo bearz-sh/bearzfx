@@ -35,6 +35,18 @@ public static partial class StringExtensions
     {
         return source.Split(separator.ToCharArray());
     }
+
+    /// <summary>
+    /// Splits a <see cref="string"/> into substrings using the separator.
+    /// </summary>
+    /// <param name="source">The string instance to split.</param>
+    /// <param name="separator">The separator that is used to split the string.</param>
+    /// <param name="options">The string split options.</param>
+    /// <returns>The <see cref="T:string[]"/>.</returns>
+    public static string[] Split(this string source, string separator, StringSplitOptions options)
+    {
+        return source.Split(separator.ToCharArray(), options);
+    }
 #endif
 
     /// <summary>
