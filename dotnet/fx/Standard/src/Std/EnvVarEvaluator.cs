@@ -110,7 +110,7 @@ public static class EnvVarEvaluator
                 }
                 else if (substitution.Contains(":="))
                 {
-                    var parts = substitution.Split(":", StringSplitOptions.RemoveEmptyEntries);
+                    var parts = substitution.Split(":=", StringSplitOptions.RemoveEmptyEntries);
                     key = parts[0];
                     defaultValue = parts[1];
 
@@ -159,11 +159,22 @@ public static class EnvVarEvaluator
 
             if (kind == TokenKind.BashVariable && (!(char.IsLetterOrDigit(c) || c is '_') || remaining == 0))
             {
-                bool append = true;
+                // '\' is used to escape the next character, so don't append it.
+                // its used to escape a name like $HOME\\_TEST where _TEST is not
+                // part of the variable name.
+                bool append = c is not '\\';
+
                 if (remaining == 0 && (char.IsLetterOrDigit(c) || c is '_'))
                 {
                     append = false;
                     tokenBuilder.Append(c);
+                }
+
+                // rewind one character. Let the previous block handle $ for the next variable
+                if (c is '$')
+                {
+                    append = false;
+                    i--;
                 }
 
                 var key = tokenBuilder.ToString();
