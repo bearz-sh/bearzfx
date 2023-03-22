@@ -12,6 +12,27 @@ public class EnvVarEvaluator_Tests
     }
 
     [UnitTest]
+    public void EvaluateSingleWindowsVar(IAssert assert)
+    {
+        Environment.SetEnvironmentVariable("WORD", "World");
+
+        var result = EnvVarEvaluator.Evaluate("Hello %WORD%", true);
+        assert.Equal("Hello World", result);
+
+        result = EnvVarEvaluator.Evaluate("Hello test%WORD%:", true);
+        assert.Equal("Hello testWorld:", result);
+
+        result = EnvVarEvaluator.Evaluate("%WORD%", true);
+        assert.Equal("World", result);
+
+        result = EnvVarEvaluator.Evaluate("%WORD%  ", true);
+        assert.Equal("World  ", result);
+
+        result = EnvVarEvaluator.Evaluate(" \n%WORD%  ", true);
+        assert.Equal(" \nWorld  ", result);
+    }
+
+    [UnitTest]
     public void EvaluateSingleBashVar(IAssert assert)
     {
         Environment.SetEnvironmentVariable("WORD", "World");

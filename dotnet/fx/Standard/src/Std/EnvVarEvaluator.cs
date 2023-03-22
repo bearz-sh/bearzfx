@@ -81,7 +81,8 @@ public static class EnvVarEvaluator
                     continue;
                 }
 
-                var value = getValue?.Invoke(tokenBuilder.ToString());
+                var key = tokenBuilder.ToString();
+                var value = getValue == null ? Env.Get(key) : getValue(key);
                 if (value is not null && value.Length > 0)
                     output.Append(value);
                 tokenBuilder.Clear();
