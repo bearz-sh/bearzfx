@@ -101,11 +101,18 @@ public static class DotEnvSerializer
                     };
                 }
 
+                var eso = new EnvSubstitutionOptions()
+                {
+                    UnixAssignment = false,
+                    UnixCustomErrorMessage = false,
+                    GetVariable = getVariable,
+                    SetVariable = (name, value) => Env.Set(name, value),
+                };
                 foreach (var entry in doc)
                 {
                     if (entry is EnvNameValuePair pair)
                     {
-                        var v = EnvVarEvaluator.Evaluate(pair.RawValue, false, false, getVariable);
+                        var v = EnvSubstitution.Evaluate(pair.RawValue, eso);
 
                         // Only set the value if it has changed.
                         if (v.Length != pair.RawValue.Length || !v.SequenceEqual(pair.RawValue))

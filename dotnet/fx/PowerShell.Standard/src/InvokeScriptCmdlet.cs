@@ -176,7 +176,7 @@ if((Test-Path -LiteralPath variable:LASTEXITCODE))
                 return;
             }
 
-            Dictionary<string, string>? env = null;
+            Dictionary<string, string?>? env = null;
             var args = new CommandArgs();
             if (resolver.ArgumentList != null)
                 args.AddRange(resolver.ArgumentList);
@@ -185,16 +185,20 @@ if((Test-Path -LiteralPath variable:LASTEXITCODE))
 
             if (this.Environment != null)
             {
-                env = new Dictionary<string, string>();
+                env = new Dictionary<string, string?>();
                 foreach (var key in this.Environment.Keys)
                 {
                     if (key is string name)
                     {
-                        var value = this.Environment[name] as string;
+                        var value = this.Environment[name];
                         if (value is null)
-                            continue;
-
-                        env[name] = value;
+                        {
+                            env[name] = null;
+                        }
+                        else if (value is string vstr)
+                        {
+                            env[name] = vstr;
+                        }
                     }
                 }
             }

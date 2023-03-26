@@ -31,6 +31,66 @@ public static partial class Path
         return P.Combine(paths);
     }
 
+    public static string Resolve(string path)
+        => Resolve(path, Env.Cwd);
+
+    public static string Resolve(string path, string basePath)
+    {
+        if (!P.IsPathRooted(basePath))
+        {
+            throw new InvalidOperationException("basePath must be an absolute path");
+        }
+
+        switch (path.Length)
+        {
+            case 0:
+                return basePath;
+            case 1:
+                {
+                    var c = path[0];
+                    return c switch
+                    {
+                        '~' => Env.HomeDir(),
+                        '.' => basePath,
+                        _ => P.Combine(basePath, path),
+                    };
+                }
+
+            default:
+                {
+                    var c1 = path[0];
+                    var c2 = path[1];
+
+                    switch (c1)
+                    {
+                        case '~' when c2 is '/' or '\\':
+                            if (path.Length == 2)
+                                return Env.HomeDir();
+
+                            path = path.Substring(2);
+                            return P.GetFullPath(P.Combine(Env.HomeDir(), path));
+                        case '.' when c2 is '/' or '\\':
+                            if (path.Length == 2)
+                                return basePath;
+
+                            path = path.Substring(2);
+                            return P.GetFullPath(P.Combine(basePath, path));
+                        case '.' when c2 is '.':
+                            // there could be wierd case when it starts with .. but has no separator
+                            // this is treated as a relative path, otherwise this case ensures that .. and ../ is treated
+                            // as a relative path.
+                            return P.GetFullPath(P.Combine(basePath, path));
+
+                        default:
+                            if (P.IsPathRooted(path))
+                                return P.GetFullPath(path);
+
+                            return P.GetFullPath(c1 is not '.' and not '~' and not '/' and not '\\' ? P.Combine(basePath, path) : path);
+                    }
+                }
+        }
+    }
+
 #if NETLEGACY || NET6_0
 
     public static bool Exists([NotNullWhen(true)] string? path)

@@ -69,7 +69,7 @@ public static class Util
             if (s_fxRoot is not null)
                 return s_fxRoot;
 
-            var location = Location;
+            string? location = Location;
             while (location is not null)
             {
                 if (Path.GetFileName(location) == "Standard")

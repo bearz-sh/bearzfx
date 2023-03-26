@@ -59,7 +59,7 @@ public interface IEnvironment
 
     string Directory(string directoryName);
 
-    string Expand(string template, bool useWindows = true);
+    string Expand(string template, EnvSubstitutionOptions? options = null);
 
     void Set(string variableName, string value);
 

@@ -94,14 +94,14 @@ public class VirtualEnvironment : IEnvironment
     public string Directory(string directoryName)
         => Env.Directory(directoryName);
 
-    public string Expand(string template, bool useWindows = true)
-        => Env.Expand(template, useWindows, (name) =>
-        {
-            if (!Env.TryGet(name, out var value))
-                return null;
+    public string Expand(string template, EnvSubstitutionOptions? options = null)
+    {
+        options ??= new EnvSubstitutionOptions();
+        options.GetVariable ??= this.Get;
+        options.SetVariable ??= this.Set;
 
-            return value;
-        });
+        return EnvSubstitution.Evaluate(template, options);
+    }
 
     public void Set(string variableName, string value)
     {

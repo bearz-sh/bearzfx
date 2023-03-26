@@ -2,12 +2,13 @@ using Bearz.Std;
 
 namespace Test.Std;
 
-public class EnvVarEvaluator_Tests
+// ReSharper disable once InconsistentNaming
+public class EnvSubstitution_Tests
 {
     [UnitTest]
     public void EvaluateNothing(IAssert assert)
     {
-        var result = EnvVarEvaluator.Evaluate("Hello World");
+        var result = EnvSubstitution.Evaluate("Hello World");
         assert.Equal("Hello World", result);
     }
 
@@ -16,10 +17,10 @@ public class EnvVarEvaluator_Tests
     {
         Environment.SetEnvironmentVariable("WORD", "World");
 
-        var result = EnvVarEvaluator.Evaluate("Hello \\$WORD");
+        var result = EnvSubstitution.Evaluate("Hello \\$WORD");
         assert.Equal("Hello $WORD", result);
 
-        result = EnvVarEvaluator.Evaluate("Hello $WORD\\_SUN");
+        result = EnvSubstitution.Evaluate("Hello $WORD\\_SUN");
         assert.Equal("Hello World_SUN", result);
     }
 
@@ -29,10 +30,10 @@ public class EnvVarEvaluator_Tests
         Environment.SetEnvironmentVariable("WORD", "World");
         Environment.SetEnvironmentVariable("HELLO", "Hello");
 
-        var result = EnvVarEvaluator.Evaluate("$HELLO $WORD");
+        var result = EnvSubstitution.Evaluate("$HELLO $WORD");
         assert.Equal("Hello World", result);
 
-        result = EnvVarEvaluator.Evaluate("$HELLO$WORD!");
+        result = EnvSubstitution.Evaluate("$HELLO$WORD!");
         assert.Equal("HelloWorld!", result);
     }
 
@@ -41,19 +42,19 @@ public class EnvVarEvaluator_Tests
     {
         Environment.SetEnvironmentVariable("WORD", "World");
 
-        var result = EnvVarEvaluator.Evaluate("Hello %WORD%", true);
+        var result = EnvSubstitution.Evaluate("Hello %WORD%");
         assert.Equal("Hello World", result);
 
-        result = EnvVarEvaluator.Evaluate("Hello test%WORD%:", true);
+        result = EnvSubstitution.Evaluate("Hello test%WORD%:");
         assert.Equal("Hello testWorld:", result);
 
-        result = EnvVarEvaluator.Evaluate("%WORD%", true);
+        result = EnvSubstitution.Evaluate("%WORD%");
         assert.Equal("World", result);
 
-        result = EnvVarEvaluator.Evaluate("%WORD%  ", true);
+        result = EnvSubstitution.Evaluate("%WORD%  ");
         assert.Equal("World  ", result);
 
-        result = EnvVarEvaluator.Evaluate(" \n%WORD%  ", true);
+        result = EnvSubstitution.Evaluate(" \n%WORD%  ");
         assert.Equal(" \nWorld  ", result);
     }
 
@@ -62,19 +63,19 @@ public class EnvVarEvaluator_Tests
     {
         Environment.SetEnvironmentVariable("WORD", "World");
 
-        var result = EnvVarEvaluator.Evaluate("Hello $WORD");
+        var result = EnvSubstitution.Evaluate("Hello $WORD");
         assert.Equal("Hello World", result);
 
-        result = EnvVarEvaluator.Evaluate("Hello test$WORD:");
+        result = EnvSubstitution.Evaluate("Hello test$WORD:");
         assert.Equal("Hello testWorld:", result);
 
-        result = EnvVarEvaluator.Evaluate("$WORD");
+        result = EnvSubstitution.Evaluate("$WORD");
         assert.Equal("World", result);
 
-        result = EnvVarEvaluator.Evaluate("$WORD  ");
+        result = EnvSubstitution.Evaluate("$WORD  ");
         assert.Equal("World  ", result);
 
-        result = EnvVarEvaluator.Evaluate(" \n$WORD  ");
+        result = EnvSubstitution.Evaluate(" \n$WORD  ");
         assert.Equal(" \nWorld  ", result);
     }
 
@@ -83,19 +84,19 @@ public class EnvVarEvaluator_Tests
     {
         Environment.SetEnvironmentVariable("WORD", "World");
 
-        var result = EnvVarEvaluator.Evaluate("Hello ${WORD}");
+        var result = EnvSubstitution.Evaluate("Hello ${WORD}");
         assert.Equal("Hello World", result);
 
-        result = EnvVarEvaluator.Evaluate("Hello test${WORD}:");
+        result = EnvSubstitution.Evaluate("Hello test${WORD}:");
         assert.Equal("Hello testWorld:", result);
 
-        result = EnvVarEvaluator.Evaluate("${WORD}");
+        result = EnvSubstitution.Evaluate("${WORD}");
         assert.Equal("World", result);
 
-        result = EnvVarEvaluator.Evaluate("${WORD}  ");
+        result = EnvSubstitution.Evaluate("${WORD}  ");
         assert.Equal("World  ", result);
 
-        result = EnvVarEvaluator.Evaluate(" \n$WORD  ");
+        result = EnvSubstitution.Evaluate(" \n$WORD  ");
         assert.Equal(" \nWorld  ", result);
     }
 
@@ -105,7 +106,7 @@ public class EnvVarEvaluator_Tests
         // assert state
         assert.False(Env.Has("WORD2"));
 
-        var result = EnvVarEvaluator.Evaluate("${WORD2:-World}");
+        var result = EnvSubstitution.Evaluate("${WORD2:-World}");
         assert.Equal("World", result);
         assert.False(Env.Has("WORD2"));
     }
@@ -116,7 +117,7 @@ public class EnvVarEvaluator_Tests
         // assert state
         assert.False(Env.Has("WORD3"));
 
-        var result = EnvVarEvaluator.Evaluate("${WORD3:=World}");
+        var result = EnvSubstitution.Evaluate("${WORD3:=World}");
         assert.Equal("World", result);
         assert.True(Env.Has("WORD3"));
         assert.Equal("World", Env.Get("WORD3"));
@@ -127,23 +128,23 @@ public class EnvVarEvaluator_Tests
     {
         Environment.SetEnvironmentVariable("WORD", "World");
 
-        var ex = assert.Throws<EnvVarSubstitutionException>(() =>
+        var ex = assert.Throws<EnvSubstitutionException>(() =>
         {
-            EnvVarEvaluator.Evaluate("Hello ${WORLD:?WORLD must be set}");
+            EnvSubstitution.Evaluate("Hello ${WORLD:?WORLD must be set}");
         });
 
         assert.Equal("WORLD must be set", ex.Message);
 
-        ex = assert.Throws<EnvVarSubstitutionException>(() =>
+        ex = assert.Throws<EnvSubstitutionException>(() =>
         {
-            EnvVarEvaluator.Evaluate("Hello ${WORLD}");
+            EnvSubstitution.Evaluate("Hello ${WORLD}");
         });
 
         assert.Equal("Bad substitution, variable WORLD is not set.", ex.Message);
 
-        ex = assert.Throws<EnvVarSubstitutionException>(() =>
+        ex = assert.Throws<EnvSubstitutionException>(() =>
         {
-            EnvVarEvaluator.Evaluate("Hello $WORLD");
+            EnvSubstitution.Evaluate("Hello $WORLD");
         });
 
         assert.Equal("Bad substitution, variable WORLD is not set.", ex.Message);
@@ -154,14 +155,14 @@ public class EnvVarEvaluator_Tests
     {
         Environment.SetEnvironmentVariable("WORD", "World");
 
-        assert.Throws<EnvVarParseTokenException>(() =>
+        assert.Throws<EnvSubstitutionException>(() =>
         {
-            EnvVarEvaluator.Evaluate("Hello ${WORD");
+            EnvSubstitution.Evaluate("Hello ${WORD");
         });
 
-        assert.Throws<EnvVarParseTokenException>(() =>
+        assert.Throws<EnvSubstitutionException>(() =>
         {
-            EnvVarEvaluator.Evaluate("Hello %WORD", true);
+            EnvSubstitution.Evaluate("Hello %WORD");
         });
     }
 }

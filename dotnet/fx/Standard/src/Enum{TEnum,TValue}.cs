@@ -186,7 +186,7 @@ public class Enum<TEnum, TValue> : IEquatable<TEnum>, IComparable<TEnum>
         value = null;
         foreach (var item in Set)
         {
-            if (item.Name.Equals(name, comparison))
+            if (item.Name.Equals(name, comparison) || item.Label.Equals(name, comparison))
             {
                 value = item;
                 return true;

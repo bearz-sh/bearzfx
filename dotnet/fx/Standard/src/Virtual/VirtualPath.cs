@@ -1,5 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 
+using Bearz.Extra.Strings;
+
 using P = System.IO.Path;
 using Path = Bearz.Std.Path;
 
