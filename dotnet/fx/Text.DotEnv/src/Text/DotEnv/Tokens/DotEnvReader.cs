@@ -49,10 +49,11 @@ public class DotEnvReader
         while (true)
         {
             var c = (char)this.reader.Read();
-            if (c is char.MinValue)
+            if (c is char.MinValue or char.MaxValue)
             {
                 this.eof = true;
-                return false;
+                if (this.buffer.Length == 0)
+                    return false;
             }
 
             if (this.HandleLineBreak(c))
@@ -116,11 +117,12 @@ public class DotEnvReader
 
                         // invalid character if we get here.
                         throw new ParseException(
-                            $"Unexpected character '{c}' on line {this.lineNumber} for environment variable name");
+                            $"Unexpected character '{c}' on line {this.lineNumber}, col {this.columnNumber} for environment variable name");
                     }
 
                 case TokenKind.Comment:
                     {
+
                         this.buffer.Append(c);
                         continue;
                     }
@@ -128,7 +130,8 @@ public class DotEnvReader
                 case TokenKind.Value:
                     {
                         // empty value after '=', so we don't know if its a multiline value or not.
-                        if (this.buffer.Length == 0)
+                        // only run this check if we haven't already captured a value and the buffer is 0.
+                        if (this.capture == Capture.None && this.buffer.Length == 0)
                         {
                             switch (c)
                             {
@@ -137,6 +140,12 @@ public class DotEnvReader
                                     continue;
                                 case '\"':
                                     this.capture = Capture.DoubleQuote;
+                                    this.multiLineNumber = this.lineNumber;
+                                    this.multiLineColumn = this.columnNumber;
+                                    continue;
+
+                                case '\'':
+                                    this.capture = Capture.SingleQuote;
                                     this.multiLineNumber = this.lineNumber;
                                     this.multiLineColumn = this.columnNumber;
                                     continue;
@@ -192,14 +201,26 @@ public class DotEnvReader
                                     continue;
 
                                 default:
+                                    if (char.IsWhiteSpace(c))
+                                        continue;
+
                                     this.buffer.Append(c);
-                                    break;
+                                    continue;
                             }
                         }
 
                         // single line value
                         if (this.capture is Capture.None)
                         {
+                            if (this.eof)
+                            {
+                                this.tokenKind = TokenKind.None;
+                                var slice = this.buffer.ToArray();
+                                this.buffer.Clear();
+                                this.VisitScalarNode(slice);
+                                return true;
+                            }
+
                             // if we've already terminated by whitespace.
                             if (valueTerminated)
                             {
@@ -225,7 +246,7 @@ public class DotEnvReader
                             }
 
                             // terminate value
-                            if (char.IsWhiteSpace(c))
+                            if (char.IsWhiteSpace(c) && this.buffer.Length > 0)
                             {
                                 valueTerminated = true;
                                 continue;
@@ -252,9 +273,6 @@ public class DotEnvReader
 
     private bool HandleMultiLineCapture(char c)
     {
-        if (this.capture == Capture.None)
-            return false;
-
         switch (this.capture)
         {
             case Capture.None:
@@ -374,8 +392,19 @@ public class DotEnvReader
 
     private bool HandleLineBreak(char c)
     {
+        // if we're capturing a multi-line string, then we need to handle line breaks differently.
+        if (this.capture != Capture.None)
+        {
+            if (c is char.MinValue or char.MaxValue)
+            {
+                throw new ParseException("Unexpected end of file while capturing multi-line string");
+            }
+
+            return false;
+        }
+
         bool lineBreak = false;
-        if (c is '\n')
+        if (c is '\n' or char.MaxValue or char.MinValue)
         {
             lineBreak = true;
         }
@@ -394,10 +423,6 @@ public class DotEnvReader
         this.columnNumber = 1;
         this.multiLineNumber++;
         this.multiLineColumn++;
-
-        // if we are capturing a multi-line string return false to continue;
-        if (this.capture != Capture.None)
-            return false;
 
         // if the buffer is empty, we haven't read a token, so return false to continue;
         if (this.buffer.Length == 0)

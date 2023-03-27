@@ -54,11 +54,11 @@ public static class DotEnvSerializer
                 {
                     case EnvCommentToken commentToken:
                         doc.Add(new EnvComment(commentToken.RawValue));
-                        break;
+                        continue;
 
                     case EnvNameToken nameToken:
                         key = nameToken.Value;
-                        break;
+                        continue;
 
                     case EnvScalarToken scalarToken:
                         if (key is not null && key.Length > 0)

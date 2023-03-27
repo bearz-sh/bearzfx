@@ -7,6 +7,11 @@ indent_style = space
 # Xml files
 [*.xml]
 indent_size = 2
+tab_width = 2
+
+[*.csproj]
+indent_size = 2
+tab_width = 2
 
 # C# files
 [*.cs]
