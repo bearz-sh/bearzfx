@@ -8,6 +8,7 @@ using Xunit.Abstractions;
 
 namespace Test.Std;
 
+// ReSharper disable once InconsistentNaming
 public class Command_Tests
 {
     [IntegrationTest]

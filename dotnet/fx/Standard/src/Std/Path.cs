@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
 
 using P = System.IO.Path;
 
@@ -8,32 +9,38 @@ namespace Bearz.Std;
 public static partial class Path
 {
     [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Combine(string path1, string path2)
     {
         return P.Combine(path1, path2);
     }
 
     [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Combine(string path1, string path2, string path3)
     {
         return P.Combine(path1, path2, path3);
     }
 
     [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Combine(string path1, string path2, string path3, string path4)
     {
         return P.Combine(path1, path2, path3, path4);
     }
 
     [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Combine(params string[] paths)
     {
         return P.Combine(paths);
     }
 
+    [Pure]
     public static string Resolve(string path)
         => Resolve(path, Env.Cwd);
 
+    [Pure]
     public static string Resolve(string path, string basePath)
     {
         if (!P.IsPathRooted(basePath))
@@ -91,8 +98,10 @@ public static partial class Path
         }
     }
 
-#if NETLEGACY || NET6_0
+#if !NET7_0_OR_GREATER
 
+    [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Exists([NotNullWhen(true)] string? path)
     {
         return File.Exists(path) || Directory.Exists(path);
@@ -102,6 +111,7 @@ public static partial class Path
 
     [Pure]
     [return: NotNullIfNotNull("path")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? Basename(string? path)
     {
         return P.GetFileName(path);
@@ -109,6 +119,7 @@ public static partial class Path
 
     [Pure]
     [return: NotNullIfNotNull("path")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? BasenameWithoutExtension(string? path)
     {
         return P.GetFileNameWithoutExtension(path);
@@ -116,28 +127,40 @@ public static partial class Path
 
     [Pure]
     [return: NotNullIfNotNull("path")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? ChangeExtension(string? path, string? extension)
     {
         return P.ChangeExtension(path, extension);
     }
 
     [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? Dirname(string? path)
         => P.GetDirectoryName(path);
 
     [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string? GetDirectoryName(string? path)
+        => P.GetDirectoryName(path);
+
+    [Pure]
     [return: NotNullIfNotNull("path")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? Extension(string? path)
         => P.GetExtension(path);
 
     [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsPathRooted([NotNullWhen(true)] string? path)
         => P.IsPathRooted(path);
 
     [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string RandomFileName()
         => P.GetRandomFileName();
 
+    [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string TempDir()
     {
         return P.GetTempPath();
