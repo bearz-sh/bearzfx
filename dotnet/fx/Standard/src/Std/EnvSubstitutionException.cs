@@ -1,6 +1,11 @@
 namespace Bearz.Std;
 
-public class EnvSubstitutionException : BearzException
+#if STD
+public
+#else
+internal
+#endif
+class EnvSubstitutionException : BearzException
 {
     public EnvSubstitutionException()
         : base()

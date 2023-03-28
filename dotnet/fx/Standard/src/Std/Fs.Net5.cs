@@ -4,8 +4,6 @@ using System.Text;
 
 using Bearz.Text;
 
-
-
 namespace Bearz.Std;
 
 public static partial class Fs

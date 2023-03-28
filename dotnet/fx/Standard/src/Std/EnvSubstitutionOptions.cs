@@ -1,6 +1,11 @@
 namespace Bearz.Std;
 
-public class EnvSubstitutionOptions
+#if STD
+public
+#else
+internal
+#endif
+class EnvSubstitutionOptions
 {
     public bool WindowsExpansion { get; set; } = true;
 

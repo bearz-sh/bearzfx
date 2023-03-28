@@ -3,9 +3,17 @@ using System.Text;
 using Bearz.Extra.Strings;
 using Bearz.Text;
 
+#if !STD
+using EnvSubstitutionException = System.InvalidOperationException;
+#endif
+
 namespace Bearz.Std;
 
+#if STD
 public static class EnvSubstitution
+#else
+internal static class EnvSubstitution
+#endif
 {
     private enum TokenKind
     {

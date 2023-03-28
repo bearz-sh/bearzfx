@@ -1,3 +1,4 @@
+<!--suppress MsbuildTargetFrameworkTagInspection -->
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
@@ -10,7 +11,7 @@
 
   <PropertyGroup>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags></PackageTags>
+    <PackageTags>dotenv variable substitution expansion </PackageTags>
     <Description>
     Bearz.Text.DotEnv
     </Description>
@@ -30,9 +31,12 @@
   <ItemGroup>
     <Compile Include="$(InternalDir)/Index.cs" Link="Index.cs" />
     <Compile Include="$(InternalDir)/Range.cs" Link="Range.cs" />
+    <Compile Include="../../Standard/src/Std/EnvSubstitution.cs" Link="Std/EnvSubstitution.cs" />
+    <Compile Include="../../Standard/src/Std/EnvSubstitutionOptions.cs" Link="Std/EnvSubstitutionOptions.cs" />
+    <Compile Include="../../Standard/src/Std/Env.Variables.cs" Link="Std/Env.Variables.cs" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Standard\src\Bearz.Standard.csproj" />
+  
+  <ItemGroup Condition="$(NetLegacy) == 'true'">
+    <PackageReference Include="System.Memory" />
   </ItemGroup>
 </Project>

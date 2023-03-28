@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Concurrent;
+using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Bearz.Text.DotEnv.Document;
@@ -229,9 +231,33 @@ public class EnvDocument : IEnumerable<EnvDocumentEntry>,
     /// Copies the <see cref="EnvNameValuePair"/> elements of this document to a dictionary.
     /// </summary>
     /// <returns>a dictionary.</returns>
-    public IDictionary<string, string> ToDictionary()
+    public Dictionary<string, string> ToDictionary()
     {
         var dictionary = new Dictionary<string, string>();
+        foreach (var entry in this.entries)
+        {
+            if (entry is EnvNameValuePair nameValuePair)
+                dictionary.Add(nameValuePair.Name, nameValuePair.GetRawValueAsString());
+        }
+
+        return dictionary;
+    }
+
+    public ConcurrentDictionary<string, string> ToConcurrentDictionary()
+    {
+        var dictionary = new ConcurrentDictionary<string, string>();
+        foreach (var entry in this.entries)
+        {
+            if (entry is EnvNameValuePair nameValuePair)
+                dictionary.TryAdd(nameValuePair.Name, nameValuePair.GetRawValueAsString());
+        }
+
+        return dictionary;
+    }
+
+    public OrderedDictionary ToOrderedDictionary()
+    {
+        var dictionary = new OrderedDictionary();
         foreach (var entry in this.entries)
         {
             if (entry is EnvNameValuePair nameValuePair)

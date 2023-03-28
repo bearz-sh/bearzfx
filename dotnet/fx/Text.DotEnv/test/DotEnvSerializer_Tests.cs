@@ -1,7 +1,9 @@
 using Bearz.Text.DotEnv;
+using Bearz.Text.DotEnv.Document;
 
 namespace Tests;
 
+// ReSharper disable once InconsistentNaming
 public class DotEnvSerializer_Tests
 {
     [UnitTest]
@@ -228,5 +230,125 @@ PW=X232dwe)()_+!@
         assert.Equal(2, env.Count);
         assert.Equal("hello_world", env["TEST"]);
         assert.Equal("X232dwe)()_+!@", env["PW"]);
+    }
+
+    [UnitTest]
+    public void Verify_DeserializeDictionary(IAssert assert)
+    {
+        Environment.SetEnvironmentVariable("WORD", "world");
+        var envContent = """
+# This is a comment
+TEST=hello_world
+  # this is a comment too
+PW=X232dwe)()_+!@
+## this is a comment woo hoo
+MULTI="1
+2
+3
+  4"
+HW="Hello, ${WORD}"
+""";
+        var values = DotEnvSerializer.Deserialize(
+            envContent,
+            typeof(Dictionary<string, string>));
+
+        assert.NotNull(values);
+        assert.IsType<Dictionary<string, string>>(values);
+
+        var env = (Dictionary<string, string>)values;
+        assert.Equal(4, env.Count);
+        assert.Equal("hello_world", env["TEST"]);
+        assert.Equal("X232dwe)()_+!@", env["PW"]);
+        assert.Equal("1\r\n2\r\n3\r\n  4", env["MULTI"]);
+        assert.Equal("Hello, world", env["HW"]);
+    }
+
+    [UnitTest]
+    public void Verify_Json(IAssert assert)
+    {
+        var envContent = """
+JSON={
+    ""test"": ""hello world"",
+    ""test2"": ""hello world2""
+}
+""";
+        var values = DotEnvSerializer.Deserialize(
+            envContent,
+            typeof(Dictionary<string, string>),
+            new DotEnvSerializerOptions { AllowJson = true });
+
+        assert.NotNull(values);
+        assert.IsType<Dictionary<string, string>>(values);
+
+        var env = (Dictionary<string, string>)values;
+        assert.Equal(1, env.Count);
+        assert.Equal(
+            """
+{
+    ""test"": ""hello world"",
+    ""test2"": ""hello world2""
+}
+""",
+            env["JSON"]);
+    }
+
+    [UnitTest]
+    public void Verify_Yaml(IAssert assert)
+    {
+        var envContent = """
+YAML=---
+test: hello world
+test2: hello world2
+---
+TEST=hello_world
+""";
+        var values = DotEnvSerializer.Deserialize(
+            envContent,
+            typeof(Dictionary<string, string>),
+            new DotEnvSerializerOptions { AllowYaml = true });
+
+        assert.NotNull(values);
+        assert.IsType<Dictionary<string, string>>(values);
+
+        var env = (Dictionary<string, string>)values;
+        assert.Equal(2, env.Count);
+        assert.Equal(
+            """
+test: hello world
+test2: hello world2
+
+""",
+            env["YAML"]);
+        assert.Equal("hello_world", env["TEST"]);
+    }
+
+    [UnitTest]
+    public void Verify_DeserializeEnvDocument(IAssert assert)
+    {
+        Environment.SetEnvironmentVariable("WORD", "world");
+        var envContent = """
+# This is a comment
+TEST=hello_world
+  # this is a comment too
+PW=X232dwe)()_+!@
+## this is a comment woo hoo
+MULTI="1
+2
+3
+  4"
+HW="Hello, ${WORD}"
+""";
+        var values = DotEnvSerializer.Deserialize(
+            envContent,
+            typeof(EnvDocument));
+
+        assert.NotNull(values);
+        assert.IsType<EnvDocument>(values);
+
+        var env = (EnvDocument)values;
+        assert.Equal("hello_world", env["TEST"]);
+        assert.Equal("X232dwe)()_+!@", env["PW"]);
+        assert.Equal("1\r\n2\r\n3\r\n  4", env["MULTI"]);
+        assert.Equal("Hello, world", env["HW"]);
     }
 }

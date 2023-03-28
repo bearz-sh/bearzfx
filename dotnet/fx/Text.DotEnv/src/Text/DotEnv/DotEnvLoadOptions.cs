@@ -1,30 +1,29 @@
 namespace Bearz.Text.DotEnv;
 
-public class DotEnvSerializerOptions
+public class DotEnvLoadOptions : DotEnvSerializerOptions
 {
-    public bool AllowBackticks { get; set; } = true;
+    public IReadOnlyList<string> Files { get; set; } = Array.Empty<string>();
 
-    public bool AllowJson { get; set; }
+    public string? Content { get; set; }
 
-    public bool AllowYaml { get; set; }
+    public bool OverrideEnvironment { get; set; }
 
-    public bool Expand { get; set; } = true;
-
-    public IDictionary<string, string>? ExpandVariables { get; set; }
-
-    public virtual object Clone()
+    public override object Clone()
     {
         Dictionary<string, string>? expandVars = null;
         if (this.ExpandVariables is not null)
             expandVars = new Dictionary<string, string>(this.ExpandVariables);
 
-        var copy = new DotEnvSerializerOptions()
+        var copy = new DotEnvLoadOptions()
         {
             AllowBackticks = this.AllowBackticks,
             AllowJson = this.AllowJson,
             AllowYaml = this.AllowYaml,
             Expand = this.Expand,
             ExpandVariables = expandVars,
+            Files = this.Files,
+            Content = this.Content,
+            OverrideEnvironment = this.OverrideEnvironment,
         };
 
         return copy;

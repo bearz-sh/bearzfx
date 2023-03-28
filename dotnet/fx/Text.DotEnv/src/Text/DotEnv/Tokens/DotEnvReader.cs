@@ -1,7 +1,5 @@
 using System.Text;
 
-using Bearz.Std;
-
 namespace Bearz.Text.DotEnv.Tokens;
 
 public class DotEnvReader
@@ -162,6 +160,7 @@ public class DotEnvReader
                                         continue;
                                     }
 
+                                    this.buffer.Append(c);
                                     this.capture = Capture.Brackets;
                                     this.multiLineNumber = this.lineNumber;
                                     this.multiLineColumn = this.columnNumber;
@@ -194,7 +193,30 @@ public class DotEnvReader
                                         continue;
                                     }
 
-                                    this.buffer.Remove(this.buffer.Length - 3, 3);
+                                    this.reader.Read();
+
+                                    j = this.reader.Peek();
+                                    if (j is '\r')
+                                    {
+                                        this.reader.Read();
+                                        j = this.reader.Peek();
+                                        if (j is '\n')
+                                        {
+                                            this.reader.Read();
+                                        }
+                                        else
+                                        {
+                                            this.buffer.Append(c, 3)
+                                                .Append('\r');
+                                            continue;
+                                        }
+                                    }
+                                    else if (j is not '\n')
+                                    {
+                                        this.buffer.Append(c, 3);
+                                        continue;
+                                    }
+
                                     this.capture = Capture.FrontMatter;
                                     this.multiLineNumber = this.lineNumber;
                                     this.multiLineColumn = this.columnNumber;
@@ -362,7 +384,7 @@ public class DotEnvReader
 
             case Capture.FrontMatter:
                 // likely yaml.
-                if (c == '-' && this.buffer[^1] == '\n' && this.reader.Peek() == '-')
+                if (c == '-' && (this.buffer.Length != 0 && this.buffer[^1] == '\n') && this.reader.Peek() == '-')
                 {
                     var d = (char)this.reader.Read();
 
@@ -371,6 +393,16 @@ public class DotEnvReader
                     {
                         this.buffer.Append(d);
                         return false;
+                    }
+
+                    // consume last dash
+                    this.reader.Read();
+
+                    // peek for end of line or end of file.
+                    d = (char)this.reader.Read();
+                    while (d is not char.MinValue and not char.MaxValue and not '\n')
+                    {
+                        d = (char)this.reader.Read();
                     }
 
                     this.capture = Capture.None;
