@@ -61,11 +61,13 @@ public static class EnvHelpers
         if (hb is null)
         {
             HandlebarsDotNet.Handlebars.RegisterHelper("env-value", GetEnvVariable);
+            HandlebarsDotNet.Handlebars.RegisterHelper("env", GetEnvVariable);
             HandlebarsDotNet.Handlebars.RegisterHelper("env-bool", GetEnvVariableAsBool);
             HandlebarsDotNet.Handlebars.RegisterHelper("env-expand", ExpandEnvVar);
             return;
         }
 
+        hb.RegisterHelper("env", GetEnvVariable);
         hb.RegisterHelper("env-value", GetEnvVariable);
         hb.RegisterHelper("env-bool", GetEnvVariableAsBool);
         hb.RegisterHelper("env-expand", ExpandEnvVar);

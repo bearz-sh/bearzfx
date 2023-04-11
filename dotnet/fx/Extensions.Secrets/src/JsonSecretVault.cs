@@ -11,8 +11,6 @@ public sealed class JsonSecretVault : SecretVault, IDisposable
 {
     private readonly IEncryptionProvider cipher;
 
-    private readonly IDisposable? disposableOptions;
-
     private readonly SemaphoreSlim syncLock = new(1, 1);
 
     private readonly ConcurrentDictionary<string, JsonSecretRecord> secrets = new();
@@ -198,7 +196,7 @@ public sealed class JsonSecretVault : SecretVault, IDisposable
         name = this.FormatName(name);
         var value = secret;
 
-        if (!this.secrets.TryGetValue(name, out var existing) || existing is null)
+        if (!this.secrets.TryGetValue(name, out var existing))
         {
            existing = new JsonSecretRecord(name);
            existing.WithCreatedAt(DateTime.UtcNow);
@@ -289,9 +287,6 @@ public sealed class JsonSecretVault : SecretVault, IDisposable
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (this.cipher is IDisposable disposable)
             disposable.Dispose();
-
-        if (this.disposableOptions is not null)
-            this.disposableOptions.Dispose();
     }
 
     private void Save()

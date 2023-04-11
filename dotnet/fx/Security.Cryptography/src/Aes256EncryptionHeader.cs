@@ -5,7 +5,7 @@ using Bearz.Text;
 namespace Bearz.Security.Cryptography;
 
 /// <summary>
-///
+/// The header for the AES256 encryption record.
 /// </summary>
 /// <remarks>
 /// <list type="bullet">
@@ -30,11 +30,10 @@ internal sealed class Aes256EncryptionHeader : IDisposable
 
     public short HashSaltSize { get; set; }
 
-
     public byte[] Salt { get; set; } = Array.Empty<byte>();
 
     public byte[] HashSalt { get; set; } = Array.Empty<byte>();
-    
+
     public KeyedHashAlgorithmType KeyedHashAlgorithmType { get; set; }
 
     // ReSharper disable once InconsistentNaming
