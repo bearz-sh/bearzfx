@@ -1,3 +1,4 @@
+// ReSharper disable VirtualMemberCallInConstructor
 namespace Bearz.Extensions.Secrets;
 
 public abstract class SecretRecord : ISecretRecord, ICloneable

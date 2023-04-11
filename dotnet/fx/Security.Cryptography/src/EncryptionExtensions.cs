@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+
+using Bearz.Text;
 
 namespace Bearz.Security.Cryptography;
 
@@ -39,5 +42,48 @@ public static class EncryptionExtensions
         }
 
         return diff == 0;
+    }
+
+    public static short HashSize(this KeyedHashAlgorithmType type)
+    {
+        switch (type)
+        {
+            case KeyedHashAlgorithmType.HMACSHA256:
+                return 32;
+            case KeyedHashAlgorithmType.HMACSHA384:
+                return 48;
+
+            case KeyedHashAlgorithmType.HMACSHA512:
+                return 64;
+
+            default:
+                throw new NotSupportedException($"Unsupported algorithm type {type}.");
+        }
+    }
+
+    public static string Encrypt(this IEncryptionProvider provider, string data, Encoding? encoding = null)
+    {
+        encoding ??= Encodings.Utf8NoBom;
+        var bytes = encoding.GetBytes(data);
+
+        var encrypted = provider.Encrypt(bytes);
+        var base64 = Convert.ToBase64String(encrypted);
+        Array.Clear(bytes, 0, bytes.Length);
+        Array.Clear(encrypted, 0, encrypted.Length);
+
+        return base64;
+    }
+
+    public static string Decrypt(this IEncryptionProvider provider, string encryptedData, Encoding? encoding = null)
+    {
+        encoding ??= Encodings.Utf8NoBom;
+        var bytes = Convert.FromBase64String(encryptedData);
+
+        var decrypted = provider.Decrypt(bytes);
+        var data = encoding.GetString(decrypted);
+        Array.Clear(bytes, 0, bytes.Length);
+        Array.Clear(decrypted, 0, decrypted.Length);
+
+        return data;
     }
 }

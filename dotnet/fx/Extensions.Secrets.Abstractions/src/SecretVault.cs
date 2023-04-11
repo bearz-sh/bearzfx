@@ -91,6 +91,7 @@ public abstract class SecretVault : ISecretVault
             if (char.IsWhiteSpace(c) || c is '_' or '.' or '/' or '\\' or ':')
             {
                 sb.Append('-');
+                continue;
             }
 
             throw new InvalidOperationException($"Cannot use character '{c}' in secret name.");

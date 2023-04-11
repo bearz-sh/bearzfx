@@ -90,9 +90,6 @@ namespace Bearz.Security.Cryptography
 #endif
         }
 
-        public static SymmetricAlgorithm CreateSymmetricAlgorithm(this SymmetricAlgorithmType type)
-            => CreateSymmetricAlgorithm(type.ToString());
-
         public static SymmetricAlgorithm CreateSymmetricAlgorithm(string symmetricAlgorithm)
         {
             if (symmetricAlgorithm is null)
