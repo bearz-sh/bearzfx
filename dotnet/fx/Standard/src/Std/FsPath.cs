@@ -6,7 +6,7 @@ using P = System.IO.Path;
 
 namespace Bearz.Std;
 
-public static partial class Path
+public static partial class FsPath
 {
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

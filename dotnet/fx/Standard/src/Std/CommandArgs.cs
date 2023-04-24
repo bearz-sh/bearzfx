@@ -29,6 +29,9 @@ public class CommandArgs : List<string>
 
     public bool Escape { get; set; } = true;
 
+    public static implicit operator CommandArgs(CommandArgsBuilder builder)
+        => builder.BuildArgs();
+
     public static implicit operator CommandArgs(string args)
         => From(args);
 
@@ -177,7 +180,7 @@ public class CommandArgs : List<string>
 
     public static CommandArgs From(ICommandArgsBuilder builder)
     {
-        return builder.Build();
+        return builder.BuildArgs();
     }
 
     public static CommandArgs From(StringBuilder builder)

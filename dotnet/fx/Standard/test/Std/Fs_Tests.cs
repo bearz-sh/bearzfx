@@ -1,12 +1,10 @@
 using Bearz.Std;
 
-using Path = Bearz.Std.Path;
-
 namespace Test.Std;
 
 public class Fs_Tests
 {
-    private static readonly string Csproj = Path.Combine(Util.StandardDir, "src", "Bearz.Standard.csproj");
+    private static readonly string Csproj = FsPath.Combine(Util.StandardDir, "src", "Bearz.Standard.csproj");
 
     [IntegrationTest]
     public void Verify_Attr(IAssert assert)
@@ -50,9 +48,9 @@ public class Fs_Tests
     [IntegrationTest]
     public void Verify_MakeAndDeleteDirectory(IAssert assert)
     {
-        var tmp = Path.TempDir();
-        var dir = Path.Combine(tmp, "foo", "bar");
-        var parent = Path.Dirname(dir)!;
+        var tmp = FsPath.TempDir();
+        var dir = FsPath.Combine(tmp, "foo", "bar");
+        var parent = FsPath.Dirname(dir)!;
         Fs.RemoveDirectory(parent, true);
         assert.False(Fs.DirectoryExists(dir));
         Fs.MakeDirectory(dir);
@@ -65,9 +63,9 @@ public class Fs_Tests
     [IntegrationTest]
     public void Verify_CopyDirectory(IAssert assert)
     {
-        var tmp = Path.TempDir();
-        var src = Path.Combine(Util.StandardDir);
-        var dst = Path.Combine(tmp, "dst");
+        var tmp = FsPath.TempDir();
+        var src = FsPath.Combine(Util.StandardDir);
+        var dst = FsPath.Combine(tmp, "dst");
         if (Fs.DirectoryExists(dst))
             Fs.RemoveDirectory(dst, true);
 
@@ -77,11 +75,11 @@ public class Fs_Tests
             Fs.CopyDirectory(src, dst, true, false);
 
             assert.True(Fs.DirectoryExists(dst));
-            assert.True(Fs.DirectoryExists(Path.Combine(dst)));
-            assert.True(Fs.DirectoryExists(Path.Combine(dst, "src")));
-            assert.True(Fs.DirectoryExists(Path.Combine(dst, "test")));
-            assert.True(Fs.DirectoryExists(Path.Combine(dst, "test", "Std")));
-            assert.True(Fs.FileExists(Path.Combine(dst, "test", "Std", "Fs_Tests.cs")));
+            assert.True(Fs.DirectoryExists(FsPath.Combine(dst)));
+            assert.True(Fs.DirectoryExists(FsPath.Combine(dst, "src")));
+            assert.True(Fs.DirectoryExists(FsPath.Combine(dst, "test")));
+            assert.True(Fs.DirectoryExists(FsPath.Combine(dst, "test", "Std")));
+            assert.True(Fs.FileExists(FsPath.Combine(dst, "test", "Std", "Fs_Tests.cs")));
         }
         finally
         {

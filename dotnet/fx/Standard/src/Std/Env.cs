@@ -95,7 +95,7 @@ static partial class Env
 
     public static string TempDir()
     {
-        return Path.TempDir();
+        return FsPath.TempDir();
     }
 
     public static string HomeConfigDir()
@@ -141,7 +141,7 @@ static partial class Env
         switch (folder)
         {
             case SpecialDirectory.Downloads:
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+                return FsPath.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
 
             case SpecialDirectory.HomeCache:
                 if (IsWindows())
@@ -150,7 +150,7 @@ static partial class Env
                 }
 
                 var cache = Env.Get("XDG_CACHE_HOME") ??
-                            Path.Combine(Env.Directory(SpecialDirectory.Home), ".cache");
+                            FsPath.Combine(Env.Directory(SpecialDirectory.Home), ".cache");
                 return cache;
 
             case SpecialDirectory.Mnt:

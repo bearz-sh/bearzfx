@@ -19,12 +19,12 @@ public static class EnvPath
 
         if (prepend)
         {
-            var newPath = $"{path}{Path.PathSeparator}{Get(target)}";
+            var newPath = $"{path}{FsPath.PathSeparator}{Get(target)}";
             Set(newPath, target);
         }
         else
         {
-            var newPath = $"{Get(target)}{Path.PathSeparator}{path}";
+            var newPath = $"{Get(target)}{FsPath.PathSeparator}{path}";
             Set(newPath, target);
         }
     }
@@ -33,7 +33,7 @@ public static class EnvPath
         => Environment.GetEnvironmentVariable(Key, target);
 
     public static string[] Split(EnvironmentVariableTarget target = EnvironmentVariableTarget.Process)
-            => (Get(target) ?? string.Empty).Split(new[] { Path.PathSeparator }, StringSplitOptions.RemoveEmptyEntries);
+            => (Get(target) ?? string.Empty).Split(new[] { FsPath.PathSeparator }, StringSplitOptions.RemoveEmptyEntries);
 
     public static void Set(string path, EnvironmentVariableTarget target = EnvironmentVariableTarget.Process)
     {
@@ -62,7 +62,7 @@ public static class EnvPath
         if (!InternalHas(path, paths))
             return;
 
-        var newPath = string.Join(Path.PathSeparator.ToString(), paths.Where(p => !p.Equals(path, StringComparison.OrdinalIgnoreCase)));
+        var newPath = string.Join(FsPath.PathSeparator.ToString(), paths.Where(p => !p.Equals(path, StringComparison.OrdinalIgnoreCase)));
         Set(newPath, target);
     }
 

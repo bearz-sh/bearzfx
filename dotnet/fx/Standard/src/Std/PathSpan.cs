@@ -59,15 +59,15 @@ public ref struct PathSpan
 
     public bool Exists()
     {
-        return Path.Exists(this);
+        return FsPath.Exists(this);
     }
 
     public ReadOnlySpan<char> Extension()
     {
 #if NETLEGACY
-        return Path.Extension(this.ToString()).AsSpan();
+        return FsPath.Extension(this.ToString()).AsSpan();
 #else
-        return Path.Extension(this);
+        return FsPath.Extension(this);
 #endif
     }
 
@@ -89,33 +89,33 @@ public ref struct PathSpan
 
     public PathSpan ChangeExtension(string extension)
     {
-        return Path.ChangeExtension(this, extension);
+        return FsPath.ChangeExtension(this, extension);
     }
 
     public PathSpan Dirname()
     {
 #if NETLEGACY
-        return new PathSpan(Path.Dirname(this.ToString()));
+        return new PathSpan(FsPath.Dirname(this.ToString()));
 #else
-        return Path.Dirname(this.span);
+        return FsPath.Dirname(this.span);
 #endif
     }
 
     public PathSpan Basename()
     {
 #if NETLEGACY
-        return new PathSpan(Path.Basename(this.ToString()));
+        return new PathSpan(FsPath.Basename(this.ToString()));
 #else
-        return Path.Basename(this.span);
+        return FsPath.Basename(this.span);
 #endif
     }
 
     public PathSpan BasenameWithoutExtension()
     {
 #if NETLEGACY
-        return new PathSpan(Path.BasenameWithoutExtension(this.ToString()));
+        return new PathSpan(FsPath.BasenameWithoutExtension(this.ToString()));
 #else
-        return Path.BasenameWithoutExtension(this.span);
+        return FsPath.BasenameWithoutExtension(this.span);
 #endif
     }
 
@@ -169,17 +169,17 @@ public ref struct PathSpan
         var path = this.span;
         var last = path[^1];
         var first1 = path1[0];
-        if (last == Path.DirectorySeparator || last == Path.AltDirectorySeparator)
+        if (last == FsPath.DirectorySeparator || last == FsPath.AltDirectorySeparator)
         {
             path = path.Slice(0, path.Length - 1);
         }
 
-        if (first1 == Path.DirectorySeparator || first1 == Path.AltDirectorySeparator)
+        if (first1 == FsPath.DirectorySeparator || first1 == FsPath.AltDirectorySeparator)
         {
             path1 = path1.Slice(1);
         }
 
-        path = path.Join(Path.DirectorySeparator, path1);
+        path = path.Join(FsPath.DirectorySeparator, path1);
         return new PathSpan(path);
     }
 
@@ -196,29 +196,29 @@ public ref struct PathSpan
         var first1 = path1[0];
         var last1 = path1[^1];
         var first2 = path2[0];
-        if (last == Path.DirectorySeparator || last == Path.AltDirectorySeparator)
+        if (last == FsPath.DirectorySeparator || last == FsPath.AltDirectorySeparator)
         {
             path = path.Slice(0, path.Length - 1);
         }
 
-        if (first1 == Path.DirectorySeparator || first1 == Path.AltDirectorySeparator)
+        if (first1 == FsPath.DirectorySeparator || first1 == FsPath.AltDirectorySeparator)
         {
-            if (last1 == Path.DirectorySeparator || last1 == Path.AltDirectorySeparator)
+            if (last1 == FsPath.DirectorySeparator || last1 == FsPath.AltDirectorySeparator)
                 path1 = path1.Slice(1, path1.Length - 2);
             else
                 path1 = path1.Slice(1);
         }
-        else if (last1 == Path.DirectorySeparator || last1 == Path.AltDirectorySeparator)
+        else if (last1 == FsPath.DirectorySeparator || last1 == FsPath.AltDirectorySeparator)
         {
             path1 = path1.Slice(0, path1.Length - 1);
         }
 
-        if (first2 == Path.DirectorySeparator || first2 == Path.AltDirectorySeparator)
+        if (first2 == FsPath.DirectorySeparator || first2 == FsPath.AltDirectorySeparator)
         {
             path2 = path2.Slice(1);
         }
 
-        path = path.Join(Path.DirectorySeparator, path1, path2);
+        path = path.Join(FsPath.DirectorySeparator, path1, path2);
         return new PathSpan(path);
     }
 
@@ -237,41 +237,41 @@ public ref struct PathSpan
         var first2 = path2[0];
         var last2 = path2[^1];
         var first3 = path3[0];
-        if (last == Path.DirectorySeparator || last == Path.AltDirectorySeparator)
+        if (last == FsPath.DirectorySeparator || last == FsPath.AltDirectorySeparator)
         {
             path = path.Slice(0, path.Length - 1);
         }
 
-        if (first1 == Path.DirectorySeparator || first1 == Path.AltDirectorySeparator)
+        if (first1 == FsPath.DirectorySeparator || first1 == FsPath.AltDirectorySeparator)
         {
-            if (last1 == Path.DirectorySeparator || last1 == Path.AltDirectorySeparator)
+            if (last1 == FsPath.DirectorySeparator || last1 == FsPath.AltDirectorySeparator)
                 path1 = path1.Slice(1, path1.Length - 2);
             else
                 path1 = path1.Slice(1);
         }
-        else if (last1 == Path.DirectorySeparator || last1 == Path.AltDirectorySeparator)
+        else if (last1 == FsPath.DirectorySeparator || last1 == FsPath.AltDirectorySeparator)
         {
             path1 = path1.Slice(0, path1.Length - 1);
         }
 
-        if (first2 == Path.DirectorySeparator || first2 == Path.AltDirectorySeparator)
+        if (first2 == FsPath.DirectorySeparator || first2 == FsPath.AltDirectorySeparator)
         {
-            if (last2 == Path.DirectorySeparator || last2 == Path.AltDirectorySeparator)
+            if (last2 == FsPath.DirectorySeparator || last2 == FsPath.AltDirectorySeparator)
                 path2 = path2.Slice(1, path2.Length - 2);
             else
                 path2 = path2.Slice(1);
         }
-        else if (last2 == Path.DirectorySeparator || last2 == Path.AltDirectorySeparator)
+        else if (last2 == FsPath.DirectorySeparator || last2 == FsPath.AltDirectorySeparator)
         {
             path1 = path1.Slice(0, path2.Length - 1);
         }
 
-        if (first3 == Path.DirectorySeparator || first3 == Path.AltDirectorySeparator)
+        if (first3 == FsPath.DirectorySeparator || first3 == FsPath.AltDirectorySeparator)
         {
             path3 = path3.Slice(1);
         }
 
-        path = path.Join(Path.DirectorySeparator, path1, path2, path3);
+        path = path.Join(FsPath.DirectorySeparator, path1, path2, path3);
         return new PathSpan(path);
     }
 
@@ -296,53 +296,53 @@ public ref struct PathSpan
         var first3 = path3[0];
         var last3 = path3[^1];
         var first4 = path4[0];
-        if (last == Path.DirectorySeparator || last == Path.AltDirectorySeparator)
+        if (last == FsPath.DirectorySeparator || last == FsPath.AltDirectorySeparator)
         {
             path = path.Slice(0, path.Length - 1);
         }
 
-        if (first1 == Path.DirectorySeparator || first1 == Path.AltDirectorySeparator)
+        if (first1 == FsPath.DirectorySeparator || first1 == FsPath.AltDirectorySeparator)
         {
-            if (last1 == Path.DirectorySeparator || last1 == Path.AltDirectorySeparator)
+            if (last1 == FsPath.DirectorySeparator || last1 == FsPath.AltDirectorySeparator)
                 path1 = path1.Slice(1, path1.Length - 2);
             else
                 path1 = path1.Slice(1);
         }
-        else if (last1 == Path.DirectorySeparator || last1 == Path.AltDirectorySeparator)
+        else if (last1 == FsPath.DirectorySeparator || last1 == FsPath.AltDirectorySeparator)
         {
             path1 = path1.Slice(0, path1.Length - 1);
         }
 
-        if (first2 == Path.DirectorySeparator || first2 == Path.AltDirectorySeparator)
+        if (first2 == FsPath.DirectorySeparator || first2 == FsPath.AltDirectorySeparator)
         {
-            if (last2 == Path.DirectorySeparator || last2 == Path.AltDirectorySeparator)
+            if (last2 == FsPath.DirectorySeparator || last2 == FsPath.AltDirectorySeparator)
                 path2 = path2.Slice(1, path2.Length - 2);
             else
                 path2 = path2.Slice(1);
         }
-        else if (last2 == Path.DirectorySeparator || last2 == Path.AltDirectorySeparator)
+        else if (last2 == FsPath.DirectorySeparator || last2 == FsPath.AltDirectorySeparator)
         {
             path1 = path1.Slice(0, path2.Length - 1);
         }
 
-        if (first3 == Path.DirectorySeparator || first3 == Path.AltDirectorySeparator)
+        if (first3 == FsPath.DirectorySeparator || first3 == FsPath.AltDirectorySeparator)
         {
-            if (last3 == Path.DirectorySeparator || last3 == Path.AltDirectorySeparator)
+            if (last3 == FsPath.DirectorySeparator || last3 == FsPath.AltDirectorySeparator)
                 path3 = path3.Slice(1, path3.Length - 2);
             else
                 path3 = path3.Slice(1);
         }
-        else if (last3 == Path.DirectorySeparator || last3 == Path.AltDirectorySeparator)
+        else if (last3 == FsPath.DirectorySeparator || last3 == FsPath.AltDirectorySeparator)
         {
             path3 = path3.Slice(0, path3.Length - 1);
         }
 
-        if (first4 == Path.DirectorySeparator || first4 == Path.AltDirectorySeparator)
+        if (first4 == FsPath.DirectorySeparator || first4 == FsPath.AltDirectorySeparator)
         {
             path4 = path4.Slice(1);
         }
 
-        path = path.Join(Path.DirectorySeparator, path1, path2, path3, path4);
+        path = path.Join(FsPath.DirectorySeparator, path1, path2, path3, path4);
         return new PathSpan(path);
     }
 

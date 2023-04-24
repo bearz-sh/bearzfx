@@ -29,7 +29,11 @@
 
   <PropertyGroup>
     <CoreFx>net7.0</CoreFx>
+   
     <CoreTestFx>$(CoreFx)</CoreTestFx>
+
+    <CoreLibFx>net6.0;$(CoreFx)</CoreLibFx>
+    <CoreLibTestFx>$(CoreLibFx)</CoreLibTestFx>
 
     <NetFx>net472</NetFx>
     <NetTestFx>$(NetFx)</NetTestFx>

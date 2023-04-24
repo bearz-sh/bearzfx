@@ -4,7 +4,6 @@ using System.Diagnostics;
 using Bearz.Extra.Strings;
 using Bearz.Std;
 
-using Path = Bearz.Std.Path;
 using Proc = System.Diagnostics.Process;
 using Process = Bearz.Std.Process;
 
@@ -124,12 +123,12 @@ public class VirtualProcess : IProcess
         if (string.IsNullOrWhiteSpace(command))
             throw new ArgumentNullException(nameof(command));
 
-        var rootName = Path.BasenameWithoutExtension(command);
+        var rootName = FsPath.BasenameWithoutExtension(command);
         if (useCache && ExecutableLocationCache.TryGetValue(rootName, out var location))
             return location;
 
 #if NETLEGACY
-        if (Path.IsPathRooted(command) && File.Exists(command))
+        if (FsPath.IsPathRooted(command) && File.Exists(command))
         {
             ExecutableLocationCache[command] = command;
             ExecutableLocationCache[rootName] = command;
@@ -137,7 +136,7 @@ public class VirtualProcess : IProcess
             return command;
         }
 #else
-        if (Path.IsPathFullyQualified(command) && File.Exists(command))
+        if (FsPath.IsPathFullyQualified(command) && File.Exists(command))
         {
             ExecutableLocationCache[command] = command;
             ExecutableLocationCache[rootName] = command;
@@ -208,7 +207,7 @@ public class VirtualProcess : IProcess
                         Debug.WriteLine(ex.ToString());
                     }
 
-                    var expandedPath = Path.Combine(pathSegment, command);
+                    var expandedPath = FsPath.Combine(pathSegment, command);
 
                     foreach (var match in matches)
                     {

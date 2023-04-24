@@ -9,7 +9,11 @@ namespace Bearz.Templating.Handlebars;
 
 public static class SecretHelper
 {
-    public static void GetSecretValue(ISecretVault vault, EncodedTextWriter writer, Context context, Arguments arguments)
+    public static void GetSecretValue(
+        ISecretVault vault,
+        EncodedTextWriter writer,
+        Context context,
+        Arguments arguments)
     {
         if (arguments.Length == 0)
             throw new InvalidOperationException("conf helper requires at least one argument");

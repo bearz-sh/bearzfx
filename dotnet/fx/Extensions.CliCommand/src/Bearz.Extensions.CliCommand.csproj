@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <LibFx Condition="$(LibFx) == ''">net7.0</LibFx>
+    <TargetFrameworks>$(LibFx)</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <RootNamespace>Bearz.Extensions.CliCommand</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags></PackageTags>
+    <Description>
+    Bearz.Extensions.CliCommand
+    </Description>
+    <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/CHANGELOG.md"))</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Standard\src\Bearz.Standard.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="$(InternalDir)/Runtime/Versioning/PlatformAttributes.cs" Link="PlatformAttributes.cs" />
+  </ItemGroup>
+</Project>

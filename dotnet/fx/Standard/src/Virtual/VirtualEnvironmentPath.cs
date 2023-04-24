@@ -33,11 +33,11 @@ public class VirtualEnvironmentPath : IEnvironmentPath
 
         if (prepend)
         {
-            this.Set($"{path}{Bearz.Std.Path.PathSeparator}{this.env.Get(this.key)}");
+            this.Set($"{path}{Bearz.Std.FsPath.PathSeparator}{this.env.Get(this.key)}");
         }
         else
         {
-            this.Set($"{this.env.Get(this.key)}{Bearz.Std.Path.PathSeparator}{path}");
+            this.Set($"{this.env.Get(this.key)}{Bearz.Std.FsPath.PathSeparator}{path}");
         }
     }
 
@@ -54,7 +54,7 @@ public class VirtualEnvironmentPath : IEnvironmentPath
                 continue;
 
             if (sb.Length > 0)
-                sb.Append(Bearz.Std.Path.PathSeparator);
+                sb.Append(Bearz.Std.FsPath.PathSeparator);
 
             sb.Append(p);
         }
@@ -94,5 +94,5 @@ public class VirtualEnvironmentPath : IEnvironmentPath
     }
 
     private IReadOnlyList<string> SplitPaths()
-        => this.Get().Split(new[] { Bearz.Std.Path.PathSeparator }, StringSplitOptions.RemoveEmptyEntries);
+        => this.Get().Split(new[] { Bearz.Std.FsPath.PathSeparator }, StringSplitOptions.RemoveEmptyEntries);
 }

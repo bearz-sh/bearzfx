@@ -120,7 +120,7 @@ public static partial class Fs
 
         foreach (FileInfo file in dir.GetFiles())
         {
-            string targetFilePath = Path.Combine(destinationDir, file.Name);
+            string targetFilePath = FsPath.Combine(destinationDir, file.Name);
             if (FileExists(targetFilePath))
             {
                 if (force)
@@ -140,7 +140,7 @@ public static partial class Fs
         DirectoryInfo[] dirs = dir.GetDirectories();
         foreach (DirectoryInfo subDir in dirs)
         {
-            string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+            string newDestinationDir = FsPath.Combine(destinationDir, subDir.Name);
             CopyDirectory(subDir.FullName, newDestinationDir, true, force);
         }
     }

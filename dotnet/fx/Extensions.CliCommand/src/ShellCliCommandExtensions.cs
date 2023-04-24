@@ -5,13 +5,12 @@ using System.Text;
 
 using Bearz.Diagnostics;
 using Bearz.Std;
-using Bearz.Text;
 
-namespace Bearz.Extra.Std;
+namespace Bearz.Extensions.CliCommand;
 
-public static class CommandExtensions
+public static class ShellCliCommandExtensions
 {
-    public static Command WithStdio(this Command command, Stdio stdio)
+    public static ShellCliCommand WithStdio(this ShellCliCommand command, Stdio stdio)
     {
         command.StartInfo.StdIn = stdio;
         command.StartInfo.StdOut = stdio;
@@ -19,50 +18,50 @@ public static class CommandExtensions
         return command;
     }
 
-    public static Command WithStdIn(this Command command, Stdio stdio)
+    public static ShellCliCommand WithStdIn(this ShellCliCommand command, Stdio stdio)
     {
         command.StartInfo.StdIn = stdio;
         return command;
     }
 
-    public static Command WithStdOut(this Command command, Stdio stdio)
+    public static ShellCliCommand WithStdOut(this ShellCliCommand command, Stdio stdio)
     {
         command.StartInfo.StdOut = stdio;
         return command;
     }
 
-    public static Command WithStdErr(this Command command, Stdio stdio)
+    public static ShellCliCommand WithStdErr(this ShellCliCommand command, Stdio stdio)
     {
         command.StartInfo.StdErr = stdio;
         return command;
     }
 
-    public static Command WithArgs(this Command command, params string[] args)
+    public static ShellCliCommand WithArgs(this ShellCliCommand command, params string[] args)
     {
         command.StartInfo.Args = args;
         return command;
     }
 
-    public static Command WithArgs(this Command command, IEnumerable<string> args)
+    public static ShellCliCommand WithArgs(this ShellCliCommand command, IEnumerable<string> args)
     {
         command.StartInfo.Args = new CommandArgs(args);
         return command;
     }
 
-    public static Command WithArgs(this Command command, CommandArgs args)
+    public static ShellCliCommand WithArgs(this ShellCliCommand command, CommandArgs args)
     {
         command.StartInfo.Args = args;
         return command;
     }
 
-    public static Command AsUser(this Command command, string user)
+    public static ShellCliCommand AsUser(this ShellCliCommand command, string user)
     {
         command.StartInfo.User = user;
         return command;
     }
 
     [SupportedOSPlatform("windows")]
-    public static Command AsUser(this Command command, string user, string password)
+    public static ShellCliCommand AsUser(this ShellCliCommand command, string user, string password)
     {
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             throw new PlatformNotSupportedException("Calling AsUser() with Password is only supported on Windows");
@@ -73,7 +72,7 @@ public static class CommandExtensions
     }
 
     [SupportedOSPlatform("windows")]
-    public static Command AsUser(this Command command, string user, string password, string domain)
+    public static ShellCliCommand AsUser(this ShellCliCommand command, string user, string password, string domain)
     {
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             throw new PlatformNotSupportedException("Calling AsUser() with Password is only supported on Windows");
@@ -85,7 +84,7 @@ public static class CommandExtensions
     }
 
     [SupportedOSPlatform("windows")]
-    public static Command AsUser(this Command command, string user, SecureString password)
+    public static ShellCliCommand AsUser(this ShellCliCommand command, string user, SecureString password)
     {
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             throw new PlatformNotSupportedException("Calling AsUser() with Password is only supported on Windows");
@@ -96,7 +95,7 @@ public static class CommandExtensions
     }
 
     [SupportedOSPlatform("windows")]
-    public static Command AsUser(this Command command, string user, SecureString password, string domain)
+    public static ShellCliCommand AsUser(this ShellCliCommand command, string user, SecureString password, string domain)
     {
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             throw new PlatformNotSupportedException("Calling AsUser() with Password is only supported on Windows");
@@ -108,7 +107,7 @@ public static class CommandExtensions
     }
 
     [SupportedOSPlatform("windows")]
-    public static unsafe Command AsUser(this Command command, string user, ReadOnlySpan<char> password, string domain)
+    public static unsafe ShellCliCommand AsUser(this ShellCliCommand command, string user, ReadOnlySpan<char> password, string domain)
     {
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             throw new PlatformNotSupportedException("Calling AsUser() with Password is only supported on Windows");
@@ -124,44 +123,44 @@ public static class CommandExtensions
         return command;
     }
 
-    public static Command AddArg(this Command command, string arg)
+    public static ShellCliCommand AddArg(this ShellCliCommand command, string arg)
     {
         command.StartInfo.Args.Add(arg);
         return command;
     }
 
-    public static Command AsSudo(this Command command)
+    public static ShellCliCommand AsSudo(this ShellCliCommand command)
     {
         command.StartInfo.Verb = "sudo";
         return command;
     }
 
-    public static Command AsAdmin(this Command command)
+    public static ShellCliCommand AsAdmin(this ShellCliCommand command)
     {
         command.StartInfo.Verb = "runas";
         return command;
     }
 
-    public static Command AsOsAdmin(this Command command)
+    public static ShellCliCommand AsOsAdmin(this ShellCliCommand command)
     {
         command.StartInfo.Verb = "admin";
         return command;
     }
 
-    public static Command WithVerb(this Command command, string verb)
+    public static ShellCliCommand WithVerb(this ShellCliCommand command, string verb)
     {
         command.StartInfo.Verb = verb;
         return command;
     }
 
-    public static Command AddEnv(this Command command, string key, string? value)
+    public static ShellCliCommand AddEnv(this ShellCliCommand command, string key, string? value)
     {
         command.StartInfo.Env ??= new Dictionary<string, string?>();
         command.StartInfo.Env[key] = value;
         return command;
     }
 
-    public static Command WithEnv(this Command command, IDictionary<string, string?> env)
+    public static ShellCliCommand WithEnv(this ShellCliCommand command, IDictionary<string, string?> env)
     {
         command.StartInfo.Env ??= new Dictionary<string, string?>();
         foreach (var kvp in env)
@@ -172,58 +171,58 @@ public static class CommandExtensions
         return command;
     }
 
-    public static Command WithShellExecute(this Command command, bool shellExecute = true)
+    public static ShellCliCommand WithShellExecute(this ShellCliCommand command, bool shellExecute = true)
     {
         command.StartInfo.UseShellExecute = shellExecute;
         return command;
     }
 
-    public static Command WithWindow(this Command command, bool createWindow = true)
+    public static ShellCliCommand WithWindow(this ShellCliCommand command, bool createWindow = true)
     {
         command.StartInfo.CreateNoWindow = !createWindow;
         return command;
     }
 
-    public static Command WithCwd(this Command command, string workingDirectory)
+    public static ShellCliCommand WithCwd(this ShellCliCommand command, string workingDirectory)
     {
         command.StartInfo.Cwd = workingDirectory;
         return command;
     }
 
-    public static Command WithWorkingDirectory(this Command command, string workingDirectory)
+    public static ShellCliCommand WithWorkingDirectory(this ShellCliCommand command, string workingDirectory)
         => WithCwd(command, workingDirectory);
 
-    public static Command RedirectTo(this Command command, IProcessCapture capture)
+    public static ShellCliCommand RedirectTo(this ShellCliCommand command, IProcessCapture capture)
     {
         command.StartInfo.RedirectTo(capture);
         return command;
     }
 
-    public static Command RedirectTo(this Command command, TextWriter writer)
+    public static ShellCliCommand RedirectTo(this ShellCliCommand command, TextWriter writer)
     {
         command.StartInfo.RedirectTo(new StreamCapture(writer));
         return command;
     }
 
-    public static Command RedirectTo(this Command command, FileInfo fileInfo, Encoding? encoding = null)
+    public static ShellCliCommand RedirectTo(this ShellCliCommand command, FileInfo fileInfo, Encoding? encoding = null)
     {
         command.StartInfo.RedirectTo(new StreamCapture(fileInfo, encoding ?? Encoding.UTF8));
         return command;
     }
 
-    public static Command RedirectTo(this Command command, IObserver<string> observer)
+    public static ShellCliCommand RedirectTo(this ShellCliCommand command, IObserver<string> observer)
     {
         command.StartInfo.RedirectTo(new ObserverCapture(observer));
         return command;
     }
 
-    public static Command RedirectTo(this Command command, Stream stream, Encoding? encoding = null, int bufferSize = 4096, bool leaveOpen = false)
+    public static ShellCliCommand RedirectTo(this ShellCliCommand command, Stream stream, Encoding? encoding = null, int bufferSize = 4096, bool leaveOpen = false)
     {
         command.StartInfo.RedirectTo(new StreamCapture(stream, encoding, bufferSize, leaveOpen));
         return command;
     }
 
-    public static Command RedirectTo(this Command command, Action<string, System.Diagnostics.Process> action, Action<System.Diagnostics.Process>? onComplete = null)
+    public static ShellCliCommand RedirectTo(this ShellCliCommand command, Action<string, System.Diagnostics.Process> action, Action<System.Diagnostics.Process>? onComplete = null)
     {
         if (action == null)
         {
@@ -234,49 +233,49 @@ public static class CommandExtensions
         return command;
     }
 
-    public static Command RedirectTo(this Command command, ICollection<string> collection)
+    public static ShellCliCommand RedirectTo(this ShellCliCommand command, ICollection<string> collection)
     {
         command.StartInfo.RedirectTo(new CollectionCapture(collection));
         return command;
     }
 
-    public static Command RedirectErrorTo(this Command command, IProcessCapture capture)
+    public static ShellCliCommand RedirectErrorTo(this ShellCliCommand command, IProcessCapture capture)
     {
         command.StartInfo.RedirectErrorTo(capture);
         return command;
     }
 
-    public static Command RedirectErrorTo(this Command command, TextWriter writer)
+    public static ShellCliCommand RedirectErrorTo(this ShellCliCommand command, TextWriter writer)
     {
         command.StartInfo.RedirectErrorTo(new StreamCapture(writer));
         return command;
     }
 
-    public static Command RedirectErrorTo(this Command command, FileInfo fileInfo, Encoding? encoding = null)
+    public static ShellCliCommand RedirectErrorTo(this ShellCliCommand command, FileInfo fileInfo, Encoding? encoding = null)
     {
         command.StartInfo.RedirectErrorTo(new StreamCapture(fileInfo, encoding ?? Encoding.UTF8));
         return command;
     }
 
-    public static Command RedirectErrorTo(this Command command, IObserver<string> observer)
+    public static ShellCliCommand RedirectErrorTo(this ShellCliCommand command, IObserver<string> observer)
     {
         command.StartInfo.RedirectErrorTo(new ObserverCapture(observer));
         return command;
     }
 
-    public static Command RedirectErrorTo(this Command command, Stream stream, Encoding? encoding = null, int bufferSize = 4096, bool leaveOpen = false)
+    public static ShellCliCommand RedirectErrorTo(this ShellCliCommand command, Stream stream, Encoding? encoding = null, int bufferSize = 4096, bool leaveOpen = false)
     {
         command.StartInfo.RedirectErrorTo(new StreamCapture(stream, encoding, bufferSize, leaveOpen));
         return command;
     }
 
-    public static Command RedirectErrorTo(this Command command, Action<string, System.Diagnostics.Process> action, Action<System.Diagnostics.Process>? onComplete = null)
+    public static ShellCliCommand RedirectErrorTo(this ShellCliCommand command, Action<string, System.Diagnostics.Process> action, Action<System.Diagnostics.Process>? onComplete = null)
     {
         command.StartInfo.RedirectErrorTo(new ActionCapture(action, onComplete));
         return command;
     }
 
-    public static Command RedirectErrorTo(this Command command, ICollection<string> collection)
+    public static ShellCliCommand RedirectErrorTo(this ShellCliCommand command, ICollection<string> collection)
     {
         command.StartInfo.RedirectErrorTo(new CollectionCapture(collection));
         return command;

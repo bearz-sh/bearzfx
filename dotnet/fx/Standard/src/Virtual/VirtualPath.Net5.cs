@@ -1,6 +1,5 @@
 #if NET5_0_OR_GREATER
 using P = System.IO.Path;
-using Path = Bearz.Std.Path;
 
 namespace Bearz.Virtual;
 

@@ -12,8 +12,6 @@ using Bearz.Extra.Strings;
 using Bearz.Std;
 using Bearz.Std.Unix;
 
-using Path = Bearz.Std.Path;
-
 namespace Bearz.PowerShell.Standard;
 
 [Cmdlet(VerbsLifecycle.Invoke, "Script")]
@@ -161,7 +159,7 @@ if((Test-Path -LiteralPath variable:LASTEXITCODE))
         }
 
         var tmpDir = System.IO.Path.GetTempPath();
-        var tmpFile = Path.Combine(tmpDir, $"{System.IO.Path.GetRandomFileName()}.{resolver.Extension}");
+        var tmpFile = FsPath.Combine(tmpDir, $"{System.IO.Path.GetRandomFileName()}.{resolver.Extension}");
         if (!System.IO.File.Exists(tmpFile))
         {
             System.IO.File.WriteAllText(tmpFile, script);

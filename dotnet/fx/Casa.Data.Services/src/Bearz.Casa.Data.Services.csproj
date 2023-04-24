@@ -1,0 +1,40 @@
+<!--suppress MsbuildTargetFrameworkTagInspection -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <CoreLibFx Condition="$(CoreLibFx) == ''">net7.0</CoreLibFx>
+    <TargetFrameworks>$(CoreLibFx)</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <RootNamespace>Bearz.Casa.Data.Services</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>Bearz</PackageTags>
+    <Description>
+    Bearz.Casa.Data.Services
+    </Description>
+    <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/CHANGELOG.md"))</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Casa.Data\src\Bearz.Casa.Data.csproj" />
+    <ProjectReference Include="..\..\Extensions.Secrets.Abstractions\src\Bearz.Extensions.Secrets.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Security.Cryptography\src\Bearz.Security.Cryptography.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+</Project>
