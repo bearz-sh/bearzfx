@@ -23,11 +23,13 @@ public class EvaluateTemplateTask
         this.Environments = set;
     }
 
-    public string Template { get; set; } = string.Empty;
+    public string TemplateDirectory { get; set; } = string.Empty;
 
     public string Environment { get; set; } = "default";
 
-    public bool Overwrite { get; set;  }
+    public bool Overwrite { get; set; }
+
+    public bool Import { get; set; }
 
     protected EnvironmentSet Environments { get; set; }
 
@@ -39,34 +41,42 @@ public class EvaluateTemplateTask
         this.handlebars.RegisterJsonHelpers();
 
         var env = this.Environments.GetOrCreate(this.Environment);
-        var templateDir = FsPath.Dirname(this.Template)!;
+        var templateDir = this.TemplateDirectory;
         var vault = new CasaSecretVault(env);
         this.handlebars.RegisterSecretHelpers(vault);
-        var casaStackConfigFile = FsPath.Join(this.Template, "casa.json");
+        var casaStackConfigFile = FsPath.Join(this.TemplateDirectory, "casa.json");
 
         var tempConfig = new ConfigurationBuilder()
             .AddJsonFile(casaStackConfigFile, true, false)
             .Build();
 
         var stackName = tempConfig.GetValue<string?>("compose:name");
-        stackName ??= FsPath.Basename(this.Template);
+        stackName ??= FsPath.Basename(this.TemplateDirectory);
 
         if (!this.Environment.EqualsIgnoreCase("default"))
             stackName = $"{stackName}-{this.Environment}";
 
-        var stackDirectory = FsPath.Join(Paths.ComposeDirectory, stackName);
-        var lockFile = FsPath.Join(Paths.ComposeDirectory, stackName, "lock.json");
+        var stackDirectory = this.TemplateDirectory;
+        if (this.Import)
+            stackDirectory = FsPath.Join(Paths.ComposeDirectory, stackName);
+
+        var lockFile = FsPath.Join(stackDirectory, "lock.json");
         if (File.Exists(lockFile))
             return Task.CompletedTask;
 
         var checksumFile = FsPath.Join(stackDirectory, "checksums.json");
         var checksums = new Dictionary<string, byte[]>();
-        var checksumEntries = JsonSerializer.Deserialize<List<ChecksumEntry>>(checksumFile);
-        if (checksumEntries is not null)
+        var checksumEntries = new List<ChecksumEntry>();
+        if (Fs.FileExists(checksumFile))
         {
-            foreach (var entry in checksumEntries)
+            var json2 = Fs.ReadTextFile(checksumFile);
+            checksumEntries = JsonSerializer.Deserialize<List<ChecksumEntry>>(json2);
+            if (checksumEntries is not null)
             {
-                checksums[entry.Path] = Convert.FromBase64String(entry.Checksum);
+                foreach (var entry in checksumEntries)
+                {
+                    checksums[entry.Path] = Convert.FromBase64String(entry.Checksum);
+                }
             }
         }
 
@@ -80,12 +90,12 @@ public class EvaluateTemplateTask
             FsPath.Join(Paths.UserConfigDirectory, "casa.yml"),
             FsPath.Join(Paths.UserConfigDirectory, $"casa.{this.Environment}.yaml"),
             FsPath.Join(Paths.UserConfigDirectory, $"casa.{this.Environment}.yml"),
-            FsPath.Join(templateDir, "casa", "casa.json"),
-            FsPath.Join(templateDir, "casa", $"casa.{this.Environment}.json"),
-            FsPath.Join(templateDir, "casa", "casa.yaml"),
-            FsPath.Join(templateDir, "casa", "casa.yml"),
-            FsPath.Join(templateDir, "casa", $"casa.{this.Environment}.yaml"),
-            FsPath.Join(templateDir, "casa", $"casa.{this.Environment}.yml"),
+            FsPath.Join(templateDir, "casa.json"),
+            FsPath.Join(templateDir, $"casa.{this.Environment}.json"),
+            FsPath.Join(templateDir, "casa.yaml"),
+            FsPath.Join(templateDir, "casa.yml"),
+            FsPath.Join(templateDir, $"casa.{this.Environment}.yaml"),
+            FsPath.Join(templateDir, $"casa.{this.Environment}.yml"),
         };
 
         var builder = new ConfigurationBuilder();
@@ -143,17 +153,35 @@ public class EvaluateTemplateTask
         var ignoreFile = new CasaIgnore(ignoreFiles);
 
         var directories = Directory.EnumerateDirectories(templateDir);
-
+        var sameRoot = templateDir.Equals(stackDirectory);
+        Console.WriteLine(templateDir);
+        Console.WriteLine(stackDirectory);
+        Console.WriteLine();
+        Console.WriteLine($"same root: {sameRoot}");
         foreach (var dir in directories)
         {
+            if (dir.Equals(this.TemplateDirectory))
+                continue;
+
             if (ignoreFile.IsMatch(dir))
                 continue;
 
-            var folderName = FsPath.Basename(dir);
-            var destDir = Path.Join(stackDirectory, folderName);
+            var destDir = dir;
+            if (!sameRoot)
+            {
+                var folderName = FsPath.Basename(dir);
+                destDir = Path.Join(stackDirectory, folderName);
+            }
+
+            Console.WriteLine(dir);
+            Console.WriteLine(destDir);
+            Console.WriteLine();
             this.RenderDirectory(dir, destDir, context, checksums, configChanged, this.Overwrite, ignoreFile);
         }
 
+        Console.WriteLine(templateDir);
+        Console.WriteLine(stackDirectory);
+        Console.WriteLine();
         this.RenderRootFiles(templateDir, stackDirectory, context, checksums, configChanged, this.Overwrite);
 
         checksumEntries ??= new List<ChecksumEntry>();
@@ -178,7 +206,7 @@ public class EvaluateTemplateTask
     }
 
     private void RenderRootFiles(
-        string stackDir,
+        string sourceDir,
         string destDir,
         Dictionary<string, object?> context,
         Dictionary<string, byte[]> checksums,
@@ -187,21 +215,21 @@ public class EvaluateTemplateTask
     {
         var composeFiles = new List<string>()
         {
-            Path.Combine(stackDir, $"{this.Environment}.compose.yml.hbs"),
-            Path.Combine(stackDir, $"{this.Environment}.compose.yaml.hbs"),
-            Path.Combine(stackDir, "compose.yml.hbs"),
-            Path.Combine(stackDir, "compose.yaml.hbs"),
-            Path.Combine(stackDir, $"{this.Environment}.docker-compose.yml.hbs"),
-            Path.Combine(stackDir, $"{this.Environment}.docker-compose.yaml.hbs"),
-            Path.Combine(stackDir, "docker-compose.yml.hbs"),
-            Path.Combine(stackDir, "docker-compose.yaml.hbs"),
+            Path.Combine(sourceDir, $"{this.Environment}.compose.yml.hbs"),
+            Path.Combine(sourceDir, $"{this.Environment}.compose.yaml.hbs"),
+            Path.Combine(sourceDir, "compose.yml.hbs"),
+            Path.Combine(sourceDir, "compose.yaml.hbs"),
+            Path.Combine(sourceDir, $"{this.Environment}.docker-compose.yml.hbs"),
+            Path.Combine(sourceDir, $"{this.Environment}.docker-compose.yaml.hbs"),
+            Path.Combine(sourceDir, "docker-compose.yml.hbs"),
+            Path.Combine(sourceDir, "docker-compose.yaml.hbs"),
         };
 
         var composeTemplate = composeFiles.FirstOrDefault(File.Exists);
         var envFiles = new List<string>()
         {
-            Path.Combine(stackDir, $"{this.Environment}.env.hbs"),
-            Path.Combine(stackDir, "env.hbs"),
+            Path.Combine(sourceDir, $"{this.Environment}.env.hbs"),
+            Path.Combine(sourceDir, ".env.hbs"),
         };
 
         envFiles = envFiles.Where(File.Exists).ToList();
@@ -216,12 +244,15 @@ public class EvaluateTemplateTask
             templates.AddRange(envFiles);
         }
 
+        foreach (var tpl in templates)
+            Console.WriteLine(tpl);
+
         if (templates.Count == 0)
             return;
 
         this.ProcessTemplates(
             templates,
-            stackDir,
+            sourceDir,
             destDir,
             context,
             checksums,
@@ -321,11 +352,24 @@ public class EvaluateTemplateTask
         using var sha256 = SHA256.Create();
         foreach (var template in templates)
         {
-            var relative = FsPath.RelativePath(sourceDir, template);
+            var sameDir = sourceDir.Equals(destDir);
+            Console.WriteLine();
+            Console.WriteLine(template);
+            Console.WriteLine(sourceDir);
+            Console.WriteLine(destDir);
+            string dest;
+            if (!sameDir)
+            {
+                var relative = FsPath.RelativePath(sourceDir, template);
 
-            // get rid of the .hbs extension
-            relative = relative.Substring(0, relative.Length - 4);
-            var dest = FsPath.Resolve(FsPath.Join(destDir, relative));
+                // get rid of the .hbs extension
+                relative = relative.Substring(0, relative.Length - 4);
+                dest = FsPath.Resolve(FsPath.Join(destDir, relative));
+            }
+            else
+            {
+                dest = template.Substring(0, template.Length - 4);
+            }
 
             var dir = FsPath.Dirname(dest)!;
 

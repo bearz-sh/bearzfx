@@ -121,3 +121,9 @@ uninstall-templates:
         $templatePath = (Resolve-Path $template).Path
         dotnet new -u $templatePath
     }
+    
+casa:
+     #!{{ shebang }}
+     $cwd = "{{ justfile_directory() }}"
+     $tpl = (Resolve-Path "$cwd/../../docker/mssql").Path
+     dotnet run --project Casa/src/Casa.csproj -- compose evaluate "$tpl" --overwrite

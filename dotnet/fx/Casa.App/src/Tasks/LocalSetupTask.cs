@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Security;
 using System.Text.Json;
 
+using Bearz.Casa.Data.Models;
 using Bearz.Extensions.CliCommand;
 using Bearz.Extensions.CliCommand.Age;
 using Bearz.Extra.Strings;
@@ -9,12 +10,18 @@ using Bearz.Secrets;
 using Bearz.Std;
 using Bearz.Std.Unix;
 
+using Microsoft.EntityFrameworkCore;
+
 using Process = System.Diagnostics.Process;
 
 namespace Bearz.Casa.App.Tasks;
 
 public class LocalSetupTask
 {
+    public bool SetupAge { get; set; }
+
+    public bool RunMigrations { get; set; }
+
     public Task RunAsync(CancellationToken cancellationToken)
     {
         var globalDirs = new List<string>()
@@ -34,13 +41,25 @@ public class LocalSetupTask
                 "Unable to create global directories. Please run casa as root");
         }
 
+        int x660 = (int)(UnixFileMode.GroupRead |
+                         UnixFileMode.GroupWrite |
+                         UnixFileMode.UserRead |
+                         UnixFileMode.UserWrite);
+
+        int x770 = (int)(UnixFileMode.GroupRead |
+                         UnixFileMode.GroupWrite |
+                         UnixFileMode.GroupExecute |
+                         UnixFileMode.UserRead |
+                         UnixFileMode.UserWrite |
+                         UnixFileMode.UserExecute);
+
         int userId = 0;
         if (Env.IsLinux() && UnixUser.EffectiveUserId.HasValue)
             userId = UnixUser.EffectiveUserId.Value;
 
         bool mustChown = Env.TryGet("SUDO_UID", out var uid) && int.TryParse(uid, out userId);
 
-        int casaGroupdId = 0;
+        int casaGroupId = 0;
         Dictionary<string, int> groups = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         if (!Env.IsWindows())
         {
@@ -50,13 +69,13 @@ public class LocalSetupTask
                 if (parts.Length != 4)
                     continue;
 
-                if (int.TryParse(parts[1], out var gid))
+                if (int.TryParse(parts[2], out var gid))
                 {
                     groups.Add(parts[0], gid);
                 }
             }
 
-            if (!groups.TryGetValue("casa", out casaGroupdId))
+            if (!groups.TryGetValue("casa", out casaGroupId))
             {
                 new Command("groupadd")
                     .WithArgs("casa")
@@ -76,14 +95,17 @@ public class LocalSetupTask
                     if (parts.Length != 4)
                         continue;
 
-                    if (int.TryParse(parts[1], out var gid))
+                    if (int.TryParse(parts[2], out var gid))
                     {
                         groups[parts[0]] = gid;
                         if (parts[0] == "casa")
-                            casaGroupdId = gid;
+                            casaGroupId = gid;
                     }
                 }
             }
+
+            if (casaGroupId == 0)
+                throw new InvalidOperationException("Unable to retrieve the id for the casa group");
         }
 
         foreach (var dir in globalDirs)
@@ -98,8 +120,8 @@ public class LocalSetupTask
                 {
                     if (!Env.IsWindows())
                     {
-                        Fs.Chown(dir, userId, casaGroupdId);
-                        Fs.Chmod(dir, 770);
+                        Fs.Chown(dir, 0, casaGroupId);
+                        Fs.Chmod(dir, x770);
                     }
                     else
                     {
@@ -113,6 +135,7 @@ public class LocalSetupTask
         {
             Paths.UserConfigDirectory,
             Paths.UserDataDirectory,
+            Path.Join(Paths.UserDataDirectory, "age"),
         };
 
         foreach (var dir in userDirectories)
@@ -120,7 +143,7 @@ public class LocalSetupTask
             if (!Fs.DirectoryExists(dir))
             {
                 Fs.MakeDirectory(dir);
-                if (mustChown)
+                if (!Env.IsWindows())
                 {
                     Fs.Chown(dir, userId, userId);
                 }
@@ -138,7 +161,47 @@ public class LocalSetupTask
             }
         }
 
-        var globalConfigFile = Path.Join(Paths.ConfigDirectory, "casa.config.json");
+        var globalConfigFile = Path.Join(Paths.ConfigDirectory, "casa.json");
+        var userConfigFile = Path.Join(Paths.UserConfigDirectory, "casa.json");
+        var encryptKeyFile = Path.Join(Paths.UserDataDirectory, "casa.key");
+        if (!Fs.FileExists(encryptKeyFile))
+        {
+            var key = new SecretGenerator()
+                .AddDefaults()
+                .GenerateAsBytes(40);
+
+            Fs.WriteFile(encryptKeyFile, key);
+            if (!Env.IsWindows())
+            {
+                Fs.Chown(encryptKeyFile, userId, userId);
+                Fs.Chmod(encryptKeyFile, x660);
+            }
+        }
+
+        var ageKeyFile = Path.Join(Paths.UserDataDirectory, "age", "default.key");
+        if (!Fs.FileExists(ageKeyFile))
+        {
+            var cmd = new AgeKeyGenCommand();
+            var age = cmd.Which();
+            if (!age.IsNullOrWhiteSpace())
+            {
+                cmd
+                    .WithArgs("-o", ageKeyFile)
+                    .WithStdio(Stdio.Inherit)
+                    .Output()
+                    .ThrowOnInvalidExitCode();
+
+                if (!Env.IsWindows())
+                {
+                    if (mustChown)
+                    {
+                        Fs.Chown(ageKeyFile, userId, userId);
+                    }
+
+                    Fs.Chmod(encryptKeyFile, x660);
+                }
+            }
+        }
 
         if (!Fs.FileExists(globalConfigFile))
         {
@@ -150,6 +213,16 @@ public class LocalSetupTask
 
             var cfg = new Dictionary<string, object?>()
             {
+                ["database"] = "sqlite",
+                ["env"] = new Dictionary<string, object?>
+                {
+                    ["default"] = "default",
+                },
+                ["sops"] = new Dictionary<string, object?>
+                {
+                    ["enabled"] = false,
+                    ["method"] = "age",
+                },
                 ["compose"] = new Dictionary<string, object?>()
                 {
                     ["variables"] = new Dictionary<string, object?>()
@@ -181,47 +254,77 @@ public class LocalSetupTask
             Fs.WriteTextFile(globalConfigFile, json);
         }
 
-        var encryptKeyFile = Path.Join(Paths.UserDataDirectory, "casa.key");
-        if (!Fs.FileExists(encryptKeyFile))
+        if (!Fs.FileExists(userConfigFile))
         {
-            var key = new SecretGenerator()
-                .AddDefaults()
-                .GenerateAsBytes(40);
+            if (Env.IsLinux() && !Env.IsUserElevated)
+            {
+                throw new SecurityException(
+                    "Unable to create global config file. Please run casa as root");
+            }
 
-            Fs.WriteFile(encryptKeyFile, key);
+            var cfg = new Dictionary<string, object?>()
+            {
+                ["database"] = "sqlite",
+                ["env"] = new Dictionary<string, object?>
+                {
+                    ["default"] = "default",
+                },
+                ["sops"] = new Dictionary<string, object?>
+                {
+                    ["enabled"] = false,
+                    ["method"] = "age",
+                },
+                ["age"] = new Dictionary<string, object?>
+                {
+                    ["default"] = Path.Join(Paths.UserDataDirectory, "age", "default.key"),
+                },
+                ["compose"] = new Dictionary<string, object?>()
+                {
+                    ["variables"] = new Dictionary<string, object?>()
+                    {
+                        ["dirs"] = new Dictionary<string, object>()
+                        {
+                            ["etc"] = "./etc",
+                            ["certs"] = "./certs",
+                            ["log"] = "./log",
+                            ["data"] = "./data",
+                            ["run"] = "./run",
+                            ["cache"] = "./cache",
+                            ["shared"] = Paths.SharedComposeDataDirectory,
+                        },
+                        ["tz"] = "America/Chicago",
+                        ["guid"] = "0",
+                        ["puid"] = "0",
+                        ["vnetName"] = "docker-vnet",
+                    },
+                },
+            };
+
+            var json = JsonSerializer.Serialize(cfg, new JsonSerializerOptions()
+            {
+                WriteIndented = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            });
+
+            Fs.WriteTextFile(userConfigFile, json);
             if (!Env.IsWindows())
             {
-                if (mustChown)
-                {
-                    Fs.Chown(encryptKeyFile, userId, userId);
-                }
-
-                Fs.Chmod(encryptKeyFile, 600);
+                Fs.Chown(userConfigFile, userId, userId);
             }
         }
 
-        var ageKeyFile = Path.Join(Paths.UserDataDirectory, "casa.age.key");
-        if (!Fs.FileExists(ageKeyFile))
+        if (this.RunMigrations)
         {
-            var cmd = new AgeCommand();
-            var age = cmd.Which();
-            if (!age.IsNullOrWhiteSpace())
+            var dbFile = Path.Join(Paths.UserDataDirectory, "casa.db");
+            var options = new DbContextOptionsBuilder<SqliteCasaDbContext>();
+            options.UseSqlite($"Data Source={dbFile}");
+            var db = new SqliteCasaDbContext(options.Options);
+            db.Database.Migrate();
+
+            if (!Env.IsWindows())
             {
-                AgeCommand.Create()
-                    .WithArgs("-o", ageKeyFile)
-                    .WithStdio(Stdio.Inherit)
-                    .Output()
-                    .ThrowOnInvalidExitCode();
-
-                if (!Env.IsWindows())
-                {
-                    if (mustChown)
-                    {
-                        Fs.Chown(ageKeyFile, userId, userId);
-                    }
-
-                    Fs.Chmod(encryptKeyFile, 600);
-                }
+                Fs.Chown(dbFile, userId, userId);
+                Fs.Chmod(dbFile, x660);
             }
         }
 
