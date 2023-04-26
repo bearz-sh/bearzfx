@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <LibFx Condition="$(CoreLibFx) == ''">net7.0</LibFx>
-    <TargetFrameworks>$(CoreLibFx)</TargetFrameworks>
+    <LibFx Condition="$(CoreFx) == ''">net7.0</LibFx>
+    <TargetFrameworks>$(CoreFx)</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>true</ImplicitUsings>
     <RootNamespace>Bearz.Casa.App</RootNamespace>

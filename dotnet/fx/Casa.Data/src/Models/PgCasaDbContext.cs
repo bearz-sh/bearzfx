@@ -8,4 +8,12 @@ public class PgCasaDbContext : CasaDbContext
         : base(options)
     {
     }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+            optionsBuilder.UseNpgsql();
+
+        base.OnConfiguring(optionsBuilder);
+    }
 }

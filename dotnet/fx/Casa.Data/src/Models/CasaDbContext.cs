@@ -13,6 +13,12 @@ public class CasaDbContext : DbContext
 
     public DbSet<Environment> Environments => this.Set<Environment>();
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSnakeCaseNamingConvention();
+        base.OnConfiguring(optionsBuilder);
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CasaDbContext).Assembly);

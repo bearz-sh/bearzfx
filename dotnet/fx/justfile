@@ -22,14 +22,14 @@ restore:
     dotnet restore $ENV:SLN
     exit $LASTEXITCODE
     
-new-migration MIGRATION:
+add-migration MIGRATION:
      #!{{ shebang }}
      $env:MIGRATION = "{{ MIGRATION }}"
      $cwd = "{{ justfile_directory() }}"
      $project = "$cwd/Casa.Data/src"
      dotnet-ef migrations add $ENV:MIGRATION -p $project --context CasaDbContext --output-dir Migrations/Sqlite -- sqlite
-     dotnet-ef migrations add $ENV:MIGRATION -p $project --context CasaDbContext --output-dir Migrations/Sqlite -- mssql
-     dotnet-ef migrations add $ENV:MIGRATION -p $project --context CasaDbContext --output-dir Migrations/Sqlite -- pg
+     dotnet-ef migrations add $ENV:MIGRATION -p $project --context CasaDbContext --output-dir Migrations/Mssql -- mssql
+     dotnet-ef migrations add $ENV:MIGRATION -p $project --context CasaDbContext --output-dir Migrations/Pg -- pg
 
 build PROJECT='': 
     #!{{ shebang }}

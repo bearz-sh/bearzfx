@@ -8,4 +8,12 @@ public class SqliteCasaDbContext : CasaDbContext
         : base(options)
     {
     }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+            optionsBuilder.UseSqlite("Data Source=casa.db");
+
+        base.OnConfiguring(optionsBuilder);
+    }
 }

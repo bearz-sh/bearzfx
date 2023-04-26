@@ -8,4 +8,12 @@ public class MssqlCasaDbContext : CasaDbContext
         : base(options)
     {
     }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+            optionsBuilder.UseSqlServer();
+
+        base.OnConfiguring(optionsBuilder);
+    }
 }

@@ -4,6 +4,10 @@ using System.CommandLine.Parsing;
 
 using Bearz.Extensions.Hosting.CommandLine;
 
+using Casa.Commands.Age;
+using Casa.Commands.MkCert;
+using Casa.Commands.Sops;
+
 using Microsoft.Extensions.Logging;
 
 using Serilog;
@@ -22,6 +26,10 @@ try
     var builder = new ConsoleApplicationBuilder();
 
     builder.UseDefaults();
+
+    builder.AddCommand(new AgeCommand());
+    builder.AddCommand(new MkCertCommand());
+    builder.AddCommand(new SopsCommand());
 
     var app = builder.Build();
 
