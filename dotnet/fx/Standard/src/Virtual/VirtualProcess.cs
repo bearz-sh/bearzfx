@@ -5,7 +5,6 @@ using Bearz.Extra.Strings;
 using Bearz.Std;
 
 using Proc = System.Diagnostics.Process;
-using Process = Bearz.Std.Process;
 
 // ReSharper disable ParameterHidesMember
 namespace Bearz.Virtual;
@@ -62,7 +61,7 @@ public class VirtualProcess : IProcess
 
     public void Kill(int pid)
     {
-        Process.Exit(pid);
+        Env.Process.Exit(pid);
     }
 
     public void Exit(int code)

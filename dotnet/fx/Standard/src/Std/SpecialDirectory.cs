@@ -216,7 +216,7 @@ public enum SpecialDirectory
     /// <summary>
     /// The cache directory.
     /// </summary>
-    Cache = 1003, // 0x000003EC
+    GlobalCache = 1003, // 0x000003EC
 
     /// <summary>
     /// The user's downloads folder.
@@ -226,5 +226,11 @@ public enum SpecialDirectory
     /// <summary>
     /// The users's cache directory.
     /// </summary>
-    HomeCache = 1051, // 0x000003EC
+    LocalCache = 1051, // 0x000003EC
+
+    GlobalApplicationData = 1062,
+
+    LocalLogs = 1070,
+
+    GlobalLogs = 1071,
 }

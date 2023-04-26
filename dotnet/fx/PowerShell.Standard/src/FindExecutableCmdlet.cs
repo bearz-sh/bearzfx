@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Management.Automation;
 
-using Process = Bearz.Std.Process;
+using Bearz.Std;
 
 namespace Bearz.PowerShell.Standard;
 
@@ -30,7 +30,7 @@ public class FindExecutableCmdlet : PSCmdlet
 
         foreach (var path in this.Executable)
         {
-            var result = Process.Which(path, this.PrependPaths, this.UseCache.ToBool());
+            var result = Env.Process.Which(path, this.PrependPaths, this.UseCache.ToBool());
             this.WriteObject(result);
         }
     }

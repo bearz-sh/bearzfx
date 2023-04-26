@@ -62,7 +62,7 @@ public class InvokeProcessCmdlet : PSCmdlet
         var args = this.Arguments;
         args ??= new CommandArgs();
 
-        var exe = Process.Which(this.Executable);
+        var exe = Env.Process.Which(this.Executable);
         if (exe is null)
             throw new NotFoundOnPathException(this.Executable);
 
@@ -113,7 +113,7 @@ public class InvokeProcessCmdlet : PSCmdlet
             ci.RedirectErrorTo(capture);
         }
 
-        var cmd = Process.CreateCommand(exe, ci);
+        var cmd = Env.Process.CreateCommand(exe, ci);
 
         this.WriteCommand(this.Executable, this.Arguments, this.CommandAction);
 

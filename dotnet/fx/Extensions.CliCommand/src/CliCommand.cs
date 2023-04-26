@@ -264,7 +264,7 @@ public abstract class CliCommand : CommandBase
             return this.Location;
         }
 
-        exe = Process.Which(this.Name, null, true);
+        exe = Env.Process.Which(this.Name, null, true);
         if (exe is not null)
         {
             this.Location = exe;

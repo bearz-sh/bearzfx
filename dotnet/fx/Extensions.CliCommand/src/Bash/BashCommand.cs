@@ -27,7 +27,7 @@ public class BashCommand : ShellCliCommand
         get
         {
             this.isWslBash ??= RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
-                               Process
+                               Env.Process
                                    .Which("bash")?
                                    .EqualsIgnoreCase("c:\\windows\\system32\\bash.exe") == true;
 

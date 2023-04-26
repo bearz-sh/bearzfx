@@ -37,7 +37,7 @@ public class TestUserIsInteractiveCmdlet : PSCmdlet
         {
             ModuleState.ShellInteractive = false;
         }
-        else if (Process.Argv.Any(o => o.EqualsIgnoreCase("-NonInteractive")))
+        else if (Env.Process.Argv.Any(o => o.EqualsIgnoreCase("-NonInteractive")))
         {
             ModuleState.ShellInteractive = false;
         }

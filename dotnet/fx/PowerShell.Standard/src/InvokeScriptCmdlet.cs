@@ -167,7 +167,7 @@ if((Test-Path -LiteralPath variable:LASTEXITCODE))
 
         try
         {
-            var exe = Process.Which(this.Shell);
+            var exe = Env.Process.Which(this.Shell);
             if (exe.IsNullOrWhiteSpace())
             {
                 this.ThrowTerminatingError(new NotFoundOnPathException(this.Shell));
@@ -230,7 +230,7 @@ if((Test-Path -LiteralPath variable:LASTEXITCODE))
                 ci.RedirectErrorTo(capture);
             }
 
-            var cmd = Process.CreateCommand(exe, ci);
+            var cmd = Env.Process.CreateCommand(exe, ci);
 
             var r = cmd.Output();
             if (r.ExitCode != 0)

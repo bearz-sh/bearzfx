@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <LibFx Condition="$(CoreLibFx) == ''">net7.0</LibFx>
+    <TargetFrameworks>$(CoreLibFx)</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <RootNamespace>Bearz.Casa.App</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags></PackageTags>
+    <Description>
+    Bearz.Casa.App
+    </Description>
+    <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/CHANGELOG.md"))</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Glob" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Serilog.Extensions.Hosting" />
+    <PackageReference Include="Serilog.Sinks.Console" />
+    <PackageReference Include="Serilog.Sinks.Debug" />
+    <PackageReference Include="Serilog.Sinks.File" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Casa.Data.Services\src\Bearz.Casa.Data.Services.csproj" />
+    <ProjectReference Include="..\..\Casa.Data\src\Bearz.Casa.Data.csproj" />
+    <ProjectReference Include="..\..\Extensions.CliCommand.Age\src\Bearz.Extensions.CliCommand.Age.csproj" />
+    <ProjectReference Include="..\..\Extensions.CliCommand.Docker\src\Bearz.Extensions.CliCommand.Docker.csproj" />
+    <ProjectReference Include="..\..\Extensions.CliCommand.MkCert\src\Bearz.Extensions.CliCommand.MkCert.csproj" />
+    <ProjectReference Include="..\..\Extensions.CliCommand.Sops\src\Bearz.Extensions.CliCommand.Sops.csproj" />
+    <ProjectReference Include="..\..\Extensions.CliCommand\src\Bearz.Extensions.CliCommand.csproj" />
+    <ProjectReference Include="..\..\Extensions.Secrets.Abstractions\src\Bearz.Extensions.Secrets.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Extensions.Secrets\src\Bearz.Extensions.Secrets.csproj" />
+    <ProjectReference Include="..\..\Security.Cryptography\src\Bearz.Security.Cryptography.csproj" />
+    <ProjectReference Include="..\..\Templating.Handlebars.Configuration\src\Bearz.Templating.Handlebars.Configuration.csproj" />
+    <ProjectReference Include="..\..\Templating.Handlebars.Secrets\src\Bearz.Templating.Handlebars.Secrets.csproj" />
+    <ProjectReference Include="..\..\Templating.Handlebars\src\Bearz.Templating.Handlebars.csproj" />
+    <ProjectReference Include="..\..\Templating\src\Bearz.Templating.csproj" />
+    <ProjectReference Include="..\..\Text.DotEnv\src\Bearz.Text.DotEnv.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\newtonsoft.json\13.0.1\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

@@ -88,6 +88,93 @@ static partial class Env
         return path ?? Environment.GetFolderPath((Environment.SpecialFolder)directory, option);
     }
 
+    public static string Directory(SpecialDirectory folder, string appName)
+    {
+        switch (folder)
+        {
+            case SpecialDirectory.Etc:
+                if (Env.IsWindows())
+                {
+                    return Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                        appName,
+                        "etc");
+                }
+
+                return Path.Combine("/etc", appName);
+
+            case SpecialDirectory.LocalCache:
+                if (Env.IsWindows())
+                {
+                    return Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                        appName,
+                        "cache");
+                }
+
+                var cache = Env.Get("XDG_CACHE_HOME");
+                if (cache is null)
+                    cache = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache");
+
+                return Path.Combine(cache, appName);
+
+            case SpecialDirectory.GlobalCache:
+                if (Env.IsWindows())
+                {
+                    return Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                        appName,
+                        "cache");
+                }
+
+                return Path.Combine("/var/cache", appName);
+
+            case SpecialDirectory.Opt:
+                if (Env.IsWindows())
+                {
+                    return Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), appName);
+                }
+
+                return Path.Combine("/opt", appName);
+
+            case SpecialDirectory.GlobalApplicationData:
+                if (Env.IsWindows())
+                {
+                    return Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                        appName,
+                        "data");
+                }
+
+                return Path.Combine("/var/lib", appName);
+
+            case SpecialDirectory.LocalLogs:
+                return Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    appName,
+                    "log");
+
+            case SpecialDirectory.GlobalLogs:
+                if (Env.IsWindows())
+                {
+                    return Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                        appName,
+                        "log");
+                }
+
+                return Path.Combine("/var/log", appName);
+
+            case SpecialDirectory.Null:
+                throw new InvalidOperationException("Null folder can't be used to storage application data");
+
+            default:
+                var dir = Directory(folder);
+                return Path.Combine(dir, appName);
+        }
+    }
+
     public static string HomeDir()
     {
         return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -143,14 +230,19 @@ static partial class Env
             case SpecialDirectory.Downloads:
                 return FsPath.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
 
-            case SpecialDirectory.HomeCache:
+            case SpecialDirectory.Home:
+                return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+            case SpecialDirectory.LocalCache:
                 if (IsWindows())
                 {
                     return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
                 }
 
-                var cache = Env.Get("XDG_CACHE_HOME") ??
-                            FsPath.Combine(Env.Directory(SpecialDirectory.Home), ".cache");
+                var cache = Env.Get("XDG_CACHE_HOME");
+                if (cache is null)
+                    cache = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache");
+
                 return cache;
 
             case SpecialDirectory.Mnt:
@@ -159,8 +251,13 @@ static partial class Env
             case SpecialDirectory.Null:
                 return IsWindows() ? "NUL" : "/dev/null";
 
-            case SpecialDirectory.Cache:
-                return IsWindows() ? Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) : "/var/cache";
+            case SpecialDirectory.GlobalApplicationData:
+                return IsWindows()
+                    ? Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
+                    : "/var/lib";
+
+            case SpecialDirectory.GlobalCache:
+                return IsWindows() ? Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) : "/var/cache";
 
             case SpecialDirectory.Opt:
                 return IsWindows() ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) : "/opt";

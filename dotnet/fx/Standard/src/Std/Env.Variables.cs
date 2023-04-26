@@ -40,6 +40,15 @@ static partial class Env
         return result;
     }
 
+    public static string GetRequired(string name, EnvironmentVariableTarget target = EnvironmentVariableTarget.Process)
+    {
+        var value = Environment.GetEnvironmentVariable(name, target);
+        if (value is null)
+            throw new InvalidOperationException("Unable to find environment variable: " + name);
+
+        return value;
+    }
+
     public static bool Has(string name, EnvironmentVariableTarget target = EnvironmentVariableTarget.Process)
     {
         return Environment.GetEnvironmentVariable(name, target) != null;
