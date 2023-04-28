@@ -5,7 +5,7 @@ using Bearz.Extra.Strings;
 using Bearz.Std;
 using Bearz.Text;
 
-namespace Bearz.Extensions.CliCommand;
+namespace Bearz.Cli;
 
 public abstract class ReflectionCommandArgsBuilder : CommandArgsBuilder
 {

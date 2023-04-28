@@ -1,7 +1,8 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
 
-using Bearz.Extensions.CliCommand;
+using Bearz.Cli;
+using Bearz.Cli.MkCert;
 using Bearz.Extensions.Hosting.CommandLine;
 
 namespace Casa.Commands.MkCert;
@@ -19,7 +20,7 @@ public class UninstallCommandHandler : ICommandHandler
 {
     public int Invoke(InvocationContext context)
     {
-        var result = Bearz.Extensions.CliCommand.MkCert.MkCertCli.Create()
+        var result = MkCertCli.Create()
             .WithArgs("-Uninstall")
             .WithStdio(Bearz.Std.Stdio.Inherit)
             .Output();
@@ -30,7 +31,7 @@ public class UninstallCommandHandler : ICommandHandler
     public async Task<int> InvokeAsync(InvocationContext context)
     {
         var cts = context.GetCancellationToken();
-        var cmd = Bearz.Extensions.CliCommand.MkCert.MkCertCli.Create()
+        var cmd = MkCertCli.Create()
             .WithArgs("-Uninstall")
             .WithStdio(Bearz.Std.Stdio.Inherit);
 

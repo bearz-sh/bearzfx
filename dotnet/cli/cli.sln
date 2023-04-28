@@ -1,0 +1,80 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cli.Core", "Cli.Core", "{8A0FF17D-D499-4B92-B904-42E7F072C764}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Cli.Core", "Cli.Core\src\Bearz.Cli.Core.csproj", "{C5616DCE-BB78-4036-B008-1365B2DEEE84}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cli.Age", "Cli.Age", "{8AEEF4A7-38EF-4B76-9E37-4D83B78947C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Cli.Age", "Cli.Age\src\Bearz.Cli.Age.csproj", "{69C4A14C-A71A-4471-9734-7126E1628F9A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cli.Sops", "Cli.Sops", "{AE4CF827-0703-4213-9B93-531A7E161CCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Cli.Sops", "Cli.Sops\src\Bearz.Cli.Sops.csproj", "{141C06ED-A9E2-4AC8-A538-E6BBC9A7CF40}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cli.MkCert", "Cli.MkCert", "{A2C9406A-8571-4F53-AA8F-7EEF695E82CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Cli.MkCert", "Cli.MkCert\src\Bearz.Cli.MkCert.csproj", "{C5A1621F-8D4C-4EC8-8628-7693B3E3402E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cli.Docker", "Cli.Docker", "{7304519E-0F34-4E28-8CE2-AB53084E6774}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Cli.Docker", "Cli.Docker\src\Bearz.Cli.Docker.csproj", "{0889F227-3E0E-4993-9AFF-EA0C0EE1E987}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{E484502E-BD07-4957-B4E2-EFC90B4378AB}"
+	ProjectSection(SolutionItems) = preProject
+		..\Directory.Build.props = ..\Directory.Build.props
+		..\Directory.Build.targets = ..\Directory.Build.targets
+		..\Directory.Packages.props = ..\Directory.Packages.props
+		..\LICENSE.md = ..\LICENSE.md
+		..\omnisharp.json = ..\omnisharp.json
+		..\README.md = ..\README.md
+		..\version.json = ..\version.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".project", ".project", "{075E7FAF-7B78-4F56-B6BC-27CD3C9AC43D}"
+	ProjectSection(SolutionItems) = preProject
+		justfile = justfile
+		omnisharp.json = omnisharp.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5616DCE-BB78-4036-B008-1365B2DEEE84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5616DCE-BB78-4036-B008-1365B2DEEE84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5616DCE-BB78-4036-B008-1365B2DEEE84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5616DCE-BB78-4036-B008-1365B2DEEE84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69C4A14C-A71A-4471-9734-7126E1628F9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69C4A14C-A71A-4471-9734-7126E1628F9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69C4A14C-A71A-4471-9734-7126E1628F9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69C4A14C-A71A-4471-9734-7126E1628F9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{141C06ED-A9E2-4AC8-A538-E6BBC9A7CF40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{141C06ED-A9E2-4AC8-A538-E6BBC9A7CF40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{141C06ED-A9E2-4AC8-A538-E6BBC9A7CF40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{141C06ED-A9E2-4AC8-A538-E6BBC9A7CF40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5A1621F-8D4C-4EC8-8628-7693B3E3402E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5A1621F-8D4C-4EC8-8628-7693B3E3402E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5A1621F-8D4C-4EC8-8628-7693B3E3402E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5A1621F-8D4C-4EC8-8628-7693B3E3402E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0889F227-3E0E-4993-9AFF-EA0C0EE1E987}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0889F227-3E0E-4993-9AFF-EA0C0EE1E987}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0889F227-3E0E-4993-9AFF-EA0C0EE1E987}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0889F227-3E0E-4993-9AFF-EA0C0EE1E987}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C5616DCE-BB78-4036-B008-1365B2DEEE84} = {8A0FF17D-D499-4B92-B904-42E7F072C764}
+		{69C4A14C-A71A-4471-9734-7126E1628F9A} = {8AEEF4A7-38EF-4B76-9E37-4D83B78947C1}
+		{141C06ED-A9E2-4AC8-A538-E6BBC9A7CF40} = {AE4CF827-0703-4213-9B93-531A7E161CCC}
+		{C5A1621F-8D4C-4EC8-8628-7693B3E3402E} = {A2C9406A-8571-4F53-AA8F-7EEF695E82CE}
+		{0889F227-3E0E-4993-9AFF-EA0C0EE1E987} = {7304519E-0F34-4E28-8CE2-AB53084E6774}
+	EndGlobalSection
+EndGlobal

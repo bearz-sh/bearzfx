@@ -30,11 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Templating.Handlebars\src\Bearz.Templating.Handlebars.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="NetEscapades.Configuration.Yaml" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
-    <PackageReference Include="NetEscapades.Configuration.Yaml" />
+    <ProjectReference Include="..\..\Handlebars.Helpers\src\Bearz.Handlebars.Helpers.csproj" />
   </ItemGroup>
 </Project>

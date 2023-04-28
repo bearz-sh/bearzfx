@@ -1,6 +1,6 @@
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand.Deno;
+namespace Bearz.Cli.Deno;
 
 public class DenoCli : ShellCliCommand
 {

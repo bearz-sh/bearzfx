@@ -1,6 +1,6 @@
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand.Ruby;
+namespace Bearz.Cli.Ruby;
 
 public class RubyCli : ShellCliCommand
 {

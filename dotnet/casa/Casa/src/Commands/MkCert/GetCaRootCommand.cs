@@ -1,7 +1,7 @@
 using System.CommandLine.Invocation;
 
-using Bearz.Extensions.CliCommand;
-using Bearz.Extensions.CliCommand.MkCert;
+using Bearz.Cli;
+using Bearz.Cli.MkCert;
 using Bearz.Std;
 
 using Spectre.Console;

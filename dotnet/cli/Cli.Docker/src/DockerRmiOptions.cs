@@ -1,4 +1,4 @@
-namespace Bearz.Extensions.CliCommand.Docker;
+namespace Bearz.Cli.Docker;
 
 public enum DockerRmiOptions
 {

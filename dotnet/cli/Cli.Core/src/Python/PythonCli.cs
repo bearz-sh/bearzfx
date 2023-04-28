@@ -1,6 +1,6 @@
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand.Python;
+namespace Bearz.Cli.Python;
 
 public class PythonCli : ShellCliCommand
 {

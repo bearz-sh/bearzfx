@@ -4,7 +4,7 @@ using Bearz.Extra.Strings;
 
 using HandlebarsDotNet;
 
-namespace Bearz.Templates.Handlebars;
+namespace Bearz.Handlebars.Helpers;
 
 internal static class ArgumentExtensions
 {

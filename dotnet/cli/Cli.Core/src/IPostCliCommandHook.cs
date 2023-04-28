@@ -1,6 +1,6 @@
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand;
+namespace Bearz.Cli;
 
 public interface IPostCliCommandHook
 {

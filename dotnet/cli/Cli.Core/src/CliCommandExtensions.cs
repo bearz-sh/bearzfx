@@ -6,7 +6,7 @@ using System.Text;
 using Bearz.Diagnostics;
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand;
+namespace Bearz.Cli;
 
 public static class CliCommandExtensions
 {

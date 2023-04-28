@@ -1,4 +1,4 @@
-namespace Bearz.Extensions.CliCommand.MkCert;
+namespace Bearz.Cli.MkCert;
 
 public class MkCertArgs : ReflectionCommandArgsBuilder
 {

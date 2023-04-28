@@ -1,6 +1,6 @@
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand.Pwsh;
+namespace Bearz.Cli.Pwsh;
 
 public class PwshCli : ShellCliCommand
 {

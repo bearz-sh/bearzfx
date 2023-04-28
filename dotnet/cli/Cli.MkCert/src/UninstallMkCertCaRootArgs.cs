@@ -1,6 +1,6 @@
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand.MkCert;
+namespace Bearz.Cli.MkCert;
 
 public class UninstallMkCertCaRootArgs : CommandArgsBuilder
 {

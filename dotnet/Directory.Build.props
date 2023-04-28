@@ -22,6 +22,9 @@
     <LangVersion>preview</LangVersion>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <FxDir>$(MSBuildThisFileDirectory)fs</FxDir>
+    <CliDir>$(MSBuildThisFileDirectory)cli</CliDir>
+    <HandlebarsDir>$(MSBuildThisFileDirectory)handlebars</HandlebarsDir>
   </PropertyGroup>
 
   <ItemGroup>

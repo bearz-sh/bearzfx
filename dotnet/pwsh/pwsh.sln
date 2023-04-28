@@ -3,6 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PowerShell", "PowerShell", "{ADA13AA8-F641-4A6B-B693-F494AC205798}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.PowerShell", "PowerShell\src\Bearz.PowerShell.csproj", "{D964D1C4-BFE6-4C20-B0D4-B7B6A1B7592A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PowerShell.Standard", "PowerShell.Standard", "{6BC3B2D1-3359-47DD-8D45-A749A15AD2E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.PowerShell.Standard", "PowerShell.Standard\src\Bearz.PowerShell.Standard.csproj", "{17DCAA6F-D1D0-4A52-9F99-CD864A8D8252}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{98A8929A-ADD2-491C-B27D-1B527C9B40ED}"
+	ProjectSection(SolutionItems) = preProject
+		..\Directory.Build.props = ..\Directory.Build.props
+		..\Directory.Build.targets = ..\Directory.Build.targets
+		..\Directory.Packages.props = ..\Directory.Packages.props
+		..\LICENSE.md = ..\LICENSE.md
+		..\omnisharp.json = ..\omnisharp.json
+		..\README.md = ..\README.md
+		..\version.json = ..\version.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".project", ".project", "{02DAADA5-17C3-4ABB-8C40-24520DE4DCA2}"
+	ProjectSection(SolutionItems) = preProject
+		justfile = justfile
+		omnisharp.json = omnisharp.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -10,5 +35,19 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D964D1C4-BFE6-4C20-B0D4-B7B6A1B7592A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D964D1C4-BFE6-4C20-B0D4-B7B6A1B7592A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D964D1C4-BFE6-4C20-B0D4-B7B6A1B7592A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D964D1C4-BFE6-4C20-B0D4-B7B6A1B7592A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17DCAA6F-D1D0-4A52-9F99-CD864A8D8252}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17DCAA6F-D1D0-4A52-9F99-CD864A8D8252}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17DCAA6F-D1D0-4A52-9F99-CD864A8D8252}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17DCAA6F-D1D0-4A52-9F99-CD864A8D8252}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D964D1C4-BFE6-4C20-B0D4-B7B6A1B7592A} = {ADA13AA8-F641-4A6B-B693-F494AC205798}
+		{17DCAA6F-D1D0-4A52-9F99-CD864A8D8252} = {6BC3B2D1-3359-47DD-8D45-A749A15AD2E6}
 	EndGlobalSection
 EndGlobal

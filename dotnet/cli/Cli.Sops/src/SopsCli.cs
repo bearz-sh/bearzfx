@@ -1,6 +1,6 @@
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand.Sops;
+namespace Bearz.Cli.Sops;
 
 public class SopsCli : CliCommand
 {

@@ -1,7 +1,8 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
 
-using Bearz.Extensions.CliCommand;
+using Bearz.Cli;
+using Bearz.Cli.MkCert;
 using Bearz.Extensions.Hosting.CommandLine;
 
 using Spectre.Console;
@@ -21,7 +22,7 @@ public class InstallCommandHandler : ICommandHandler
 {
     public int Invoke(InvocationContext context)
     {
-        var cmd = Bearz.Extensions.CliCommand.MkCert.MkCertCli.Create();
+        var cmd = MkCertCli.Create();
         var path = cmd.Which();
         if (string.IsNullOrWhiteSpace(path))
         {
@@ -39,7 +40,7 @@ public class InstallCommandHandler : ICommandHandler
 
     public async Task<int> InvokeAsync(InvocationContext context)
     {
-        var cmd = Bearz.Extensions.CliCommand.MkCert.MkCertCli.Create();
+        var cmd = MkCertCli.Create();
         var path = cmd.Which();
         if (string.IsNullOrWhiteSpace(path))
         {

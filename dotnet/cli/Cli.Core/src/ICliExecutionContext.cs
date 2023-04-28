@@ -1,6 +1,6 @@
 using Bearz.Virtual;
 
-namespace Bearz.Extensions.CliCommand;
+namespace Bearz.Cli;
 
 public interface ICliExecutionContext
 {

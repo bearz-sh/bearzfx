@@ -1,6 +1,6 @@
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand;
+namespace Bearz.Cli;
 
 public abstract class ShellCliCommand : CliCommand
 {
@@ -13,7 +13,7 @@ public abstract class ShellCliCommand : CliCommand
         ["bash"] = typeof(Bash.BashCli),
         ["sh"] = typeof(Sh.ShCli),
         ["pwsh"] = typeof(Pwsh.PwshCli),
-        ["powershell"] = typeof(PowerShell.PowerShellCommand),
+        ["powershell"] = typeof(PowerShell.PowerShellCli),
         ["cmd"] = typeof(WinCmd.WinCmdCli),
     };
 

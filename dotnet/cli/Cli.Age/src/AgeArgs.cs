@@ -3,7 +3,7 @@ using Bearz.Std;
 
 using FluentBuilder;
 
-namespace Bearz.Extensions.CliCommand.Age;
+namespace Bearz.Cli.Age;
 
 [AutoGenerateBuilder]
 public class AgeArgs : ReflectionCommandArgsBuilder

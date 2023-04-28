@@ -5,14 +5,14 @@
     <TargetFrameworks>$(LibFx)</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>true</ImplicitUsings>
-    <RootNamespace>Bearz.Extensions.CliCommand.Sops</RootNamespace>
+    <RootNamespace>Bearz.Cli.Age</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags></PackageTags>
+    <PackageTags>bearz age cli</PackageTags>
     <Description>
-    Bearz.Extensions.CliCommand.Sops
+    Interact with the Age cli with dotnet.
     </Description>
     <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/CHANGELOG.md"))</PackageReleaseNotes>
   </PropertyGroup>
@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Extensions.CliCommand\src\Bearz.Extensions.CliCommand.csproj" />
+    <ProjectReference Include="..\..\Cli.Core\src\*.csproj" />
   </ItemGroup>
 
   <ItemGroup>

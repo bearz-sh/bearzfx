@@ -11,11 +11,12 @@
     <ProjectReference Include="..\..\Casa.App\src\Bearz.Casa.App.csproj" />
     <ProjectReference Include="..\..\Casa.Data.Services\src\Bearz.Casa.Data.Services.csproj" />
     <ProjectReference Include="..\..\Casa.Data\src\Bearz.Casa.Data.csproj" />
-    <ProjectReference Include="..\..\Extensions.Hosting.CommandLine\src\Bearz.Extensions.Hosting.CommandLine.csproj" />
+    
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Spectre.Console" />
+    <PackageReference Include="Bearz.Extensions.Hosting.CommandLine" />
   </ItemGroup>
 
 </Project>

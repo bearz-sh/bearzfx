@@ -1,6 +1,6 @@
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand.Age;
+namespace Bearz.Cli.Age;
 
 public class AgeCli : CliCommand
 {

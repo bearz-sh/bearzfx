@@ -1,6 +1,6 @@
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand.Sh;
+namespace Bearz.Cli.Sh;
 
 public class ShCli : ShellCliCommand
 {

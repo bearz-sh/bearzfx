@@ -2,7 +2,7 @@ using Bearz.Std;
 
 using FluentBuilder;
 
-namespace Bearz.Extensions.CliCommand.MkCert;
+namespace Bearz.Cli.MkCert;
 
 [AutoGenerateBuilder]
 public class NewMkCertArgs : ReflectionCommandArgsBuilder

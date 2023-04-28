@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Handlebars.Helpers", "Handlebars.Helpers", "{F0057668-75F8-4304-BD06-8AEA5331F6C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Handlebars.Helpers", "Handlebars.Helpers\src\Bearz.Handlebars.Helpers.csproj", "{7389E8F0-01B0-4A35-99CA-86AF24284D20}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Handlebars.Helpers.Configuration", "Handlebars.Helpers.Configuration", "{EFB4D515-E172-4D1E-9F93-8D577A68F789}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Handlebars.Helpers.Configuration", "Handlebars.Helpers.Configuration\src\Bearz.Handlebars.Helpers.Configuration.csproj", "{0BE5DAFE-5B52-4852-9431-74738422CFE7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Handlebars.Helpers.Secrets", "Handlebars.Helpers.Secrets", "{FD30C877-3D87-4F61-94FA-86842A5718B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.Handlebars.Helpers.Secrets", "Handlebars.Helpers.Secrets\src\Bearz.Handlebars.Helpers.Secrets.csproj", "{732FA23B-E5EF-424E-B399-C5D79979017F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{174348A4-046C-4C16-92B1-8BE22704A5B4}"
+	ProjectSection(SolutionItems) = preProject
+		..\Directory.Build.props = ..\Directory.Build.props
+		..\Directory.Build.targets = ..\Directory.Build.targets
+		..\Directory.Packages.props = ..\Directory.Packages.props
+		..\LICENSE.md = ..\LICENSE.md
+		..\omnisharp.json = ..\omnisharp.json
+		..\README.md = ..\README.md
+		..\version.json = ..\version.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".project", ".project", "{66AABD1C-EEF4-45DD-99F9-5D2BC36FABA0}"
+	ProjectSection(SolutionItems) = preProject
+		justfile = justfile
+		omnisharp.json = omnisharp.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7389E8F0-01B0-4A35-99CA-86AF24284D20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7389E8F0-01B0-4A35-99CA-86AF24284D20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7389E8F0-01B0-4A35-99CA-86AF24284D20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7389E8F0-01B0-4A35-99CA-86AF24284D20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BE5DAFE-5B52-4852-9431-74738422CFE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BE5DAFE-5B52-4852-9431-74738422CFE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BE5DAFE-5B52-4852-9431-74738422CFE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BE5DAFE-5B52-4852-9431-74738422CFE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{732FA23B-E5EF-424E-B399-C5D79979017F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{732FA23B-E5EF-424E-B399-C5D79979017F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{732FA23B-E5EF-424E-B399-C5D79979017F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{732FA23B-E5EF-424E-B399-C5D79979017F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7389E8F0-01B0-4A35-99CA-86AF24284D20} = {F0057668-75F8-4304-BD06-8AEA5331F6C3}
+		{0BE5DAFE-5B52-4852-9431-74738422CFE7} = {EFB4D515-E172-4D1E-9F93-8D577A68F789}
+		{732FA23B-E5EF-424E-B399-C5D79979017F} = {FD30C877-3D87-4F61-94FA-86842A5718B3}
+	EndGlobalSection
+EndGlobal

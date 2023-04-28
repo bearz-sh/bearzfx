@@ -1,6 +1,6 @@
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand.NodeJs;
+namespace Bearz.Cli.NodeJs;
 
 public class NodeJsCli : ShellCliCommand
 {

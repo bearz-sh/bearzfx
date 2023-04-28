@@ -2,8 +2,8 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Diagnostics.CodeAnalysis;
 
-using Bearz.Extensions.CliCommand;
-using Bearz.Extensions.CliCommand.MkCert;
+using Bearz.Cli;
+using Bearz.Cli.MkCert;
 using Bearz.Extra.Strings;
 using Bearz.Std;
 

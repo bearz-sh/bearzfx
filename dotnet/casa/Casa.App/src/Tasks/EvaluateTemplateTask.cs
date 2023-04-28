@@ -6,19 +6,20 @@ using System.Text.Json;
 using Bearz.Casa.App.Services;
 using Bearz.Casa.Data.Services;
 using Bearz.Extra.Strings;
+using Bearz.Handlebars.Helpers;
 using Bearz.Std;
-using Bearz.Templates.Handlebars;
-using Bearz.Templating.Handlebars;
 
 using HandlebarsDotNet;
 
 using Microsoft.Extensions.Configuration;
 
+using Hb = HandlebarsDotNet.Handlebars;
+
 namespace Bearz.Casa.App.Tasks;
 
 public class EvaluateTemplateTask
 {
-    private readonly IHandlebars handlebars = Handlebars.Create();
+    private readonly IHandlebars handlebars = Hb.Create();
 
     public EvaluateTemplateTask(EnvironmentSet set)
     {

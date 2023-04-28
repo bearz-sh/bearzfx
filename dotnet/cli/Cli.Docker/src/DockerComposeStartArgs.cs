@@ -2,7 +2,7 @@ using Bearz.Std;
 
 using FluentBuilder;
 
-namespace Bearz.Extensions.CliCommand.Docker;
+namespace Bearz.Cli.Docker;
 
 [AutoGenerateBuilder(true)]
 public class DockerComposeStartArgs : DockerComposeArgs

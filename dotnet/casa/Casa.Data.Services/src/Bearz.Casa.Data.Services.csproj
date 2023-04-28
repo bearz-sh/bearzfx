@@ -30,11 +30,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Casa.Data\src\Bearz.Casa.Data.csproj" />
-    <ProjectReference Include="..\..\Extensions.Secrets.Abstractions\src\Bearz.Extensions.Secrets.Abstractions.csproj" />
-    <ProjectReference Include="..\..\Security.Cryptography\src\Bearz.Security.Cryptography.csproj" />
+
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Bearz.Security.Cryptography" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Bearz.Extensions.Secrets.Abstractions" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 using Bearz.Extra.Strings;
 using Bearz.Std;
 
-using DotNet.Globbing;
+using GlobExpressions;
 
 namespace Bearz.Casa.App.Services;
 
@@ -29,7 +29,7 @@ public class CasaIgnore
                 if (line.IsNullOrWhiteSpace())
                     continue;
 
-                var g = Glob.Parse($"{parentDir}{FsPath.DirectorySeparator}{line}");
+                var g = new Glob($"{parentDir}{FsPath.DirectorySeparator}{line}");
                 this.ignorePatterns.Add(g);
             }
         }

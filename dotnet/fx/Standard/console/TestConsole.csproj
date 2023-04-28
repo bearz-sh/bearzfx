@@ -11,7 +11,7 @@
   
   <PropertyGroup>
     <TempDir>$([System.IO.Path]::GetTempPath())</TempDir>
-    <TempDir>$(TempDir)/bearz-test-console\</TempDir>
+    <TempDir>$(TempDir)/bearz-test-console</TempDir>
     
   </PropertyGroup>
   

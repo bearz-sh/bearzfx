@@ -5,6 +5,12 @@
   <ItemGroup>
     <PackageVersion Include="AltCover" Version="8.6.14" />
     <PackageVersion Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.2" />
+    <PackageVersion Include="Bearz.Extensions.Secrets.Abstractions" Version="0.1.0-build.32" />
+    <PackageVersion Include="Bearz.Extensions.Secrets" Version="0.1.0-build.32" />
+    <PackageVersion Include="Bearz.Security.Cryptography" Version="0.1.0-build.32" />
+    <PackageVersion Include="Bearz.Extensions.Hosting.CommandLine" Version="0.1.0-build.32" />
+    <PackageVersion Include="Bearz.Text.DotEnv" Version="0.1.0-build.32" />
+    <PackageVersion Include="Bearz.Standard" Version="0.1.0-build.32" />
     <PackageVersion Include="ClosedXML" Version="0.100.3" />
     <PackageVersion Include="CloudFlare.Client" Version="6.1.4" />
     <PackageVersion Include="EFCore.NamingConventions" Version="7.0.0" />

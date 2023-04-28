@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using Bearz.Extra.Strings;
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand.Bash;
+namespace Bearz.Cli.Bash;
 
 public class BashCli : ShellCliCommand
 {

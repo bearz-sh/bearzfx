@@ -4,7 +4,7 @@ using Bearz.Diagnostics;
 using Bearz.Extra.Strings;
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand;
+namespace Bearz.Cli;
 
 public abstract class CliCommand : CommandBase
 {

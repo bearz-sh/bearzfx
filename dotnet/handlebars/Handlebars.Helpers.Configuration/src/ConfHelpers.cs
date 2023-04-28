@@ -5,7 +5,7 @@ using HandlebarsDotNet;
 
 using Microsoft.Extensions.Configuration;
 
-namespace Bearz.Templating.Handlebars;
+namespace Bearz.Handlebars.Helpers;
 
 public static class ConfHelpers
 {

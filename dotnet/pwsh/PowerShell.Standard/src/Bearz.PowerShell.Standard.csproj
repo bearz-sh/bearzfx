@@ -13,6 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="LICENSE.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\PowerShell\src\Bearz.PowerShell.csproj" />
   </ItemGroup>
 

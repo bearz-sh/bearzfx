@@ -1,6 +1,6 @@
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand.Docker;
+namespace Bearz.Cli.Docker;
 
 public class DockerComposeRestartArgs : DockerComposeArgs
 {

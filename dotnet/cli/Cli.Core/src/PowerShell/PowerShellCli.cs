@@ -1,11 +1,10 @@
-using Bearz.Extensions.CliCommand.Pwsh;
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand.PowerShell;
+namespace Bearz.Cli.PowerShell;
 
-public class PowerShellCommand : ShellCliCommand
+public class PowerShellCli : ShellCliCommand
 {
-    public PowerShellCommand(ICliExecutionContext? context = null, CommandStartInfo? startInfo = null)
+    public PowerShellCli(ICliExecutionContext? context = null, CommandStartInfo? startInfo = null)
         : base("powershell", context, startInfo)
     {
         if (!Env.IsWindows())
@@ -19,10 +18,10 @@ public class PowerShellCommand : ShellCliCommand
 
     public override string Extension => ".ps1";
 
-    public static PwshCli Create()
+    public static PowerShellCli Create()
         => new();
 
-    public static PwshCli Create(CommandStartInfo startInfo)
+    public static PowerShellCli Create(CommandStartInfo startInfo)
         => new(null, startInfo);
 
     protected override CommandArgs GenerateScriptArgs(string tempFile)

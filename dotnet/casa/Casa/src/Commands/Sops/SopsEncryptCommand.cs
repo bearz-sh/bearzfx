@@ -1,11 +1,6 @@
 using System.CommandLine.Invocation;
 using System.Diagnostics.CodeAnalysis;
 
-using Bearz.Casa.App;
-using Bearz.Extensions.CliCommand;
-using Bearz.Extra.Strings;
-using Bearz.Std;
-
 using Spectre.Console;
 
 namespace Casa.Commands.Sops;

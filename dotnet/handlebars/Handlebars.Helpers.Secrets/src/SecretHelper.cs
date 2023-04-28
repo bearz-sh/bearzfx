@@ -5,7 +5,7 @@ using Bearz.Templates.Handlebars;
 
 using HandlebarsDotNet;
 
-namespace Bearz.Templating.Handlebars;
+namespace Bearz.Handlebars.Helpers;
 
 public static class SecretHelper
 {

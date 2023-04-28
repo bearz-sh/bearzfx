@@ -1,8 +1,8 @@
 using System.CommandLine.Invocation;
 using System.Diagnostics.CodeAnalysis;
 
-using Bearz.Extensions.CliCommand;
-using Bearz.Extensions.CliCommand.Age;
+using Bearz.Cli;
+using Bearz.Cli.Age;
 using Bearz.Extra.Strings;
 using Bearz.Std;
 

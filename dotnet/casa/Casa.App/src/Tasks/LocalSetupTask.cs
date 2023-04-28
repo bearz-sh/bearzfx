@@ -3,8 +3,8 @@ using System.Security;
 using System.Text.Json;
 
 using Bearz.Casa.Data.Models;
-using Bearz.Extensions.CliCommand;
-using Bearz.Extensions.CliCommand.Age;
+using Bearz.Cli;
+using Bearz.Cli.Age;
 using Bearz.Extra.Strings;
 using Bearz.Secrets;
 using Bearz.Std;

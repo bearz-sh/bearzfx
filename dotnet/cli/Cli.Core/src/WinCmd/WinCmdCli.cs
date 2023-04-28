@@ -1,6 +1,6 @@
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand.WinCmd;
+namespace Bearz.Cli.WinCmd;
 
 public class WinCmdCli : ShellCliCommand
 {

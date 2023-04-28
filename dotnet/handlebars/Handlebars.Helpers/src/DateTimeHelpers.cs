@@ -2,7 +2,7 @@ using System.Globalization;
 
 using HandlebarsDotNet;
 
-namespace Bearz.Templates.Handlebars;
+namespace Bearz.Handlebars.Helpers;
 
 public static class DateTimeHelpers
 {

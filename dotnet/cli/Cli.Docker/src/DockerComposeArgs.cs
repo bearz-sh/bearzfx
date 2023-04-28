@@ -1,7 +1,7 @@
 using Bearz.Extra.Strings;
 using Bearz.Std;
 
-namespace Bearz.Extensions.CliCommand.Docker;
+namespace Bearz.Cli.Docker;
 
 public abstract class DockerComposeArgs : ReflectionCommandArgsBuilder
 {

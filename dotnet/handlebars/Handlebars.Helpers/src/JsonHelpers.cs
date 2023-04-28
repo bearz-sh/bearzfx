@@ -3,7 +3,7 @@ using System.Text.Json;
 
 using HandlebarsDotNet;
 
-namespace Bearz.Templates.Handlebars;
+namespace Bearz.Handlebars.Helpers;
 
 public static class JsonHelpers
 {

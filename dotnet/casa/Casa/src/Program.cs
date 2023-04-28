@@ -12,12 +12,11 @@ using Casa.Commands.MkCert;
 using Casa.Commands.Sops;
 
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 using Serilog;
 using Serilog.Events;
 
-var loggerConfig = new Serilog.LoggerConfiguration().
+var loggerConfig = new LoggerConfiguration().
     Filter.ByExcluding(e =>
         e.Properties.ContainsKey("SourceContext") &&
         e.Properties["SourceContext"].ToString().StartsWith("Microsoft"))
@@ -27,7 +26,7 @@ var appLog = loggerConfig.CreateLogger();
 
 try
 {
-    var builder = new ConsoleApplicationBuilder();
+    var builder = new CommandLineApplicationBuilder();
 
     builder.Configuration.AddJsonFile(
         Path.Join(Paths.ConfigDirectory, "casa.json"), true, false);

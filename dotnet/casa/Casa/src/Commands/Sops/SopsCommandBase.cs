@@ -3,8 +3,8 @@ using System.CommandLine.Invocation;
 using System.Diagnostics.CodeAnalysis;
 
 using Bearz.Casa.App;
-using Bearz.Extensions.CliCommand;
-using Bearz.Extensions.CliCommand.Sops;
+using Bearz.Cli;
+using Bearz.Cli.Sops;
 using Bearz.Extra.Strings;
 using Bearz.Std;
 
