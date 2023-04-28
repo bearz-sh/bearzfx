@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>test-console</AssemblyName>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <TempDir>$([System.IO.Path]::GetTempPath())</TempDir>
+    <TempDir>$(TempDir)/bearz-test-console\</TempDir>
+    
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <BinDir Include="bin\**\test-console*" />
+  </ItemGroup>
+  
+  <Target Name="AfterBuild2" AfterTargets="Build">
+    <RemoveDir Directories="$(TempDir)" ContinueOnError="true" />
+    <MakeDir Directories="$(TempDir)"/>
+    <Message Text="Copying to $(TempDir)" Importance="high" />
+    <Message Text="Copying @(BinDir)" Importance="high" />
+    <Copy SourceFiles="@(BinDir)" DestinationFolder="$(TempDir)" />
+  </Target>
+</Project>

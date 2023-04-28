@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Casa.App\src\Bearz.Casa.App.csproj" />
+    <ProjectReference Include="..\..\Casa.Data.Services\src\Bearz.Casa.Data.Services.csproj" />
+    <ProjectReference Include="..\..\Casa.Data\src\Bearz.Casa.Data.csproj" />
+    <ProjectReference Include="..\..\Extensions.Hosting.CommandLine\src\Bearz.Extensions.Hosting.CommandLine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Spectre.Console" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,70 @@
+name: fx
+
+env:
+  ROOT_DIR: "${{ github.workspace }}/dotnet/fx"
+  DOTNET_CONFIGURATION: "RELEASE"
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    paths:
+      - "dotnet/fx"
+      - ".github/workflows/fx.yaml"
+
+jobs: 
+  build:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: "${{ env.ROOT_DIR }}"
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+
+          - os: ubuntu-latest
+
+          - os: windows-latest
+
+    steps:
+      - name: ⬇️ Install Just
+        uses: extractions/setup-just@v1
+
+      - name: ⬇️ Sparse checkout
+        working-directory: ${{ github.workspace }}
+        shell: bash
+        run: |
+          REPO="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          BRANCH="${GITHUB_REF/#refs\/heads\//}"
+
+          # Following code is based on logs of actions/checkout@v, with sparseCheckout stuff inserted in the middle
+          echo "Syncing repository: $GITHUB_REPOSITORY"
+          echo "Working directory is '$(pwd)' GITHUB_WORKSPACE=$GITHUB_WORKSPACE BRANCH=$BRANCH"
+          git version
+          git init $GITHUB_WORKSPACE
+          git remote add origin https://github.com/$GITHUB_REPOSITORY
+          git config --local gc.auto 0
+          # Now interesting part
+          git config core.sparseCheckout true
+
+          # Add here contents of sparse-checkout line by line
+          echo "/dotnet/" >> .git/info/sparse-checkout
+          echo "!/dotnet/*/" >> .git/info/sparse-checkout
+          echo "/dotnet/fx/" >> .git/info/sparse-checkout
+          # echo ... 
+          git -c protocol.version=2 fetch --no-tags --prune --progress --depth=10 origin +${GITHUB_SHA}:refs/remotes/origin/${BRANCH}
+          git checkout --progress --force -B $BRANCH refs/remotes/origin/$BRANCH
+
+      - name: "Ls"
+        shell: bash 
+        run: ls 
+
+      - name: ♻️ Restore
+        run: just restore
+
+      - name: 🏭 Build
+        run: just build
+
+      - name: 🧪 Test
+        run: just test

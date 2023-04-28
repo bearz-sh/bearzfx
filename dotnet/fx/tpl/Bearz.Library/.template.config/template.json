@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Bearz.Dev",
+    "classifications": [
+        "Bearz",
+        "Library"
+    ],
+    "description": "Generates a C# class library that uses a property to define target frameworks",
+    "identity": "Bearz.Library",
+    "name": "Bearz Class Library",
+    "shortName": "bearz-lib",
+    "sourceName": "Bearz.Library",
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    }
+}

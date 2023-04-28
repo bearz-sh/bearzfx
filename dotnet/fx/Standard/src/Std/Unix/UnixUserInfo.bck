@@ -1,0 +1,16 @@
+namespace Bearz.Std.Unix;
+
+public struct UnixUserInfo
+{
+    public string? Name { get; set; }
+
+    public string? Password { get; set; }
+
+    public int UserId { get; set; }
+
+    public int GroupId { get; set; }
+
+    public string? HomeDirectory { get; set; }
+
+    public string? Shell { get; set; }
+}
