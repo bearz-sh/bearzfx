@@ -2,16 +2,17 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     
   <PropertyGroup>
-    <BaseRepoUrl>https://github.com/Bearzdev/Bearz/</BaseRepoUrl>
-    <BaseTreeUrl>https://github.com/Bearzdev/Bearz/tree/main/Bearz-dotnet</BaseTreeUrl>
+    <BaseRepoUrl>https://github.com/bearz-sh/bearzfx</BaseRepoUrl>
+    <BaseTreeUrl>https://github.com/bearz-sh/bearzfx/tree/dev/dotnet/fx</BaseTreeUrl>
   </PropertyGroup> 
   <PropertyGroup>
     <Company>Bearz.Dev</Company>
     <Version>0.1.0</Version>
-    <Copyright>©️ 2010-2021 Bearz.Dev</Copyright>
-    <RepositoryUrl>https://github.com/Bearzdev/Bearz.git</RepositoryUrl> 
+    <Copyright>©️ 2010-2021 Bearz.sh</Copyright>
+    <RepositoryUrl>$(BaseTreeUrl)</RepositoryUrl> 
     <RepositoryType>git</RepositoryType> 
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Icon>$(MSBuildThisFileDirectory)../assets/logo.png</Icon>
     
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>7</AnalysisLevel>
@@ -21,6 +22,10 @@
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(Icon)" Pack="true" PackagePath="/" />
+  </ItemGroup>
 
   <!-- Warnings that should be enabled for releasing to the web -->
   <PropertyGroup>

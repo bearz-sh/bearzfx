@@ -9,6 +9,8 @@ root_dir := justfile_directory()
 export ROOT_DIR := root_dir
 export DOTNET_CONFIGURATION := env_var_or_default("DOTNET_CONFIGURATION", "DEBUG")
 export SLN := root_dir + "/" + sln
+export ARTIFACTS_DIR := root_dir + "/.artifacts"
+export PACKAGES_DIR := root_dir + "/.artifacts/packages"
 
 set dotenv-load
 
@@ -64,6 +66,16 @@ test PROJECT='':
      Write-Host $p 
 
     dotnet test $p --no-build --no-restore
+    exit $LASTEXITCODE
+
+pack-local: 
+    #!{{ shebang }}
+    dotnet pack $ENV:SLN --configuration $ENV:DOTNET_CONFIGURATION -o $ENV:PACKAGES_DIR
+    exit $LASTEXITCODE
+
+pack: 
+    #!{{ shebang }}
+    dotnet pack $ENV:SLN --no-build --no-restore --configuration $ENV:DOTNET_CONFIGURATION -o $ENV:PACKAGES_DIR
     exit $LASTEXITCODE
 
 add-local-nuget-feed: 

@@ -47,10 +47,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNet.Glob" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Secrets" />
   </ItemGroup>
 </Project>
