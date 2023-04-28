@@ -53,7 +53,7 @@ jobs:
           echo "!/dotnet/*/" >> .git/info/sparse-checkout
           echo "/dotnet/fx/" >> .git/info/sparse-checkout
           # echo ... 
-          git -c protocol.version=2 fetch --no-tags --prune --progress --depth=10 origin +${GITHUB_SHA}:refs/remotes/origin/${BRANCH}
+          git -c protocol.version=2 fetch --no-tags --prune --progress origin +${GITHUB_SHA}:refs/remotes/origin/${BRANCH}
           git checkout --progress --force -B $BRANCH refs/remotes/origin/$BRANCH
 
       - name: "Ls"

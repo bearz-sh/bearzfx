@@ -8,10 +8,11 @@
   <PropertyGroup>
     <Company>Bearz.Dev</Company>
     <Version>0.1.0</Version>
-    <Copyright>©️ 2010-2021 Bearz.sh</Copyright>
+    <Copyright>©️ 2010-2023 Bearz.sh</Copyright>
     <RepositoryUrl>$(BaseTreeUrl)</RepositoryUrl> 
     <RepositoryType>git</RepositoryType> 
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>bearz-me ajhausen</Authors>
     <Icon>$(MSBuildThisFileDirectory)../assets/logo.png</Icon>
     
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
