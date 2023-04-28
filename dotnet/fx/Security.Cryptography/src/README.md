@@ -3,26 +3,16 @@
 
 ## Description
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+A cryptography library for BearzFx to help with encryption for automation
+purposes.
 
-## Features 
+## Features
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+- `IEncryptionProvider` interface with a AesGcm and AES encrypt then MAC implementations.
+- ChaCha20 implementation of `SymmetricAlgorithm`
+- `BeaerzRfc2898DeriveBytes` is a backwards compatible implementation of PBKDF2 that enables
+  Sha256, Sha512, etc for .NET Core and .NET Full Framework.
 
-## Installation
+## License
 
-```powershell
-dotnet add package Bearz.Security.Cryptography
-```
-
-```powershell 
-<PackageReference Include="Bearz.Security.Cryptography" Version="*" />
-```
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-## License 
-
-{{ license }}
-
-<p align="right">(<a href="#top">back to top</a>)</p>
+MIT

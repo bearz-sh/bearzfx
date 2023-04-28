@@ -14,13 +14,16 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags></PackageTags>
     <Description>
-    Bearz.Standard
+    Core Bearz library to enable cross-platform development and automation. The library 
+    makes it easier to use System.Diagnostics.Process, generate cryptographically secure
+    passwords, mask secrets, and make it easier to work with low level primitives.
     </Description>
     <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/CHANGELOG.md"))</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="LICENSE.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>

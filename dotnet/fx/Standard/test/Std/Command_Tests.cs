@@ -117,12 +117,12 @@ public class Command_Tests
         var cmd = new Command(Util.TestConsolePath)
             .WithArgs("cwd")
             .WithStdio(Stdio.Piped)
-            .WithCwd(Bearz.Std.Env.HomeDir());
+            .WithCwd(Bearz.Std.Env.GetDirectory(SpecialDirectory.Home));
 
         var result = cmd.Output();
         assert.NotNull(result);
         var cwd = result.StdOut[0];
-        assert.Equal(Bearz.Std.Env.HomeDir(), cwd);
+        assert.Equal(Bearz.Std.Env.GetDirectory(SpecialDirectory.Home), cwd);
     }
 
     [IntegrationTest]

@@ -57,7 +57,7 @@ public static partial class FsPath
                     var c = path[0];
                     return c switch
                     {
-                        '~' => Env.HomeDir(),
+                        '~' => Env.GetDirectory(SpecialDirectory.Home),
                         '.' => basePath,
                         _ => P.Combine(basePath, path),
                     };
@@ -72,10 +72,10 @@ public static partial class FsPath
                     {
                         case '~' when c2 is '/' or '\\':
                             if (path.Length == 2)
-                                return Env.HomeDir();
+                                return Env.GetDirectory(SpecialDirectory.Home);
 
                             path = path.Substring(2);
-                            return P.GetFullPath(P.Combine(Env.HomeDir(), path));
+                            return P.GetFullPath(P.Combine(Env.GetDirectory(SpecialDirectory.Home), path));
                         case '.' when c2 is '/' or '\\':
                             if (path.Length == 2)
                                 return basePath;
@@ -120,7 +120,23 @@ public static partial class FsPath
     [Pure]
     [return: NotNullIfNotNull("path")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string? GetFileName(string? path)
+    {
+        return P.GetFileName(path);
+    }
+
+    [Pure]
+    [return: NotNullIfNotNull("path")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? BasenameWithoutExtension(string? path)
+    {
+        return P.GetFileNameWithoutExtension(path);
+    }
+
+    [Pure]
+    [return: NotNullIfNotNull("path")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string? GetFileNameWithoutExtension(string? path)
     {
         return P.GetFileNameWithoutExtension(path);
     }
@@ -146,7 +162,7 @@ public static partial class FsPath
     [Pure]
     [return: NotNullIfNotNull("path")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? Extension(string? path)
+    public static string? GetExtension(string? path)
         => P.GetExtension(path);
 
     [Pure]
@@ -156,12 +172,25 @@ public static partial class FsPath
 
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string RandomFileName()
+    public static string GetRandomFileName()
         => P.GetRandomFileName();
 
     [Pure]
+    public static string GetNullDevice()
+    {
+        if (Env.IsWindows())
+        {
+            return @"\\.\NUL";
+        }
+        else
+        {
+            return "/dev/null";
+        }
+    }
+
+    [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string TempDir()
+    public static string GetTempDir()
     {
         return P.GetTempPath();
     }

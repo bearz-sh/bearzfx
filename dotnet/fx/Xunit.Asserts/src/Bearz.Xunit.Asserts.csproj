@@ -4,7 +4,13 @@
     <TargetFrameworks>$(LibFx)</TargetFrameworks>
     <Nullable>enable</Nullable>
     <RootNamespace>Xunit</RootNamespace>
-    <Description>
+    <PackageProjectUrl>$(BaseTreeUrl)Xunit.Asserts</PackageProjectUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>xunit bearz asserts</PackageTags>
+     <Description>
   A test framework that extends Xunit.net to enable dependency injection, 
   skipptable attributes, and extensible Asserts with extension methods. The
   Bearz.Xunit.Asserts project contains the `IAssert` interface and `FlexAssert`
@@ -20,8 +26,13 @@
 
   Examples can be found in the project's test source code.
     </Description>
-    <PackageProjectUrl>$(BaseTreeUrl)Xunit.Asserts</PackageProjectUrl>
+    <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/CHANGELOG.md"))</PackageReleaseNotes>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="LICENSE.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">

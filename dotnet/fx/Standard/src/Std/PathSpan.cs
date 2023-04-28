@@ -6,6 +6,7 @@ using Bearz.Text;
 
 namespace Bearz.Std;
 
+[Obsolete("Use PathBuf instead.")]
 public ref struct PathSpan
 {
     private readonly ReadOnlySpan<char> span;
@@ -65,9 +66,9 @@ public ref struct PathSpan
     public ReadOnlySpan<char> Extension()
     {
 #if NETLEGACY
-        return FsPath.Extension(this.ToString()).AsSpan();
+        return FsPath.GetExtension(this.ToString()).AsSpan();
 #else
-        return FsPath.Extension(this);
+        return FsPath.GetExtension(this);
 #endif
     }
 

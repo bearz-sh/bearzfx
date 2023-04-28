@@ -1,5 +1,8 @@
+using FluentBuilder;
+
 namespace Bearz.Text.DotEnv;
 
+[AutoGenerateBuilder]
 public class DotEnvLoadOptions : DotEnvSerializerOptions
 {
     public IReadOnlyList<string> Files { get; set; } = Array.Empty<string>();

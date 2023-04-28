@@ -1,5 +1,5 @@
 # CHANGE LOG
 
-## 0.1.0 initial creation
+## 0.1.0 initial release
 
-- created.
+- Initial release. Enable System.CommandLine to use the HostApplictionBuilder.

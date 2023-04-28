@@ -80,6 +80,11 @@ static partial class Env
         return true;
     }
 
+    public static void Remove(string name, EnvironmentVariableTarget target = EnvironmentVariableTarget.Process)
+    {
+        Environment.SetEnvironmentVariable(name, null, target);
+    }
+
     public static void Set(
         IReadOnlyDictionary<string, string> values,
         bool overwrite = true,

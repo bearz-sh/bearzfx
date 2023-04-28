@@ -1,5 +1,4 @@
 using System.CommandLine;
-using System.ComponentModel.Composition;
 
 namespace Bearz.Extensions.Hosting.CommandLine;
 

@@ -75,7 +75,7 @@ public class OrderedDictionary<TKey, TValue> : Dictionary<TKey, TValue>,
 
 #if NETLEGACY
     public OrderedDictionary(IEnumerable<KeyValuePair<TKey, TValue>> values, IEqualityComparer<TKey>? comparer)
-        : this(0, comparer)
+        : base(comparer)
     {
         foreach (var kvp in values)
             this.Add(kvp.Key, kvp.Value);
@@ -365,10 +365,14 @@ public class OrderedDictionary<TKey, TValue> : Dictionary<TKey, TValue>,
 
     private void Resize()
     {
-        if (this.Count < this.orderedValues.Length)
+        if (this.Count <= this.orderedValues.Length)
             return;
 
-        var copy = new KeyValuePair<TKey, TValue>[this.orderedValues.Length * 2];
+        int l = this.orderedValues.Length;
+        if (this.orderedValues.Length == 0)
+            l = 5;
+
+        var copy = new KeyValuePair<TKey, TValue>[l * 2];
         Array.Copy(this.orderedValues, copy, this.orderedValues.Length);
         this.orderedValues = copy;
     }

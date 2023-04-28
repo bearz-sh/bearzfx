@@ -22,6 +22,10 @@ public class TestAttribute : FactAttribute
 
     public bool LongRunning { get; set; }
 
+    public bool LocalOnly { get; set; }
+
+    public bool Unsafe { get; set; }
+
     public string? TicketId { get; set; }
 
     public string[]? Tags { get; set; }

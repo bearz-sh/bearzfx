@@ -1,28 +1,14 @@
 # Bearz.Extensions.Hosting.CommandLine
-<a name="top"></a>
 
 ## Description
 
-<p align="right">(<a href="#top">back to top</a>)</p>
 
-## Features 
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-## Installation
-
-```powershell
-dotnet add package Bearz.Extensions.Hosting.CommandLine
-```
-
-```powershell 
-<PackageReference Include="Bearz.Extensions.Hosting.CommandLine" Version="*" />
-```
+## Features
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-## License 
 
-{{ license }}
+## License
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+MIT

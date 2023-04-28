@@ -89,10 +89,10 @@ public class VirtualEnvironment : IEnvironment
         => this.env.Remove(variableName);
 
     public string Directory(SpecialDirectory directory)
-        => Env.Directory(directory);
+        => Env.GetDirectory(directory);
 
     public string Directory(string directoryName)
-        => Env.Directory(directoryName);
+        => Env.GetDirectory(directoryName);
 
     public string Expand(string template, EnvSubstitutionOptions? options = null)
     {

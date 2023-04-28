@@ -148,7 +148,7 @@ public class VirtualProcess : IProcess
         if (prependPaths is not null)
             pathSegments.AddRange(prependPaths);
 
-        pathSegments.AddRange(EnvPath.Split());
+        pathSegments.AddRange(Env.SplitPath());
 
         for (var i = 0; i < pathSegments.Count; i++)
         {

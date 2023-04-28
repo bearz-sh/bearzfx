@@ -11,7 +11,7 @@
 
   <PropertyGroup>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags>dotenv variable substitution expansion </PackageTags>
+    <PackageTags>dotenv variable substitution expansion bearz</PackageTags>
     <Description>
     Bearz.Text.DotEnv
     </Description>
@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="LICENSE.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,5 +39,12 @@
   
   <ItemGroup Condition="$(NetLegacy) == 'true'">
     <PackageReference Include="System.Memory" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="FluentBuilder">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 </Project>

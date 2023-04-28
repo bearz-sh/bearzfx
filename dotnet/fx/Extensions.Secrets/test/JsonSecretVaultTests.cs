@@ -82,7 +82,7 @@ public class JsonSecretVaultTests
                 ["TEST3"] = "TEST3",
             });
 
-            var secrets = vault.ListNames().Order();
+            var secrets = vault.ListNames().OrderBy(o => o);
 
             assert.Collection(
                 secrets,
@@ -115,7 +115,8 @@ public class JsonSecretVaultTests
 
     private static string GetVaultPath(string fileName = "vault_test.json")
     {
-        return Path.Combine(Util.Location, fileName);
+        var tmp = Path.GetTempPath();
+        return Path.Combine(tmp, "bearz_extensions_secrets", fileName);
     }
 
     private static byte[] GetOrCreateKey()

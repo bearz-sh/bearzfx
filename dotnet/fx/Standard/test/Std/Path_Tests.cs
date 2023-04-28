@@ -26,7 +26,7 @@ public class Path_Tests
     {
         // test resolve relative path
         var cwd = Env.Cwd;
-        var hd = Env.HomeDir();
+        var hd = Env.GetDirectory(SpecialDirectory.Home);
         assert.Equal(hd, FsPath.Resolve("~"));
 
         assert.Equal(hd, FsPath.Resolve("~", cwd));

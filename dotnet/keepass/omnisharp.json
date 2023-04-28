@@ -1,0 +1,8 @@
+{
+    "fileOptions": {
+      "excludeSearchPatterns": [
+        "./tpl/Bearz.Console/Bearz.Console.csproj",
+        "./tpl/Bearz.Console/Bearz.Library.csproj"
+      ]
+    }
+  }
