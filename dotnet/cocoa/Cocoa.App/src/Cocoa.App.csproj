@@ -1,0 +1,54 @@
+<!--suppress MsbuildTargetFrameworkTagInspection -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <LibFx Condition="$(LibFx) == ''">net7.0</LibFx>
+    <TargetFrameworks>$(LibFx)</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <RootNamespace>Cocoa</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>Chocolatey Coco</PackageTags>
+    <Description>
+    Coco.App
+    </Description>
+    <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/CHANGELOG.md"))</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Bearz.Standard" />
+    <PackageReference Include="Chocolatey.NuGet.Commands" />
+    <PackageReference Include="Chocolatey.NuGet.Common" />
+    <PackageReference Include="Chocolatey.NuGet.Configuration" />
+    <PackageReference Include="Chocolatey.NuGet.Credentials" />
+    <PackageReference Include="Chocolatey.NuGet.DependencyResolver.Core" />
+    <PackageReference Include="Chocolatey.NuGet.Frameworks" />
+    <PackageReference Include="Chocolatey.NuGet.LibraryModel" />
+    <PackageReference Include="Chocolatey.NuGet.PackageManagement" />
+    <PackageReference Include="Chocolatey.NuGet.Packaging" />
+    <PackageReference Include="Chocolatey.NuGet.ProjectModel" />
+    <PackageReference Include="Chocolatey.NuGet.Protocol" />
+    <PackageReference Include="Chocolatey.NuGet.Resolver" />
+    <PackageReference Include="Chocolatey.NuGet.Versioning" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" />
+    <PackageReference Include="Microsoft.Win32.Registry" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Tokens" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KeePass.Model", "KeePass.Model", "{2B836FD0-B57A-409A-92A8-CD0AFB16F988}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.KeePass.Model", "KeePass.Model\src\Bearz.KeePass.Model.csproj", "{A9C8605E-2AAF-42C0-9841-C60F7F894DE8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KeePass.Xml", "KeePass.Xml", "{5D93C80E-76D8-460D-978A-A87769F4D0CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.KeePass.Xml", "KeePass.Xml\src\Bearz.KeePass.Xml.csproj", "{91E323E0-E1E3-4560-AFC9-79AEAB3A0DF5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KeePass.Cryptography", "KeePass.Cryptography", "{A458248A-77DC-4F1D-A1F5-566B3C7355B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearz.KeePass.Cryptography", "KeePass.Cryptography\src\Bearz.KeePass.Cryptography.csproj", "{2F1C8B2C-E0AA-4D2A-8346-53A32811EBEE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A9C8605E-2AAF-42C0-9841-C60F7F894DE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9C8605E-2AAF-42C0-9841-C60F7F894DE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9C8605E-2AAF-42C0-9841-C60F7F894DE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9C8605E-2AAF-42C0-9841-C60F7F894DE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91E323E0-E1E3-4560-AFC9-79AEAB3A0DF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91E323E0-E1E3-4560-AFC9-79AEAB3A0DF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91E323E0-E1E3-4560-AFC9-79AEAB3A0DF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91E323E0-E1E3-4560-AFC9-79AEAB3A0DF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F1C8B2C-E0AA-4D2A-8346-53A32811EBEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F1C8B2C-E0AA-4D2A-8346-53A32811EBEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F1C8B2C-E0AA-4D2A-8346-53A32811EBEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F1C8B2C-E0AA-4D2A-8346-53A32811EBEE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A9C8605E-2AAF-42C0-9841-C60F7F894DE8} = {2B836FD0-B57A-409A-92A8-CD0AFB16F988}
+		{91E323E0-E1E3-4560-AFC9-79AEAB3A0DF5} = {5D93C80E-76D8-460D-978A-A87769F4D0CA}
+		{2F1C8B2C-E0AA-4D2A-8346-53A32811EBEE} = {A458248A-77DC-4F1D-A1F5-566B3C7355B3}
+	EndGlobalSection
+EndGlobal

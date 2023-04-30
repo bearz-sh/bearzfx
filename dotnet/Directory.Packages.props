@@ -11,6 +11,19 @@
     <PackageVersion Include="Bearz.Extensions.Hosting.CommandLine" Version="0.1.0-build.32" />
     <PackageVersion Include="Bearz.Text.DotEnv" Version="0.1.0-build.32" />
     <PackageVersion Include="Bearz.Standard" Version="0.1.0-build.32" />
+    <PackageVersion Include="Chocolatey.NuGet.Commands" Version="3.0.0" />
+    <PackageVersion Include="Chocolatey.NuGet.Common" Version="3.0.0" />
+    <PackageVersion Include="Chocolatey.NuGet.Configuration" Version="3.0.0" />
+    <PackageVersion Include="Chocolatey.NuGet.Credentials" Version="3.0.0" />
+    <PackageVersion Include="Chocolatey.NuGet.DependencyResolver.Core" Version="3.0.0" />
+    <PackageVersion Include="Chocolatey.NuGet.Frameworks" Version="3.0.0" />
+    <PackageVersion Include="Chocolatey.NuGet.LibraryModel" Version="3.0.0" />
+    <PackageVersion Include="Chocolatey.NuGet.PackageManagement" Version="3.0.0" />
+    <PackageVersion Include="Chocolatey.NuGet.Packaging" Version="3.0.0" />
+    <PackageVersion Include="Chocolatey.NuGet.ProjectModel" Version="3.0.0" />
+    <PackageVersion Include="Chocolatey.NuGet.Protocol" Version="3.0.0" />
+    <PackageVersion Include="Chocolatey.NuGet.Resolver" Version="3.0.0" />
+    <PackageVersion Include="Chocolatey.NuGet.Versioning" Version="3.0.0" />
     <PackageVersion Include="ClosedXML" Version="0.100.3" />
     <PackageVersion Include="CloudFlare.Client" Version="6.1.4" />
     <PackageVersion Include="EFCore.NamingConventions" Version="7.0.0" />
@@ -37,6 +50,7 @@
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+    <PackageVersion Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
     <PackageVersion Include="NetEscapades.Configuration.Yaml" Version="2.2.0" />
     <PackageVersion Include="PowerShellStandard.Library" Version="5.1.1" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.1" />
