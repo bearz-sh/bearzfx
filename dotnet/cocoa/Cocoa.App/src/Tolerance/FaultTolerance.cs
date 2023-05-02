@@ -17,6 +17,7 @@
 
 using Cocoa.Configuration;
 using Cocoa.Logging;
+using Cocoa.Threading;
 
 using Microsoft.Extensions.Logging;
 
@@ -106,6 +107,56 @@ public static class FaultTolerance
         }
 
         return returnValue!;
+    }
+
+    /// <summary>
+    /// Tries an action the specified number of tries, warning on each failure and raises error on the last attempt.
+    /// </summary>
+    /// <param name="numberOfTries">The number of tries.</param>
+    /// <param name="action">The action.</param>
+    /// <param name="waitDurationMilliseconds">The wait duration in milliseconds.</param>
+    /// <param name="increaseRetryByMilliseconds">The time for each try to increase the wait duration by in milliseconds.</param>
+    /// <param name="mutexWaitDurationMilliseconds">The time for the mutex wait duration by in milliseconds.</param>
+    public static void RetryWithMutex(
+        int numberOfTries,
+        Action? action,
+        int waitDurationMilliseconds = 100,
+        int increaseRetryByMilliseconds = 0,
+        int mutexWaitDurationMilliseconds = 2000)
+    {
+        if (action == null)
+            return;
+
+        Retry(
+            numberOfTries,
+            () => GlobalMutex.Enter(action, mutexWaitDurationMilliseconds),
+            waitDurationMilliseconds,
+            increaseRetryByMilliseconds);
+    }
+
+    /// <summary>
+    /// Tries a function the specified number of tries, warning on each failure and raises error on the last attempt.
+    /// </summary>
+    /// <typeparam name="T">The type of the return value from the function.</typeparam>
+    /// <param name="numberOfTries">The number of tries.</param>
+    /// <param name="function">The function.</param>
+    /// <param name="waitDurationMilliseconds">The wait duration in milliseconds.</param>
+    /// <param name="increaseRetryByMilliseconds">The time for each try to increase the wait duration by in milliseconds.</param>
+    /// <param name="mutexWaitDurationMilliseconds">The time for the mutex wait duration by in milliseconds.</param>
+    /// <returns>The return value from the function.</returns>
+    /// <exception cref="System.ApplicationException">You must specify a number of retries greater than zero.</exception>
+    public static T RetryWithMutex<T>(
+        int numberOfTries,
+        Func<T>? function,
+        int waitDurationMilliseconds = 100,
+        int increaseRetryByMilliseconds = 0,
+        int mutexWaitDurationMilliseconds = 2000)
+    {
+        return Retry<T>(
+            numberOfTries,
+            () => GlobalMutex.Enter<T>(function, 2000),
+            waitDurationMilliseconds,
+            increaseRetryByMilliseconds);
     }
 
     /// <summary>

@@ -2,8 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <LibFx Condition="$(LibFx) == ''">net7.0</LibFx>
-    <TargetFrameworks>$(LibFx)</TargetFrameworks>
+    <LibFx Condition="$(NetCoreLibFx) == ''">net7.0</LibFx>
+    <TargetFrameworks>$(NetStandard);$(NetCoreLibFx)</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>true</ImplicitUsings>
     <RootNamespace>Cocoa</RootNamespace>
@@ -27,6 +27,10 @@
       <_Parameter1>$(AssemblyName).Tests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
+  
+  <ItemGroup Condition="'$(NETFRAMEWORK)' == 'true'">
+    <PackageReference Include="AlphaFS" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Bearz.Standard" />
@@ -49,6 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="FileSystem" />
     <Folder Include="Tokens" />
   </ItemGroup>
 </Project>

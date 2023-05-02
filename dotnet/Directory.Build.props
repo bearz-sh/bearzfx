@@ -64,6 +64,7 @@
     <MacOs>false</MacOs>
     <InternalDir>$(MSBuildThisFileDirectory)/fx/Internal/src</InternalDir>
     <NetLegacy>false</NetLegacy>
+    <NetFramework>false</NetFramework>
   </PropertyGroup>
   <PropertyGroup>
     <SecurityPrincipalWindowsVersion>6.0.0-preview.5.21301.5</SecurityPrincipalWindowsVersion>
@@ -75,6 +76,10 @@
   <PropertyGroup Condition="($(TargetFramework.StartsWith('net4')) OR  $(TargetFramework.StartsWith('netstandard2.0')) OR $(TargetFramework.StartsWith('netstandard1')))">
     <DefineConstants>$(DefineConstants);NETLEGACY</DefineConstants>
     <NetLegacy>true</NetLegacy>
+  </PropertyGroup>
+    
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <NetFramework>true</NetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">

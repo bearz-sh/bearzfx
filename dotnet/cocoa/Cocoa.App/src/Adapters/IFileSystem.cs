@@ -17,7 +17,7 @@
 
 using System.Text;
 
-namespace Cocoa.FileSystem;
+namespace Cocoa.Adapters;
 
 /// <summary>
 ///   File System Interface.
@@ -123,7 +123,7 @@ public interface IFileSystem
     /// </summary>
     /// <param name="filePath">Path to an existing file.</param>
     /// <returns>FileInfo object or reimplementation of a FileInfo object that works with greater than 260 chars.</returns>
-    dynamic GetFileInfoFor(string filePath);
+    IFileInfo GetFileInfoFor(string filePath);
 
     /// <summary>
     ///   Gets the file mod date.
@@ -151,35 +151,35 @@ public interface IFileSystem
     /// </summary>
     /// <param name="file">File to check - FileInfo or some representation of FileInfo.</param>
     /// <returns>True if the file has the System attribute marked, otherwise false.</returns>
-    bool IsSystemFile(dynamic file);
+    bool IsSystemFile(IFileInfo file);
 
     /// <summary>
     ///   Determines if a file is a read only file.
     /// </summary>
     /// <param name="file">File to check - FileInfo or some representation of FileInfo.</param>
     /// <returns>True if the file has the ReadOnly attribute marked, otherwise false.</returns>
-    bool IsReadOnlyFile(dynamic file);
+    bool IsReadOnlyFile(IFileInfo file);
 
     /// <summary>
     ///   Determines if a file is a hidden file.
     /// </summary>
     /// <param name="file">File to check - FileInfo or some representation of FileInfo.</param>
     /// <returns>True if the file has the Hidden attribute marked, otherwise false.</returns>
-    bool IsHiddenFile(dynamic file);
+    bool IsHiddenFile(IFileInfo file);
 
     /// <summary>
     ///   Determines if a file is encrypted or not.
     /// </summary>
     /// <param name="file">File to check - FileInfo or some representation of FileInfo.</param>
     /// <returns>True if the file has the Encrypted attribute marked, otherwise false.</returns>
-    bool IsEncryptedFile(dynamic file);
+    bool IsEncryptedFile(IFileInfo file);
 
     /// <summary>
     ///   Determines the older of the file dates, Creation Date or Modified Date.
     /// </summary>
     /// <param name="file">File to analyze - FileInfo or some representation of FileInfo.</param>
     /// <returns>The oldest date on the file.</returns>
-    string GetFileDate(dynamic file);
+    string GetFileDate(IFileInfo file);
 
     /// <summary>
     ///   Moves a specified file to a new location, providing the option to specify a new file name.
@@ -189,29 +189,12 @@ public interface IFileSystem
     void MoveFile(string filePath, string newFilePath);
 
     /// <summary>
-    ///   Moves a specified file to a new location, providing the option to specify a new file name.
-    /// </summary>
-    /// <param name="filePath">The name of the file to move. </param>
-    /// <param name="newFilePath">The new path for the file. </param>
-    /// <param name="isSilent">Whether we should log retries or not.</param>
-    void MoveFile(string filePath, string newFilePath, bool isSilent);
-
-    /// <summary>
     ///   Copies an existing file to a new file. Overwriting a file of the same name is allowed.
     /// </summary>
     /// <param name="sourceFilePath">The source file path. The file to copy.</param>
     /// <param name="destinationFilePath">The destination file path.</param>
     /// <param name="overwriteExisting">true if the destination file can be overwritten; otherwise, false.</param>
     void CopyFile(string sourceFilePath, string destinationFilePath, bool overwriteExisting);
-
-    /// <summary>
-    ///   Copies an existing file to a new file. Overwriting a file of the same name is allowed.
-    /// </summary>
-    /// <param name="sourceFilePath">The source file path. The file to copy.</param>
-    /// <param name="destinationFilePath">The destination file path.</param>
-    /// <param name="overwriteExisting">true if the destination file can be overwritten; otherwise, false.</param>
-    /// <param name="isSilent">Whether we should log retries or not.</param>
-    void CopyFile(string sourceFilePath, string destinationFilePath, bool overwriteExisting, bool isSilent);
 
     /// <summary>
     ///   Copies a file from one directory to another using FFI.
@@ -294,6 +277,13 @@ public interface IFileSystem
     void WriteFile(string filePath, Func<Stream> getStream);
 
     /// <summary>
+    ///   Writes a stream to a specified file path.
+    /// </summary>
+    /// <param name="filePath">The file path.</param>
+    /// <param name="stream">A deferred function of getting the stream.</param>
+    void WriteFile(string filePath, Stream stream);
+
+    /// <summary>
     ///   Gets the current working directory of the application.
     /// </summary>
     /// <returns>The path to the directory.</returns>
@@ -337,14 +327,14 @@ public interface IFileSystem
     /// </summary>
     /// <param name="directoryPath">Full path to the directory you want the directory information for.</param>
     /// <returns>DirectoryInfo object or reimplementation of a DirectoryInfo object that works with greater than 248 chars.</returns>
-    dynamic GetDirectoryInfo(string directoryPath);
+    IDirectoryInfo GetDirectoryInfo(string directoryPath);
 
     /// <summary>
     ///   Returns a DirectoryInfo object from a string to a filepath.
     /// </summary>
     /// <param name="filePath">Full path to the file you want directory information for.</param>
     /// <returns>DirectoryInfo object or reimplementation of a DirectoryInfo object that works with greater than 248 chars.</returns>
-    dynamic GetFileDirectoryInfo(string filePath);
+    IDirectoryInfo GetFileDirectoryInfo(string filePath);
 
     /// <summary>
     ///   Creates all directories and subdirectories in the specified path.
@@ -361,37 +351,12 @@ public interface IFileSystem
     void MoveDirectory(string directoryPath, string newDirectoryPath);
 
     /// <summary>
-    ///   Moves a specified directory to a new location, providing the option to specify a new directory name.
-    ///   Will fall back to do a file move until the firlst file is unable to be moved if <paramref name="useFileMoveFallback"/>
-    ///   is <c>true</c>.
-    /// </summary>
-    /// <param name="directoryPath">The path of the directory to move.</param>
-    /// <param name="newDirectoryPath">The new path for the directory.</param>
-    /// <param name="useFileMoveFallback">Whether a fallback to move each individual files should be used if directory move fails.</param>
-    /// <param name="isSilent">Whether we should log retries or not.</param>
-    /// <remarks>Any underlying exception will be rethrown if <paramref name="useFileMoveFallback"/> is set to <c>false</c>.</remarks>
-    void MoveDirectory(string directoryPath, string newDirectoryPath, bool useFileMoveFallback, bool isSilent);
-
-    /// <summary>
     ///   Copies an existing directory to a new directory. Overwriting a directory of the same name is allowed.
     /// </summary>
     /// <param name="sourceDirectoryPath">The source file directory. The directory to copy.</param>
     /// <param name="destinationDirectoryPath">The destination directory path.</param>
     /// <param name="overwriteExisting">true if the destination directory can be overwritten; otherwise, false.</param>
     void CopyDirectory(string sourceDirectoryPath, string destinationDirectoryPath, bool overwriteExisting);
-
-    /// <summary>
-    ///   Copies an existing directory to a new directory. Overwriting a directory of the same name is allowed.
-    /// </summary>
-    /// <param name="sourceDirectoryPath">The source file directory. The directory to copy.</param>
-    /// <param name="destinationDirectoryPath">The destination directory path.</param>
-    /// <param name="overwriteExisting">true if the destination directory can be overwritten; otherwise, false.</param>
-    /// <param name="isSilent">Whether we should log retries or not.</param>
-    void CopyDirectory(
-        string sourceDirectoryPath,
-        string destinationDirectoryPath,
-        bool overwriteExisting,
-        bool isSilent);
 
     /// <summary>
     ///   Creates all directories and subdirectories in the specified path if they have not already been created.
@@ -415,15 +380,6 @@ public interface IFileSystem
     void DeleteDirectory(string directoryPath, bool recursive, bool overrideAttributes);
 
     /// <summary>
-    ///  Deletes a directory.
-    /// </summary>
-    /// <param name="directoryPath">The directory path.</param>
-    /// <param name="recursive">Would you like to delete the directories inside of this directory? Almost always true.</param>
-    /// <param name="overrideAttributes">Override the attributes, e.g. delete readonly and/or system files.</param>
-    /// <param name="isSilent">Should this method be silent? false by default.</param>
-    void DeleteDirectory(string directoryPath, bool recursive, bool overrideAttributes, bool isSilent);
-
-    /// <summary>
     ///   Deletes a directory if it exists.
     /// </summary>
     /// <param name="directoryPath">The directory path.</param>
@@ -437,15 +393,6 @@ public interface IFileSystem
     /// <param name="recursive">Would you like to delete the directories inside of this directory? Almost always true.</param>
     /// <param name="overrideAttributes">Override the attributes, e.g. delete readonly and/or system files.</param>
     void DeleteDirectoryChecked(string directoryPath, bool recursive, bool overrideAttributes);
-
-    /// <summary>
-    /// Deletes a directory if it exists.
-    /// </summary>
-    /// <param name="directoryPath">The directory path.</param>
-    /// <param name="recursive">Would you like to delete the directories inside of this directory? Almost always true.</param>
-    /// <param name="overrideAttributes">Override the attributes, e.g. delete readonly and/or system files.</param>
-    /// <param name="isSilent">Should this method be silent? false by default.</param>
-    void DeleteDirectoryChecked(string directoryPath, bool recursive, bool overrideAttributes, bool isSilent);
 
     /// <summary>
     ///   Ensure file attributes are set on a specified path.

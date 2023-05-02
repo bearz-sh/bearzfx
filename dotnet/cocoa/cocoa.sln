@@ -7,6 +7,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cocoa.App", "Cocoa.App", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cocoa.App", "Cocoa.App\src\Cocoa.App.csproj", "{9E38558A-B467-423E-BF6B-4749ED8F6B64}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{A67A207B-FD87-4BB2-B338-034C44342A4F}"
+	ProjectSection(SolutionItems) = preProject
+		..\Directory.Build.props = ..\Directory.Build.props
+		..\Directory.Build.targets = ..\Directory.Build.targets
+		..\Directory.Packages.props = ..\Directory.Packages.props
+		..\LICENSE.md = ..\LICENSE.md
+		..\omnisharp.json = ..\omnisharp.json
+		..\README.md = ..\README.md
+		..\version.json = ..\version.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".project", ".project", "{7229EE9C-DDC4-4F9F-BA43-CBC500471588}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

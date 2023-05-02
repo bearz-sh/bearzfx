@@ -15,7 +15,7 @@
 // limitations under the License.
 // source: https://github.com/chocolatey/choco/blob/release/2.0.0/src/chocolatey/infrastructure.app/domain/ChocolateyPackageMetadata.cs
 
-using Cocoa.FileSystem;
+using Cocoa.Adapters;
 
 using NuGet.Configuration;
 using NuGet.Packaging;
