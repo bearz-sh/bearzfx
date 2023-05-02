@@ -23,16 +23,12 @@ using Bearz.Extra.Strings;
 using Cocoa.Installers;
 using Cocoa.Xml;
 
-using Microsoft.Win32;
-
 namespace Cocoa.Registry;
 
 [Serializable]
 [XmlType("key")]
 public sealed class RegistryApplicationKey : IEquatable<RegistryApplicationKey>
 {
-    public RegistryView RegistryView { get; set; }
-
     public string? KeyPath { get; set; }
 
     [XmlAttribute(AttributeName = "installerType")]

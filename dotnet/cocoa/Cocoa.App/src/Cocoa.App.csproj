@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <LibFx Condition="$(NetCoreLibFx) == ''">net7.0</LibFx>
+    <NetCoreLibFx Condition="$(NetCoreLibFx) == ''">net7.0</NetCoreLibFx>
     <TargetFrameworks>$(NetStandard);$(NetCoreLibFx)</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>true</ImplicitUsings>
@@ -50,10 +50,16 @@
     <PackageReference Include="Microsoft.Extensions.Logging" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" />
     <PackageReference Include="Microsoft.Win32.Registry" />
+    <PackageReference Include="System.Reactive.Linq" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="FileSystem" />
-    <Folder Include="Tokens" />
+    <Folder Include="Rules" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Cocoa.Abstractions\src\Cocoa.Abstractions.csproj" />
   </ItemGroup>
 </Project>

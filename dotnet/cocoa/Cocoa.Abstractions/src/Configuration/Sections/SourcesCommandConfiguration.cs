@@ -1,5 +1,4 @@
 using Cocoa.Domain;
-using Cocoa.Platform;
 
 namespace Cocoa.Configuration.Sections;
 
