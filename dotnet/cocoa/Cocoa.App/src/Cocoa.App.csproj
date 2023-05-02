@@ -55,7 +55,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="FileSystem" />
     <Folder Include="Rules" />
   </ItemGroup>
 
