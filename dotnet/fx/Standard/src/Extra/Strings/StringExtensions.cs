@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace Bearz.Extra.Strings;
 
@@ -48,6 +49,12 @@ public static partial class StringExtensions
         return source.Split(separator.ToCharArray(), options);
     }
 #endif
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string ToSafeString(this string? value)
+    {
+        return value ?? string.Empty;
+    }
 
     /// <summary>
     /// Converts the span of characters to a <see cref="string"/> for

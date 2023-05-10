@@ -2,6 +2,15 @@ namespace Bearz.Extra.Collections;
 
 public static class EnumerableExtensions
 {
+#if NETLEGACY
+
+    public static HashSet<T> ToHashSet<T>(this IEnumerable<T> self)
+    {
+        return new HashSet<T>(self);
+    }
+
+#endif
+
     public static Span<T> ToSpan<T>(this IEnumerable<T> self, Span<T> destination, int index, int length)
     {
         int i = 0;

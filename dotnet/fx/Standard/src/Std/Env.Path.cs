@@ -7,7 +7,7 @@ internal
 #endif
 static partial class Env
 {
-    private static readonly string Key = Env.IsWindows() ? "Path" : "PATH";
+    private static readonly string Key = Env.IsWindows ? "Path" : "PATH";
 
     public static void AddPath(string path, bool prepend = false, EnvironmentVariableTarget target = EnvironmentVariableTarget.Process)
     {
@@ -45,14 +45,7 @@ static partial class Env
 #if NETLEGACY
         Environment.SetEnvironmentVariable(Key, path, target);
 #else
-        if (OperatingSystem.IsWindows())
-        {
-            Environment.SetEnvironmentVariable(Key, path, target);
-        }
-        else
-        {
-            Environment.SetEnvironmentVariable(Key, path, EnvironmentVariableTarget.Process);
-        }
+        Environment.SetEnvironmentVariable(Key, path, IsWindows ? target : EnvironmentVariableTarget.Process);
 #endif
     }
 
@@ -73,7 +66,7 @@ static partial class Env
 
     private static bool InternalHasPath(string path, string[] paths)
     {
-        if (Env.IsWindows())
+        if (Env.IsWindows)
         {
             foreach (var p in paths)
             {

@@ -7,7 +7,7 @@ public class PowerShellCli : ShellCliCommand
     public PowerShellCli(ICliExecutionContext? context = null, CommandStartInfo? startInfo = null)
         : base("powershell", context, startInfo)
     {
-        if (!Env.IsWindows())
+        if (!Env.IsWindows)
             throw new PlatformNotSupportedException("PowerShell is only supported on Windows.");
 
         this.WindowsPaths = new[]

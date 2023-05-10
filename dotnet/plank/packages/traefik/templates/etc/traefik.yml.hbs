@@ -1,0 +1,46 @@
+api:
+  dashboard: true
+  insecure: true
+
+log:
+  level: {{ traefik.log.level }}
+
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"
+  influxdb:
+    address: ":8086"
+  redis:
+    address: ":6379"
+  postgres:
+    address: ":5432"
+  mssql:
+    address: ":1433"
+  mysql:
+    address: ":3306"
+  gitlab:
+    address: ":2232"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+    watch: true
+    network: docker-vnet
+
+{{#if (env-exists "CLOUDFLARE_API_TOKEN") ~}}
+certificatesResolvers:
+  acme:
+    acme:
+      email: "{{ env "ACME_EMAIL" }}"
+      storage: acme/acme.json
+      caServer: "{{ acme.server }}"
+      dnsChallenge:
+        provider: "cloudflare"
+        delayBeforeCheck: "0"
+        resolvers:
+          - "1.1.1.1:53"
+          - "1.1.1.2:53"
+{{/if}}

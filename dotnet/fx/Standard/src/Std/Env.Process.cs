@@ -169,7 +169,7 @@ public static partial class Env
                     continue;
 
                 IEnumerable<string> matches = Array.Empty<string>();
-                if (Env.IsWindows())
+                if (Env.IsWindows)
                 {
                     var pathExt = Env.Get("PATHEXT");
                     if (pathExt.IsNullOrWhiteSpace())

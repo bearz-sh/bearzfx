@@ -161,7 +161,7 @@ public class VirtualProcess : IProcess
                 continue;
 
             IEnumerable<string> matches = Array.Empty<string>();
-            if (Env.IsWindows())
+            if (Env.IsWindows)
             {
                 var pathExt = this.env.Get("PATHEXT");
                 if (pathExt.IsNullOrWhiteSpace())

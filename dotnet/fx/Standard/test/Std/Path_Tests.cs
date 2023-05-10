@@ -10,7 +10,7 @@ public class Path_Tests
     {
         assert.Throws<InvalidOperationException>(() => FsPath.Resolve("foo", "bar"));
 
-        if (Env.IsWindows())
+        if (Env.IsWindows)
         {
             assert.Throws<InvalidOperationException>(() => FsPath.Resolve("foo", "c:bar"));
             assert.Throws<InvalidOperationException>(() => FsPath.Resolve("foo", "/bar"));
@@ -37,7 +37,7 @@ public class Path_Tests
         assert.Equal(cwd, FsPath.Resolve("./", cwd));
         assert.Equal(cwd, FsPath.Resolve(".\\", cwd));
 
-        if (Env.IsWindows())
+        if (Env.IsWindows)
         {
             assert.Equal($"{hd}\\Desktop", FsPath.Resolve("~/Desktop"));
 

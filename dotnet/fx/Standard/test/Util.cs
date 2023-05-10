@@ -35,7 +35,7 @@ public static class Util
                 return s_testConsolePath;
 
             var tmp = Path.GetTempPath();
-            if (Env.IsWindows())
+            if (Env.IsWindows)
             {
                 s_testConsolePath = Path.Combine(tmp, "bearz-test-console", "test-console.exe");
             }

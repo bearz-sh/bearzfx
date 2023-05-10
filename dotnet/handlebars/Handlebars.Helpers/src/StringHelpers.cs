@@ -331,6 +331,23 @@ public static class StringHelpers
         return value.TrimEnd();
     }
 
+    public static bool StringEq(Context context, Arguments arguments)
+    {
+        arguments.RequireArgumentLength(2, "string-eq");
+        var left = arguments.GetString(0);
+        var right = arguments.GetString(1);
+
+        var comparison = StringComparison.OrdinalIgnoreCase;
+        if (arguments.Length > 2)
+        {
+            var comparisonString = arguments.GetString(2);
+            if (Enum.TryParse<StringComparison>(comparisonString, true,  out var comparisonObj))
+                comparison = comparisonObj;
+        }
+
+        return string.Equals(left, right, comparison);
+    }
+
     public static string Format(
         IFormatProvider? provider,
         EncodedTextWriter writer,
@@ -410,6 +427,7 @@ public static class StringHelpers
             HandlebarsDotNet.Handlebars.RegisterHelper("format", (w, c, a) => Format(HandlebarsDotNet.Handlebars.Configuration.FormatProvider, w, c, a));
             HandlebarsDotNet.Handlebars.RegisterHelper("starts-with", (c, a) => StartsWith(c, a));
             HandlebarsDotNet.Handlebars.RegisterHelper("ends-with", (c, a) => EndsWith(c, a));
+            HandlebarsDotNet.Handlebars.RegisterHelper("string-eq", (c, a) => StringEq(c, a));
 
             return;
         }
@@ -448,5 +466,6 @@ public static class StringHelpers
         hb.RegisterHelper("format", (w, c, a) => Format(hb.Configuration.FormatProvider, w, c, a));
         hb.RegisterHelper("starts-with", (c, a) => StartsWith(c, a));
         hb.RegisterHelper("ends-with", (c, a) => EndsWith(c, a));
+        hb.RegisterHelper("string-eq", (c, a) => StringEq(c, a));
     }
 }

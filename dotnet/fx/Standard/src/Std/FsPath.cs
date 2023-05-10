@@ -178,7 +178,7 @@ public static partial class FsPath
     [Pure]
     public static string GetNullDevice()
     {
-        if (Env.IsWindows())
+        if (Env.IsWindows)
         {
             return @"\\.\NUL";
         }

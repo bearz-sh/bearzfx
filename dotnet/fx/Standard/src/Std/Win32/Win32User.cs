@@ -11,7 +11,7 @@ public static class Win32User
             if (s_isUserAdmin != null)
                 return s_isUserAdmin.Value;
 
-            if (!Env.IsWindows())
+            if (!Env.IsWindows)
             {
                 s_isUserAdmin = false;
                 return s_isUserAdmin.Value;

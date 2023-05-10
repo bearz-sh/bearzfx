@@ -35,4 +35,8 @@
   <ItemGroup>
     <Compile Include="$(InternalDir)/Runtime/Versioning/PlatformAttributes.cs" Link="PlatformAttributes.cs" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\fx\Standard\src\Bearz.Standard.csproj" />
+  </ItemGroup>
 </Project>

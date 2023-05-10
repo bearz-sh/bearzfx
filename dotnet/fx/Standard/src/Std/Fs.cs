@@ -5,7 +5,9 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
 
+using Bearz.Extra.Strings;
 using Bearz.Text;
+using Bearz.Virtual;
 
 using Directory = System.IO.Directory;
 using File = System.IO.File;
@@ -22,7 +24,7 @@ public static partial class Fs
     [UnsupportedOSPlatform("windows")]
     public static void Chown(string path, int userId)
     {
-        if (!Env.IsWindows())
+        if (!Env.IsWindows)
         {
             ChOwn(path, userId, userId);
         }
@@ -31,7 +33,7 @@ public static partial class Fs
     [UnsupportedOSPlatform("windows")]
     public static void Chown(string path, int userId, int groupId)
     {
-        if (!Env.IsWindows())
+        if (!Env.IsWindows)
         {
             ChOwn(path, userId, groupId);
         }
@@ -40,7 +42,7 @@ public static partial class Fs
     [UnsupportedOSPlatform("windows")]
     public static void Chmod(string path, int mode)
     {
-        if (!Env.IsWindows())
+        if (!Env.IsWindows)
         {
             ChMod(path, mode);
         }
@@ -71,6 +73,45 @@ public static partial class Fs
     public static FileAttributes Attr(string path)
         => File.GetAttributes(path);
 
+    public static void EnsureDirectory(string path)
+    {
+        if (!DirectoryExists(path))
+            Directory.CreateDirectory(path);
+    }
+
+    public static void EnsureDirectoryForFile(string path)
+    {
+        path = FsPath.Resolve(path);
+        var dir = Path.GetDirectoryName(path);
+        if (dir.IsNullOrWhiteSpace())
+            throw new ArgumentException("Path has no parent directory", nameof(path));
+
+        if (!DirectoryExists(dir))
+            Directory.CreateDirectory(dir);
+    }
+
+    public static bool TryEnsureDirectoryForFile(string path, [NotNullWhen(true)] out string? parentDirectory)
+    {
+        path = FsPath.Resolve(path);
+        var dir = Path.GetDirectoryName(path);
+        parentDirectory = dir;
+        if (dir.IsNullOrWhiteSpace())
+            return false;
+
+        try
+        {
+            if (!DirectoryExists(dir))
+                Directory.CreateDirectory(dir);
+
+            parentDirectory = dir;
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDirectory(string path)
@@ -90,6 +131,119 @@ public static partial class Fs
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IReadOnlyList<string> ReadAllLines(string path, Encoding? encoding = null)
         => File.ReadAllLines(path, encoding ?? Encodings.Utf8NoBom);
+
+    public static string? GetExistingFile(string file, IReadOnlyCollection<string>? extensions)
+    {
+        if (!FsPath.IsPathRooted(file))
+            file = FsPath.Resolve(file);
+
+        if (FileExists(file))
+            return file;
+
+        if (extensions is not null)
+        {
+            var ext1 = FsPath.GetExtension(file);
+            foreach (var ext in extensions)
+            {
+                if (ext == ext1)
+                    continue;
+
+                file = FsPath.ChangeExtension(file, ext);
+                if (FileExists(file))
+                    return file;
+            }
+        }
+
+        return null;
+    }
+
+    [Pure]
+    public static IReadOnlyList<string> GetExistingFiles(IEnumerable<string> files, IReadOnlyCollection<string>? extensions)
+    {
+        var existingFiles = new List<string>();
+        foreach (var file in files)
+        {
+            if (file.IsNullOrWhiteSpace())
+                continue;
+
+            if (!FsPath.IsPathRooted(file))
+            {
+                var resolvedFile = FsPath.Resolve(file);
+                if (FileExists(resolvedFile))
+                {
+                    existingFiles.Add(resolvedFile);
+                    continue;
+                }
+
+                if (extensions is not null)
+                {
+                    var ext1 = FsPath.GetExtension(resolvedFile);
+                    foreach (var ext in extensions)
+                    {
+                        if (ext1 == ext)
+                            continue;
+
+                        var resolvedFile2 = FsPath.ChangeExtension(resolvedFile, ext);
+                        if (FileExists(resolvedFile2))
+                        {
+                            existingFiles.Add(resolvedFile2);
+                            break;
+                        }
+                    }
+                }
+
+                continue;
+            }
+
+            if (FileExists(file))
+                existingFiles.Add(file);
+
+            if (extensions is not null)
+            {
+                var ext1 = FsPath.GetExtension(file);
+                foreach (var ext in extensions)
+                {
+                    if (ext1 == ext)
+                        continue;
+
+                    var resolvedFile2 = FsPath.ChangeExtension(file, ext);
+                    if (FileExists(resolvedFile2))
+                    {
+                        existingFiles.Add(resolvedFile2);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return existingFiles;
+    }
+
+    [Pure]
+    public static IReadOnlyList<string> GetExistingFiles(params string[] files)
+    {
+        var existingFiles = new List<string>();
+        foreach (var file in files)
+        {
+            if (file.IsNullOrWhiteSpace())
+                continue;
+
+            if (!FsPath.IsPathRooted(file))
+            {
+                var resolvedFile = FsPath.Resolve(file);
+                if (FileExists(resolvedFile))
+                {
+                    existingFiles.Add(resolvedFile);
+                    continue;
+                }
+            }
+
+            if (FileExists(file))
+                existingFiles.Add(file);
+        }
+
+        return existingFiles;
+    }
 
     public static string CatFiles(bool throwIfNotFound, params string[] files)
     {
@@ -235,18 +389,18 @@ public static partial class Fs
         => Directory.Delete(path, recursive);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static FileSystemInfo Stat(string path)
-        => File.GetAttributes(path).HasFlag(FileAttributes.Directory) ? new DirectoryInfo(path) : new FileInfo(path);
+    public static IFileSystemInfo Stat(string path)
+        => File.GetAttributes(path).HasFlag(FileAttributes.Directory) ? new VirtualDirectoryInfo(path) : new VirtualFileInfo(path);
 
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static FileInfo StatFile(string path)
-        => new(path);
+    public static IFileInfo StatFile(string path)
+        => new VirtualFileInfo(path);
 
     [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static DirectoryInfo StatDirectory(string path)
-        => new(path);
+    public static IDirectoryInfo StatDirectory(string path)
+        => new VirtualDirectoryInfo(path);
 
 #if NET7_0_OR_GREATER
     [LibraryImport("libc", EntryPoint = "chown", StringMarshalling = StringMarshalling.Utf8, SetLastError = true)]

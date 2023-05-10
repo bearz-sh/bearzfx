@@ -10,6 +10,20 @@ namespace Bearz.Virtual;
 // ReSharper disable once PartialTypeWithSinglePart
 public partial class VirtualFileSystem : IFileSystem
 {
+    internal const UnixFileMode ValidUnixFileModes =
+        UnixFileMode.UserRead |
+        UnixFileMode.UserWrite |
+        UnixFileMode.UserExecute |
+        UnixFileMode.GroupRead |
+        UnixFileMode.GroupWrite |
+        UnixFileMode.GroupExecute |
+        UnixFileMode.OtherRead |
+        UnixFileMode.OtherWrite |
+        UnixFileMode.OtherExecute |
+        UnixFileMode.StickyBit |
+        UnixFileMode.SetGroup |
+        UnixFileMode.SetUser;
+
     private readonly IPath path;
 
     public VirtualFileSystem(IPath path)
@@ -133,6 +147,16 @@ public partial class VirtualFileSystem : IFileSystem
         return Directory.EnumerateDirectories(path, searchPattern, searchOption);
     }
 
+    public IDirectoryInfo GetDirectoryInfo(string path)
+    {
+        return new VirtualDirectoryInfo(path);
+    }
+
+    public IFileInfo GetFileInfo(string path)
+    {
+        return new VirtualFileInfo(path);
+    }
+
     public bool IsDirectory(string path)
         => File.GetAttributes(path).HasFlag(FileAttributes.Directory);
 
@@ -244,11 +268,16 @@ public partial class VirtualFileSystem : IFileSystem
     public string ResolvePath(string path)
         => this.path.Resolve(path);
 
-    public FileSystemInfo Stat(string path)
+    public IFileSystemInfo Stat(string path)
     {
-        path = this.path.Resolve(path);
-        return this.IsDirectory(path) ? new DirectoryInfo(path) : new FileInfo(path);
+        return this.IsDirectory(path) ? new VirtualDirectoryInfo(path) : new VirtualFileInfo(path);
     }
+
+    public IFileInfo StatFile(string path)
+       => new VirtualFileInfo(path);
+
+    public IDirectoryInfo StatDirectory(string path)
+        => new VirtualDirectoryInfo(path);
 
     public void WriteFile(string path, byte[] data, bool append = false)
         => File.WriteAllBytes(path, data);

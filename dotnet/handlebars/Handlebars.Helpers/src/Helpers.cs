@@ -143,7 +143,7 @@ public static partial class Helpers
             {
                 sb.Append(char.ToUpperInvariant(c));
             }
-            else if (c is '(' or ')' && Std.Env.IsWindows())
+            else if (c is '(' or ')' && Std.Env.IsWindows)
             {
                 sb.Append(c);
             }
@@ -169,7 +169,7 @@ public static partial class Helpers
             {
                 sb.Append(c);
             }
-            else if (c is '(' or ')' && Std.Env.IsWindows())
+            else if (c is '(' or ')' && Std.Env.IsWindows)
             {
                 sb.Append(c);
             }

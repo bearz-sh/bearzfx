@@ -1,4 +1,4 @@
-#if NETSTANDARD2_0 || NET6_0
+#if NETLEGACY || NET6_0
 
 // ReSharper disable once CheckNamespace
 namespace System.IO;

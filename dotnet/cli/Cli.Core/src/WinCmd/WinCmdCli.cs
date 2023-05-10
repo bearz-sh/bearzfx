@@ -7,7 +7,7 @@ public class WinCmdCli : ShellCliCommand
     public WinCmdCli(ICliExecutionContext? context = null, CommandStartInfo? startInfo = null)
         : base("cmd", context, startInfo)
     {
-        if (!Env.IsWindows())
+        if (!Env.IsWindows)
             throw new PlatformNotSupportedException("WinCmd is only supported on Windows.");
     }
 

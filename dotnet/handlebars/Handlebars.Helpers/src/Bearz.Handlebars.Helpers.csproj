@@ -35,8 +35,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Bearz.Standard" />
     <PackageReference Include="Handlebars.Net" />
     <PackageReference Include="Humanizer.Core" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\fx\Standard\src\Bearz.Standard.csproj" />
   </ItemGroup>
 </Project>

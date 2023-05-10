@@ -25,6 +25,22 @@ public static class EnvHelpers
         writer.WriteSafeString(defaultValue);
     }
 
+    public static object GetEnvVariableExists(Context context, Arguments arguments)
+    {
+        arguments.RequireArgumentLength(1, "env-exists");
+
+        var key = arguments[0].ToString();
+        if (key.IsNullOrWhiteSpace())
+            throw new HandlebarsException("ev-get-bool name must not be null or whitespace");
+
+        if (Env.TryGet(NormalizeEnvKey(key), out var value) && !value.IsNullOrWhiteSpace())
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public static object GetEnvVariableAsBool(Context context, Arguments arguments)
     {
         arguments.RequireArgumentLength(1, "env-bool");
@@ -64,6 +80,7 @@ public static class EnvHelpers
             HandlebarsDotNet.Handlebars.RegisterHelper("env", GetEnvVariable);
             HandlebarsDotNet.Handlebars.RegisterHelper("env-bool", GetEnvVariableAsBool);
             HandlebarsDotNet.Handlebars.RegisterHelper("env-expand", ExpandEnvVar);
+            HandlebarsDotNet.Handlebars.RegisterHelper("env-exists", GetEnvVariableExists);
             return;
         }
 
@@ -71,6 +88,7 @@ public static class EnvHelpers
         hb.RegisterHelper("env-value", GetEnvVariable);
         hb.RegisterHelper("env-bool", GetEnvVariableAsBool);
         hb.RegisterHelper("env-expand", ExpandEnvVar);
+        hb.RegisterHelper("env-exists", GetEnvVariableExists);
     }
 
     private static string NormalizeEnvKey(string key)
@@ -82,7 +100,7 @@ public static class EnvHelpers
             {
                 sb.Append(char.ToUpperInvariant(c));
             }
-            else if (c is '(' or ')' && Std.Env.IsWindows())
+            else if (c is '(' or ')' && Std.Env.IsWindows)
             {
                 sb.Append(c);
             }

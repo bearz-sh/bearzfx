@@ -38,7 +38,7 @@ static partial class Env
         {
             case AppFolder.Opt:
                 {
-                    if (IsWindows())
+                    if (IsWindows)
                     {
                         var common = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
                         return Path.Combine(common, applicationName);
@@ -49,7 +49,7 @@ static partial class Env
 
             case AppFolder.GlobalBin:
                 {
-                    if (IsWindows())
+                    if (IsWindows)
                     {
                         var common = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
                         return Path.Combine(common, applicationName, "bin");
@@ -60,7 +60,7 @@ static partial class Env
 
             case AppFolder.GlobalLocalBin:
                 {
-                    if (IsWindows())
+                    if (IsWindows)
                     {
                         var common = Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles);
                         return Path.Combine(common, "bin");
@@ -83,7 +83,7 @@ static partial class Env
 
             case AppFolder.GlobalLocalShare:
                 {
-                    if (IsWindows())
+                    if (IsWindows)
                     {
                         var local = Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles);
                         return Path.Combine(local, applicationName);
@@ -107,7 +107,7 @@ static partial class Env
 
             case AppFolder.GlobalCache:
                 {
-                    if (IsWindows())
+                    if (IsWindows)
                     {
                         var common = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
                         return Path.Combine(common, applicationName, "cache");
@@ -118,7 +118,7 @@ static partial class Env
 
             case AppFolder.UserCache:
                 {
-                    if (IsWindows())
+                    if (IsWindows)
                     {
                         var local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
                         return Path.Combine(local, applicationName, "cache");
@@ -130,7 +130,7 @@ static partial class Env
 
             case AppFolder.OptCache:
                 {
-                    if (Env.IsWindows())
+                    if (Env.IsWindows)
                     {
                         var common = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
                         return Path.Combine(common, applicationName, "cache");
@@ -141,7 +141,7 @@ static partial class Env
 
             case AppFolder.GlobalConfig:
                 {
-                    if (Env.IsWindows())
+                    if (Env.IsWindows)
                     {
                         var common = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
                         return Path.Combine(common, applicationName, "etc");
@@ -152,7 +152,7 @@ static partial class Env
 
             case AppFolder.UserConfig:
                 {
-                    if (!sudoUserHomeDirectory || IsWindows())
+                    if (!sudoUserHomeDirectory || IsWindows)
                     {
                         return Path.Combine(
                         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -164,7 +164,7 @@ static partial class Env
 
             case AppFolder.OptConfig:
                 {
-                    if (Env.IsWindows())
+                    if (Env.IsWindows)
                     {
                         var common = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
                         return Path.Combine(common, applicationName, "etc");
@@ -175,7 +175,7 @@ static partial class Env
 
             case AppFolder.GlobalLogs:
                 {
-                    if (Env.IsWindows())
+                    if (Env.IsWindows)
                     {
                         var common = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
                         return Path.Combine(common, applicationName, "log");
@@ -186,7 +186,7 @@ static partial class Env
 
             case AppFolder.UserLogs:
                 {
-                    if (!sudoUserHomeDirectory || IsWindows())
+                    if (!sudoUserHomeDirectory || IsWindows)
                     {
                         return Path.Combine(
                             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -199,7 +199,7 @@ static partial class Env
 
             case AppFolder.OptLogs:
                 {
-                    if (Env.IsWindows())
+                    if (Env.IsWindows)
                     {
                         var common = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
                         return Path.Combine(common, applicationName, "log");
@@ -210,7 +210,7 @@ static partial class Env
 
             case AppFolder.GlobalTemp:
                 {
-                    if (Env.IsWindows())
+                    if (Env.IsWindows)
                     {
                         var common = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
                         return Path.Combine(common, "Temp", applicationName);
@@ -221,7 +221,7 @@ static partial class Env
 
             case AppFolder.UserTemp:
                 {
-                    if (Env.IsWindows())
+                    if (Env.IsWindows)
                         return Path.Combine(Path.GetTempPath(), applicationName);
 
                     var home = sudoUserHomeDirectory ? SudoUserHomeDirectory : HomeDirectory;
@@ -230,7 +230,7 @@ static partial class Env
 
             case AppFolder.OptTemp:
                 {
-                    if (Env.IsWindows())
+                    if (Env.IsWindows)
                     {
                         var common = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
                         return Path.Combine(common, "Temp", applicationName);
@@ -241,7 +241,7 @@ static partial class Env
 
             case AppFolder.GlobalData:
                 {
-                    if (Env.IsWindows())
+                    if (Env.IsWindows)
                     {
                         var common = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
                         return Path.Combine(common, applicationName, "data");
@@ -258,7 +258,7 @@ static partial class Env
 
             case AppFolder.OptData:
                 {
-                    if (Env.IsWindows())
+                    if (Env.IsWindows)
                     {
                         var common = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
                         return Path.Combine(common, applicationName, "data");
@@ -269,7 +269,7 @@ static partial class Env
 
             case AppFolder.UserDocuments:
                 {
-                    if (!sudoUserHomeDirectory || IsWindows())
+                    if (!sudoUserHomeDirectory || IsWindows)
                     {
                         return Path.Combine(
                             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
@@ -294,7 +294,7 @@ static partial class Env
 
             case AppFolder.UserPictures:
                 {
-                    if (!sudoUserHomeDirectory || IsWindows())
+                    if (!sudoUserHomeDirectory || IsWindows)
                     {
                         return Path.Combine(
                             Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
@@ -306,7 +306,7 @@ static partial class Env
 
             case AppFolder.UserVideos:
                 {
-                    if (!sudoUserHomeDirectory || IsWindows())
+                    if (!sudoUserHomeDirectory || IsWindows)
                     {
                         return Path.Combine(
                             Environment.GetFolderPath(Environment.SpecialFolder.MyVideos),

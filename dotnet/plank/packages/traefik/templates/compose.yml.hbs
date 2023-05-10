@@ -1,0 +1,42 @@
+services:
+  traefik:
+    image: traefik:{{tag}}
+    container_name: {{name}}
+    restart: {{restart}}
+{{#if host.ports }}
+    ports:
+{{#each host.ports as |port|}}
+    - "{{{../host.ip}}}:{{ port }}"
+{{/each}}
+{{/if}}
+    environment:
+      TZ: {{tz}}
+      PUID: {{puid}}
+      GUID: {{guid}}
+{{#if (env-exists "CLOUDFLARE_API_TOKEN")}}
+      CLOUDFLARE_DNS_API_TOKEN: "${CLOUDFLARE_API_TOKEN}"  
+{{/if}}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - {{paths.etc}}/{{name}}/traefik.yml:/etc/traefik/traefik.yml
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{name}}.entrypoints=https"
+      - "traefik.http.routers.{{name}}.tls=true"
+      - "traefik.http.routers.{{name}}.service=api@internal"
+      - "traefik.http.middlewares.{{name}}.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.{{name}}.redirectscheme.permanent=true"
+{{#if network.name }}
+    networks:
+{{#if network.ipv4 }}
+      plank-vnet:
+        ipv4_address: {{network.ipv4}}
+{{else}}
+      - plank-vnet
+{{/if}}
+      
+networks:
+  plank-vnet:
+    external: true
+    name: {{network.name}}
+{{/if}}

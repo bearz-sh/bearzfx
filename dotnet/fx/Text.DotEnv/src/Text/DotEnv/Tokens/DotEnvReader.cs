@@ -303,7 +303,7 @@ public class DotEnvReader
             case Capture.DoubleQuote:
                 if (c == '"')
                 {
-                    if (this.buffer[^1] == '\\')
+                    if (this.buffer.Length > 0 && this.buffer[^1] == '\\')
                     {
                         this.buffer.Remove(this.buffer.Length - 1, 1);
                         break;
@@ -323,7 +323,7 @@ public class DotEnvReader
             case Capture.SingleQuote:
                 if (c == '\'')
                 {
-                    if (this.buffer[^1] == '\\')
+                    if (this.buffer.Length > 0 && this.buffer[^1] == '\\')
                     {
                         this.buffer.Remove(this.buffer.Length - 1, 1);
                         break;
@@ -346,7 +346,7 @@ public class DotEnvReader
                 if (c == '`')
                 {
                     // escaped backtick
-                    if (this.buffer[^1] == '\\')
+                    if (this.buffer.Length > 0 && this.buffer[^1] == '\\')
                     {
                         this.buffer.Remove(this.buffer.Length - 1, 1);
                         break;
@@ -366,7 +366,7 @@ public class DotEnvReader
                 break;
 
             case Capture.Brackets:
-                if (c == '}' && this.buffer[^1] == '\n')
+                if (c == '}' && this.buffer.Length > 0 && this.buffer[^1] == '\n')
                 {
                     this.buffer.Append(c);
                     this.capture = Capture.None;

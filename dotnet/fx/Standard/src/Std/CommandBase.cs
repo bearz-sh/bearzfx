@@ -164,7 +164,7 @@ public abstract class CommandBase
         cmd.StartInfo.FileName = this.FileName;
         if (this.StartInfo.Verb?.EqualsIgnoreCase("runas") == true)
         {
-            if (Std.Env.IsWindows())
+            if (Std.Env.IsWindows)
             {
                 cmd.StartInfo.Verb = "runas";
             }
@@ -176,7 +176,7 @@ public abstract class CommandBase
 
         if (this.StartInfo.Verb?.EqualsIgnoreCase("sudo") == true)
         {
-            if (!Std.Env.IsWindows())
+            if (!Std.Env.IsWindows)
             {
                 cmd.StartInfo.FileName = "sudo";
                 si.Args.Prepend(this.FileName);
@@ -189,7 +189,7 @@ public abstract class CommandBase
 
         if (this.StartInfo.Verb?.EqualsIgnoreCase("admin") == true || this.StartInfo.Verb?.EqualsIgnoreCase("root") == true)
         {
-            if (Std.Env.IsWindows())
+            if (Std.Env.IsWindows)
             {
                 cmd.StartInfo.Verb = "runas";
             }
@@ -231,7 +231,7 @@ public abstract class CommandBase
         {
             cmd.StartInfo.UserName = si.User;
 
-            if (Std.Env.IsWindows())
+            if (Std.Env.IsWindows)
             {
                 if (si.Password != null)
                 {

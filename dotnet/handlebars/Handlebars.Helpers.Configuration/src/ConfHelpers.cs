@@ -68,7 +68,7 @@ public static class ConfHelpers
             {
                 sb.Append(c);
             }
-            else if (c is '(' or ')' && Std.Env.IsWindows())
+            else if (c is '(' or ')' && Std.Env.IsWindows)
             {
                 sb.Append(c);
             }

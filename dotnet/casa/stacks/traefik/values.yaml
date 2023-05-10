@@ -1,0 +1,8 @@
+
+env:
+  host:
+    ip: 127.0.0.1
+    domain: home.lan
+    ports:
+      - 80:80
+      - 443:443

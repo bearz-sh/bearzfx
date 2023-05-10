@@ -25,6 +25,10 @@ public partial interface IFileSystem
 
     bool DirectoryExists([NotNullWhen(true)] string? path);
 
+    IDirectoryInfo GetDirectoryInfo(string path);
+
+    IFileInfo GetFileInfo(string path);
+
     void MakeDirectory(string path);
 
     void MoveDirectory(string source, string destination);
@@ -55,7 +59,7 @@ public partial interface IFileSystem
 
     void RemoveDirectory(string path);
 
-    FileSystemInfo Stat(string path);
+    IFileSystemInfo Stat(string path);
 
     void WriteFile(string path, byte[] data, bool append = false);
 
