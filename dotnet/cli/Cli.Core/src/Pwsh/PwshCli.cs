@@ -32,7 +32,7 @@ public class PwshCli : ShellCliCommand
 
     protected override CommandArgs GenerateScriptArgs(string tempFile)
     {
-        return new CommandArgs()
+        var args = new CommandArgs()
         {
             "-NoProfile",
             "-NoLogo",
@@ -40,8 +40,10 @@ public class PwshCli : ShellCliCommand
             "-ExecutionPolicy",
             "Bypass",
             "-Command",
-            $". '{tempFile}'",
+            $". {tempFile}",
         };
+
+        return args;
     }
 
     protected override string GenerateScriptFile(string script)

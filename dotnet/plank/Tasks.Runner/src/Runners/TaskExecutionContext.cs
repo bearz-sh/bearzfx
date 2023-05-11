@@ -5,15 +5,6 @@ namespace Plank.Tasks.Internal;
 
 public class TaskExecutionContext : ExecutionContext, ITaskExecutionContext
 {
-    public TaskExecutionContext(ITask task, IServiceProvider services)
-        : base(services)
-    {
-        this.Task = task;
-        var loggerFactory = services.GetRequiredService<ILoggerFactory>();
-        this.Log = loggerFactory.CreateLogger(task.Id);
-        this.Outputs = new Outputs(task.Id, "tasks", this.Env.SecretMasker);
-    }
-
     public TaskExecutionContext(ITask task, IExecutionContext context)
         : base(context)
     {
@@ -28,6 +19,19 @@ public class TaskExecutionContext : ExecutionContext, ITaskExecutionContext
         else
         {
             this.Outputs = new Outputs(task.Id, "tasks", this.Env.SecretMasker);
+        }
+
+        if (this.Variables is IMutableVariables mut)
+        {
+            mut["task"] = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["name"] = task.Name,
+                ["id"] = task.Id,
+                ["description"] = task.Description,
+                ["timeout"] = task.Timeout,
+                ["continueOnError"] = task.ContinueOnError,
+                ["dependencies"] = task.Dependencies,
+            };
         }
     }
 

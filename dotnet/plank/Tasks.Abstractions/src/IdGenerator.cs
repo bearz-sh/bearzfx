@@ -31,10 +31,16 @@ public class IdGenerator : IIdGenerator
                     sb.Append("_");
                     break;
                 case '_' or '-' or ':':
-                    sb.Append(c);
+                    sb.Append('_');
                     break;
             }
         }
+
+        var i = sb.Length - 1;
+        while (i > 0 && sb[i] is '_')
+            i--;
+
+        sb.Length = i + 1;
 
         return StringBuilderCache.GetStringAndRelease(sb);
     }

@@ -49,6 +49,8 @@ public class PlankExtractedPackage
             var app = this.Spec.Name;
             varFiles = new[]
             {
+                FsPath.Combine(packageDir, "vars.yml"),
+                FsPath.Combine(packageDir, $"{target}.vars.yml"),
                 FsPath.Combine(paths.EtcDir, ".vars", "vars.yml"),
                 FsPath.Combine(paths.EtcDir, ".vars", $"{target}.vars.yml"),
                 FsPath.Combine(paths.EtcDir, ".vars", app, "vars.yml"),
@@ -61,8 +63,12 @@ public class PlankExtractedPackage
         }
 
         var existingVarFiles = Fs.GetExistingFiles(varFiles, ymlExtensions);
+        foreach(var file in existingVarFiles)
+            Console.WriteLine(file);
         this.Variables.AddVarFiles(existingVarFiles);
 
+        this.Variables.Dump();
+        
         if (secretsFile is not null)
             this.Secrets = SecretSpec.ParseFile(secretsFile);
     }

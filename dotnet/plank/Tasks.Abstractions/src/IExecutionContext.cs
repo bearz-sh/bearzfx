@@ -13,4 +13,6 @@ public interface IExecutionContext : ICliExecutionContext
     IConfiguration Config { get; }
 
     IMessageBus Bus { get; }
+
+    IVariables Variables { get; }
 }

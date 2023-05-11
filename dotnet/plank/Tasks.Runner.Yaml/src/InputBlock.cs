@@ -10,5 +10,7 @@ public class InputBlock
 
     public string DefaultValue { get; set; } = string.Empty;
 
+    public Type? Type { get; set; }
+
     public bool Required { get; set; }
 }

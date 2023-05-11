@@ -1,9 +1,9 @@
 namespace Plank.Tasks.Messages;
 
-public class TaskFinishedMessage : Message
+public class TaskFinishedMessage : GroupEndMessage
 {
     public TaskFinishedMessage(ITask task, TaskStatus status)
-        : base($"Task {task.Name} {status.ToString().ToLower()}")
+        : base(task.Name)
     {
         this.Task = task;
         this.Status = status;

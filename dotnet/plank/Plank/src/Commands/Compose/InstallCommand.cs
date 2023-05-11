@@ -67,18 +67,25 @@ public class InstallCommandHandler : AppCommandHandlerBase
             DotEnvFile.LoadRelevantVariables(new[] { package.GlobalEnvFile, package.EnvFile }, package.Secrets);
             var args = new CommandArgs()
             {
-                "compose",
                 "--project-name",
                 (package.Variables["name"]?.ToString() ?? package.Spec.Name),
                 "--file",
                 composeFile,
+                "--ansi",
+                "always",
                 "up",
                 "-d",
             };
 
-            var result = Env.Process.CreateCommand("docker")
+            Env.Set("DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION", "true");
+            Env.Set("DOTNET_CONSOLE_ANSI_COLOR", "true");
+            Console.WriteLine(args.ToString());
+
+            var result = Env.Process.CreateCommand("/usr/libexec/docker/cli-plugins/docker-compose")
                 .WithArgs(args)
                 .WithStdio(Stdio.Inherit)
+                .RedirectTo((line, _) => Console.WriteLine(line))
+                .RedirectErrorTo((line, _) => Console.WriteLine(line))
                 .WithCwd(FsPath.GetDirectoryName(composeFile)!)
                 .Output();
 

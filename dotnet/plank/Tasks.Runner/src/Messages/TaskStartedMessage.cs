@@ -1,9 +1,9 @@
 namespace Plank.Tasks.Messages;
 
-public class TaskStartedMessage : Message
+public class TaskStartedMessage : GroupStartMessage
 {
     public TaskStartedMessage(ITask task)
-        : base($"Task {task.Name} started")
+        : base(task.Name)
     {
         this.Task = task;
     }

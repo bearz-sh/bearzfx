@@ -33,7 +33,7 @@ public class PlankVariables
             },
             ["network"] = new Dictionary<string, object?>()
             {
-                ["name"] = "plank",
+                ["name"] = "plank-vnet",
                 ["ipv4"] = null,
                 ["enabled"] = false,
             },

@@ -16,7 +16,7 @@ public sealed class MessageBus : IMessageBus
     private volatile bool continueRunning = true;
     private bool disposed;
 
-    public MessageBus(IMessageSink messageSink, bool stopOnFail)
+    public MessageBus(IMessageSink messageSink, bool stopOnFail = false)
     {
         this.sinks.Add(messageSink);
         this.stopOnFail = stopOnFail;

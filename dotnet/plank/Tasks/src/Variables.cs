@@ -10,40 +10,60 @@ using Microsoft.Extensions.Configuration;
 
 namespace Plank.Tasks;
 
-public class Variables
+public class Variables : IMutableVariables
 {
     private readonly Dictionary<string, object?> variables;
 
     public Variables()
     {
-        this.variables = new Dictionary<string, object?>()
+        this.variables = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
         {
-            ["os"] = new Dictionary<string, object?>()
+            ["os"] = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
             {
                 ["windows"] = Env.IsWindows,
                 ["linux"] = Env.IsLinux,
                 ["mac"] = Env.IsMacOS,
                 ["darwin"] = Env.IsMacOS,
             },
-            ["process"] = new Dictionary<string, object?>()
+            ["host"] = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
+                {
+                    ["ip"] = GetLocalIp(),
+                },
+            ["process"] = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
             {
                 ["pid"] = Env.Process.Id,
                 ["elevated"] = Env.IsUserElevated,
                 ["is64bit"] = Env.IsProcess64Bit,
             },
-            ["env"] = new Dictionary<string, object?>()
-            {
-                ["cwd"] = Env.Cwd,
-                ["home"] = Env.HomeDirectory,
-                ["user"] = Env.User,
-                ["host"] = Env.HostName,
-            },
         };
+
+        var envValues = Env.GetAll();
+        var env = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        foreach (var kvp in envValues)
+        {
+            env[kvp.Key] = kvp.Value;
+        }
+
+        env["is_elevated"] = Env.IsUserElevated;
+
+        if (Env.IsWindows)
+        {
+            env["home"] = Env.HomeDirectory;
+            env["user"] = Env.User;
+            env["hostname"] = Env.HostName;
+        }
+
+        this.variables["env"] = env;
     }
 
     public Variables(Variables variables)
     {
         this.variables = new Dictionary<string, object?>(variables.variables);
+    }
+
+    public Variables(IDictionary<string, object?> variables)
+    {
+        this.variables = new Dictionary<string, object?>(variables);
     }
 
     public object? this[string key]
@@ -56,6 +76,18 @@ public class Variables
             return default;
         }
         set => this.variables[key] = value;
+    }
+
+    public object? this[string key, object? defaultValue]
+    {
+        get
+        {
+            if (this.variables.TryGetValue(key, out var value))
+                return value;
+
+            return defaultValue;
+        }
+        set => this.variables[key] = value ?? defaultValue;
     }
 
     public Variables Add(IConfiguration config)
@@ -129,6 +161,45 @@ public class Variables
     public IDictionary<string, object?> ToDictionary()
     {
         return this.variables;
+    }
+
+    public bool TryGetValue(string name, out object? value)
+    {
+        if (!name.Contains('.'))
+            return this.variables.TryGetValue(name, out value);
+
+        value = null;
+        var parts = name.Split('.');
+        var current = (IReadOnlyDictionary<string, object?>)this.variables;
+        for (var i = 0; i < parts.Length; i++)
+        {
+            var part = parts[i];
+            if (i == parts.Length - 1)
+            {
+                if (current.TryGetValue(part, out value))
+                    return true;
+
+                value = default;
+                return false;
+            }
+
+            if (current.TryGetValue(part, out var next))
+            {
+                if (next is not IReadOnlyDictionary<string, object?> map)
+                {
+                    value = default;
+                    return false;
+                }
+
+                current = map;
+                continue;
+            }
+
+            value = default;
+            return false;
+        }
+
+        return false;
     }
 
     private static void ProcessVariables(string baseKey, IDictionary<string, object?> map)

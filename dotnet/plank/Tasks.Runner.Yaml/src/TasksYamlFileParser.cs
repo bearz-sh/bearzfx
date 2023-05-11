@@ -11,7 +11,7 @@ namespace Plank.Tasks.Runner.Yaml;
 
 public class TasksYamlFileParser
 {
-    public TaskCollection ParseFile(string file)
+    public static YamlTaskWorkflowDefinition ParseFile(string file)
     {
         using var input = new StreamReader(file);
 
@@ -23,21 +23,26 @@ public class TasksYamlFileParser
         if (doc.RootNode is not YamlMappingNode map)
             throw new YamlException("Root node is not a mapping node");
 
+        var taskCollection = new TaskCollection();
+        var parser = new TasksYamlFileParser();
         if (map.Children.TryGetValue("tasks", out var node) && node is YamlSequenceNode tasksNode)
         {
-            var taskCollection = new TaskCollection();
+            int i = 0;
             foreach (var child in tasksNode.Children)
             {
+                i++;
+                Console.Write($"task {i}");
                 if (child is YamlMappingNode taskNode)
-                    taskCollection.Add(this.ParseTask(taskNode));
+                {
+                   
+                    taskCollection.Add(parser.ParseTask(taskNode));
+                }
+                    
+                Console.WriteLine();
             }
-
-            return taskCollection;
         }
 
-        throw new YamlException("Root node does not contain a tasks node");
-
-        // Examine the stream
+        return new YamlTaskWorkflowDefinition(taskCollection);
     }
 
     public ITask ParseTask(YamlMappingNode node)
@@ -63,7 +68,10 @@ public class TasksYamlFileParser
             throw new YamlException(nameNode.Start, nameNode.End, "Task must have a name or id that is not empty");
         }
 
+        Console.Write("name: " + name);
         var task = new YamlShellTask(name, id);
+        Console.Write(" id: " + task.Id);
+        Console.WriteLine();
         foreach (var child in node.Children)
         {
             switch (child.Key.ToString())
@@ -118,7 +126,7 @@ public class TasksYamlFileParser
                             task.Run = scalarNode2.Value;
                         }
                     }
-                   
+
                     break;
 
                 case "shell":
@@ -140,7 +148,7 @@ public class TasksYamlFileParser
         return task;
     }
 
-    private Dictionary<string, InputBlock> VisitInputBlocks(YamlNode node)
+    private  Dictionary<string, InputBlock> VisitInputBlocks(YamlNode node)
     {
         if (node is YamlScalarNode)
             throw new YamlException("Inputs must be a mapping node or sequence");

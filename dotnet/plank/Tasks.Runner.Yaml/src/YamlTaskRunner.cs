@@ -1,12 +1,17 @@
-using Microsoft.Extensions.DependencyInjection;
+using Bearz.Extra.Strings;
+using Bearz.Handlebars.Helpers;
+using Bearz.Std;
+
+using HandlebarsDotNet;
 
 using Plank.Tasks.Internal;
 using Plank.Tasks.Messages;
+using Plank.Tasks.Runner.Runners;
 using Plank.Tasks.Runners;
 
 namespace Plank.Tasks.Runner.Yaml;
 
-public class YamlTaskRunner : ITaskRunner
+public class YamlTaskRunner : IYamlTaskRunner
 {
     public YamlTaskRunner(IServiceProvider services)
     {
@@ -16,13 +21,40 @@ public class YamlTaskRunner : ITaskRunner
     private IServiceProvider Services { get; }
 
     public async Task<TaskRunnerResult> RunAsync(
+        IYamlTaskRunOptions? options = null,
+        IExecutionContext? context = null,
+        CancellationToken cancellationToken = default)
+    {
+        var yamlFile = options?.TaskFile ?? FsPath.Combine(Env.Cwd, "planktasks.yaml");
+
+        var file = Fs.GetExistingFile(yamlFile, new[] { ".yaml", ".yml" });
+        if (file is null)
+            throw new FileNotFoundException($"Unable to find a planktasks.yaml file from {file}.");
+
+        var workflow = TasksYamlFileParser.ParseFile(file);
+
+        var result = await this.RunAsync(workflow.Tasks, options, context, cancellationToken)
+            .ConfigureAwait(false);
+
+        return result;
+    }
+
+    public async Task<TaskRunnerResult> RunAsync(
         IDependencyCollection<ITask> tasks,
         ITaskRunOptions? options = null,
         IExecutionContext? context = null,
         CancellationToken cancellationToken = default)
     {
         options ??= new TaskRunOptions();
-        IMessageBus bus = context?.Bus ?? this.Services.GetRequiredService<IMessageBus>();
+        bool createdRootContext = false;
+        if (context is null)
+        {
+            createdRootContext = true;
+            context = new RootExecutionContext(this.Services);
+        }
+
+        var bus = context.Bus;
+
         var set = new List<ITask>();
 
         if (options.Targets.Count == 0)
@@ -45,9 +77,7 @@ public class YamlTaskRunner : ITaskRunner
 
                 if (rootTask.Dependencies.Count == 0 || options.SkipDependencies)
                 {
-                    var ctx = context != null
-                        ? new TaskExecutionContext(rootTask, context)
-                        : new TaskExecutionContext(rootTask, this.Services);
+                    var ctx = new TaskExecutionContext(rootTask, context);
 
                     var ct = cancellationToken;
                     if (rootTask.Timeout > 0)
@@ -68,10 +98,54 @@ public class YamlTaskRunner : ITaskRunner
                     {
                         bus.Publish(new TaskStartedMessage(rootTask));
 
+                        var hb2 = Handlebars.Create();
+                        hb2.RegisterJsonHelpers();
+                        hb2.RegisterStringHelpers();
+                        hb2.RegisterDateTimeHelpers();
+                        hb2.RegisterRegexHelpers();
+                        if (rootTask is not YamlShellTask)
+                            Console.WriteLine("not yaml shell task");
+
+                        if (ctx.Variables is not IMutableVariables)
+                            Console.WriteLine("not mutable variables");
+
+
+                        if (rootTask is YamlShellTask shellTask && ctx.Variables is IMutableVariables mut)
+                        {
+                            foreach (var kvp2 in shellTask.Inputs)
+                            {
+                                var inputBock = kvp2.Value;
+                                if (inputBock.Expression.IsNullOrWhiteSpace())
+                                {
+                                    mut[kvp2.Key] = null;
+                                    continue;
+                                }
+
+                                var template = hb2.Compile(inputBock.Expression);
+                                var value = template(mut.ToDictionary());
+                                mut[kvp2.Key] = value;
+                                shellTask.Env[kvp2.Key] = value;
+                            }
+
+                            Console.WriteLine("compile template");
+                            var run = shellTask.Run;
+                            var runTemplate = hb2.Compile(run);
+                            shellTask.Run = runTemplate(mut.ToDictionary());
+                        }
+
+
                         await rootTask.RunAsync(ctx, ct)
                             .ConfigureAwait(false);
 
-                        bus.Publish(new TaskFinishedMessage(rootTask, TaskStatus.Completed));
+                        bus.Publish(new TaskFinishedMessage(rootTask, ctx.Status));
+
+                        return ctx.Status switch
+                        {
+                            TaskStatus.Completed => TaskRunnerResult.Success(),
+                            TaskStatus.Failed => TaskRunnerResult.Failed(),
+                            TaskStatus.Cancelled => TaskRunnerResult.Cancelled(),
+                            _ => TaskRunnerResult.Failed(),
+                        };
                     }
                     catch (TaskCanceledException)
                     {
@@ -109,10 +183,18 @@ public class YamlTaskRunner : ITaskRunner
                 }
             }
 
-            IExecutionContext? parentContext = context;
+            IExecutionContext parentContext = context;
             bool failed = false;
 
-            foreach (var task in tasks)
+            ITaskExecutionContext? previousTaskContext = null;
+
+            var hb = Handlebars.Create();
+            hb.RegisterJsonHelpers();
+            hb.RegisterStringHelpers();
+            hb.RegisterDateTimeHelpers();
+            hb.RegisterRegexHelpers();
+
+            foreach (var task in set)
             {
                 if (failed && !task.ContinueOnError)
                 {
@@ -121,9 +203,48 @@ public class YamlTaskRunner : ITaskRunner
                     continue;
                 }
 
-                var ctx = parentContext != null
-                    ? new TaskExecutionContext(task, parentContext)
-                    : new TaskExecutionContext(task, this.Services);
+                if (previousTaskContext is not null && previousTaskContext.Variables is IMutableVariables parentVariables)
+                {
+                    var outputData = previousTaskContext.Outputs.ToDictionary();
+                    if (!parentVariables.TryGetValue("outputs", out var outputObject))
+                    {
+                        outputObject = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
+                    }
+
+                    var outputs = (IDictionary<string, object?>)outputObject!;
+                    outputs[previousTaskContext.Task.Id] = outputData;
+                }
+
+                var ctx = new TaskExecutionContext(task, parentContext);
+                if (task is not YamlShellTask)
+                    Console.WriteLine("not yaml shell task");
+
+                if (ctx.Variables is not IMutableVariables)
+                    Console.WriteLine("not mutable variables");
+
+                if (task is YamlShellTask shellTask && ctx.Variables is IMutableVariables mut)
+                {
+                    foreach (var kvp2 in shellTask.Inputs)
+                    {
+                        var inputBock = kvp2.Value;
+                        if (inputBock.Expression.IsNullOrWhiteSpace())
+                        {
+                            mut[kvp2.Key] = null;
+                            continue;
+                        }
+
+                        var template = hb.Compile(inputBock.Expression);
+                        var value = template(mut.ToDictionary());
+                        mut[kvp2.Key] = value;
+                        shellTask.Env[kvp2.Key] = value;
+                    }
+
+                    var run = shellTask.Run;
+                    var runTemplate = hb.Compile(run);
+                    shellTask.Run = runTemplate(mut.ToDictionary());
+                }
+
+                previousTaskContext = ctx;
 
                 var ct = cancellationToken;
                 if (task.Timeout > 0)
@@ -186,6 +307,14 @@ public class YamlTaskRunner : ITaskRunner
         {
             bus.Publish(new ErrorMessage(ex));
             return TaskRunnerResult.Failed();
+        }
+        finally
+        {
+            // ensure the scoped context is disposed
+            if (createdRootContext && context is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
         }
     }
 

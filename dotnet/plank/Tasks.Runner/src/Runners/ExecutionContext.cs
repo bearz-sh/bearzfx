@@ -7,20 +7,24 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Plank.Tasks.Internal;
 
-public abstract class ExecutionContext : IExecutionContext
+public abstract class ExecutionContext : IExecutionContext, IDisposable
 {
+    private readonly IServiceScope? scope;
+
     protected ExecutionContext(IServiceProvider services)
     {
-        this.Services = services;
-        this.Env = services.GetService<IEnvironment>() ?? new VirtualEnvironment();
-        this.Process = services.GetService<IProcess>() ?? new VirtualProcess(this.Env);
-        this.Path = services.GetService<IPath>() ?? new VirtualPath(this.Env);
-        this.Fs = services.GetService<IFileSystem>() ?? new VirtualFileSystem(this.Path);
+        this.scope = services.CreateScope();
+        this.Services = this.scope.ServiceProvider;
+        this.Env = this.Services.GetService<IEnvironment>() ?? new VirtualEnvironment();
+        this.Process = this.Services.GetService<IProcess>() ?? new VirtualProcess(this.Env);
+        this.Path = this.Services.GetService<IPath>() ?? new VirtualPath(this.Env);
+        this.Fs = this.Services.GetService<IFileSystem>() ?? new VirtualFileSystem(this.Path);
         this.Log = NullLogger.Instance;
+        this.Variables = new Variables();
 
-        this.Bus = services.GetRequiredService<IMessageBus>();
+        this.Bus = this.Services.GetRequiredService<IMessageBus>();
 
-        var configuration = services.GetService<IConfiguration>();
+        var configuration = this.Services.GetService<IConfiguration>();
         if (configuration != null)
         {
             this.Config = configuration;
@@ -42,6 +46,7 @@ public abstract class ExecutionContext : IExecutionContext
         this.Config = executionContext.Config;
         this.Log = NullLogger.Instance;
         this.Bus = executionContext.Bus;
+        this.Variables = new Variables(executionContext.Variables.ToDictionary());
     }
 
     public IEnvironment Env { get; }
@@ -59,4 +64,26 @@ public abstract class ExecutionContext : IExecutionContext
     public IMessageBus Bus { get; set; }
 
     public IConfiguration Config { get; }
+
+    public IVariables Variables { get; set; }
+
+    public void Dispose()
+    {
+        this.Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposing || this.scope is null)
+        {
+            return;
+        }
+
+        this.scope.Dispose();
+
+        // only dispose the bus if it was created by the execution context
+        // thru the service provider
+        this.Bus.Dispose();
+    }
 }

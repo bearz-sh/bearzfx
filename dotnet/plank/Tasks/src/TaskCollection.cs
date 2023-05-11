@@ -21,12 +21,9 @@ public class TaskCollection : Collection<ITask>, IDependencyCollection<ITask>
 
     public new void Add(ITask item)
     {
-        if (!this.lookup.ContainsKey(item.Name) && !this.lookup.ContainsKey(item.Id))
+        if (!this.lookup.ContainsKey(item.Id))
         {
-            this.lookup.Add(item.Name, item);
-
-            if (item.Id != item.Name)
-                this.lookup.Add(item.Id, item);
+            this.lookup.Add(item.Id, item);
 
             base.Add(item);
         }
@@ -34,8 +31,11 @@ public class TaskCollection : Collection<ITask>, IDependencyCollection<ITask>
 
     public bool Contains(string name)
     {
-        return this.lookup.ContainsKey(name);
+        return this.lookup.ContainsKey(IdGenerator.Instance.FromName(name.AsSpan()));
     }
+
+    public bool ContainsId(string id)
+        => this.lookup.ContainsKey(id);
 
     public void CheckCircularDependencies()
     {
@@ -86,12 +86,12 @@ public class TaskCollection : Collection<ITask>, IDependencyCollection<ITask>
 
         void Check(ITask task)
         {
-            if (dependents.Contains(task.Name))
+            if (dependents.Contains(task.Id))
             {
                 throw new InvalidOperationException($"Circular dependency: {string.Join(" -> ", dependents.Reverse().Append(task.Name))}");
             }
 
-            dependents.Push(task.Name);
+            dependents.Push(task.Id);
 
             foreach (var dependency in task.Dependencies)
             {

@@ -6,6 +6,7 @@
     <PackageVersion Include="Avalonia" Version="0.10.18" />
     <PackageVersion Include="Avalonia.Desktop" Version="0.10.18" />
     <PackageVersion Include="Avalonia.Diagnostics" Version="0.10.18" />
+    <PackageVersion Include="Serilog.Expressions" Version="3.4.1" />
     <PackageVersion Include="XamlNameReferenceGenerator" Version="1.6.1" />
     <PackageVersion Include="AlphaFS" Version="2.2.6" />
     <PackageVersion Include="AltCover" Version="8.6.14" />

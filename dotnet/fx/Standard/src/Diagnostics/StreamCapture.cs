@@ -64,7 +64,7 @@ public class StreamCapture : IProcessCapture
 
     public void OnNext(string value, Process process)
     {
-        this.writer.Write(value);
+        this.writer.WriteLine(value);
     }
 
     public void OnComplete(Process process)

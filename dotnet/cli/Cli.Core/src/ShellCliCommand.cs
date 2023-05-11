@@ -49,19 +49,25 @@ public abstract class ShellCliCommand : CliCommand
         return command.Output();
     }
 
-    public static Task<CommandOutput> RunScriptAsync(
+    public static async Task<CommandOutput> RunScriptAsync(
         string shell,
         string script,
         Action<CommandStartInfo>? configure,
+        ICliExecutionContext? context = null,
         CancellationToken cancellationToken = default)
     {
+        var si = new CommandStartInfo();
+        configure?.Invoke(si);
         if (!s_shellCommands.TryGetValue(shell, out var type))
             throw new InvalidOperationException($"Invalid shell type {shell}");
 
-        var command = (ShellCliCommand)Activator.CreateInstance(type)!;
+        var command = (ShellCliCommand)Activator.CreateInstance(type, new object?[] { context, si })!;
         configure?.Invoke(command.StartInfo);
         command.WithScript(script);
-        return command.OutputAsync(cancellationToken);
+        var result = await command.OutputAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        return result;
     }
 
     public ShellCliCommand WithScript(string script)
@@ -82,14 +88,14 @@ public abstract class ShellCliCommand : CliCommand
             var dir = this.Context.Path.TempDir();
             var file = Path.Combine(dir, $"{fileName}.{this.Extension}");
             this.Context.Fs.WriteFileText(file, script);
-            return script;
+            return file;
         }
         else
         {
             var dir = FsPath.GetTempDir();
             var file = Path.Combine(dir, $"{fileName}.{this.Extension}");
             Fs.WriteTextFile(file, script);
-            return script;
+            return file;
         }
     }
 

@@ -1,7 +1,6 @@
 ﻿using System.CommandLine.Parsing;
 
 using Bearz.Extensions.Hosting.CommandLine;
-using Bearz.Extra.Object;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,15 +9,21 @@ using Microsoft.Extensions.Logging;
 using Plank;
 using Plank.Commands;
 using Plank.Commands.Compose;
-using Plank.Package.Actions;
+using Plank.Commands.Tasks;
+using Plank.Tasks.Runner.Runners;
 
 using Serilog;
 using Serilog.Events;
 using Serilog.Filters;
+using Serilog.Templates;
+using Serilog.Templates.Themes;
 
-var loggerConfig = new LoggerConfiguration().
-    Filter.ByExcluding(Matching.FromSource("Microsoft"))
-    .WriteTo.Console(LogEventLevel.Information);
+var loggerConfig = new LoggerConfiguration()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .WriteTo.Console(
+        new ExpressionTemplate(
+            "{#if @l <> 'Information'}{@l:u3}: {#end}{@m}\n{@x}",
+            theme: TemplateTheme.Code));
 
 var appLog = loggerConfig.CreateLogger();
 
@@ -27,10 +32,11 @@ try
     var builder = new CommandLineApplicationBuilder();
 
     builder.Services.AddLogging(lb =>
-    {
-        lb.ClearProviders();
-        lb.AddSerilog(appLog);
-    });
+        {
+            lb.ClearProviders();
+            lb.AddSerilog(appLog);
+        })
+        .AddRunnerCore();
 
     builder.Configuration.AddJsonFile(
         Path.Join(Paths.ConfigDirectory, "plank.json"), true, false);
@@ -41,13 +47,17 @@ try
     builder.UseDefaults();
 
     builder.AddCommand(new ComposeCommand());
+    builder.AddCommand(new TasksCommand());
     builder.AddCommand(new InitCommand());
 
     var app = builder.Build();
 
-    await app.Parse(args).InvokeAsync();
+    return await app.Parse(args).InvokeAsync();
 }
 catch (Exception ex)
 {
-    appLog.Fatal(ex, "Casa startup critical failure");
+    appLog.Fatal(ex, "Plank startup critical failure");
+    return 1;
 }
+
+return 0;

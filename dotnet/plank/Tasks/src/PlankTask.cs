@@ -10,7 +10,7 @@ public abstract class PlankTask : ITask
     protected PlankTask(string name, string id)
     {
         this.Name = name;
-        this.Id = IdGenerator.Instance.FromName(id.AsSpan());
+        this.Id = IdGenerator.Instance.FromName(name.AsSpan());
     }
 
     public string Id { get; }
@@ -46,6 +46,7 @@ public abstract class PlankTask : ITask
         catch (Exception e)
         {
             context.Error(e);
+            context.Status = TaskStatus.Failed;
         }
     }
 

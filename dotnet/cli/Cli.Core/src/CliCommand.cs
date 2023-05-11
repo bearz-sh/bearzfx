@@ -40,6 +40,7 @@ public abstract class CliCommand : CommandBase
     protected IReadOnlyList<string> LinuxPaths { get; set; } = Array.Empty<string>();
 
     protected IReadOnlyList<string> DarwinPaths { get; set; } = Array.Empty<string>();
+    
 
     public static void AddGlobalPreCliCommandHook(IPreCliCommandHook hook)
     {
@@ -88,6 +89,15 @@ public abstract class CliCommand : CommandBase
                 }
             }
 
+            var preHookServices = this.Context?.Services.GetService(typeof(IEnumerable<IPreCliCommandHook>));
+            if (preHookServices is IEnumerable<IPreCliCommandHook> preHooks)
+            {
+                foreach (var hook in preHooks)
+                {
+                    hook.Next(this);
+                }
+            }
+
             var output = base.Output();
 
             if (s_postCliCommandHooks is not null)
@@ -101,6 +111,15 @@ public abstract class CliCommand : CommandBase
             if (this.postCliCommandHooks is not null)
             {
                 foreach (var hook in this.postCliCommandHooks)
+                {
+                    hook.Next(this.FileName, this, output);
+                }
+            }
+
+            var hookServices = this.Context?.Services.GetService(typeof(IEnumerable<IPostCliCommandHook>));
+            if (hookServices is IEnumerable<IPostCliCommandHook> hooks)
+            {
+                foreach (var hook in hooks)
                 {
                     hook.Next(this.FileName, this, output);
                 }

@@ -29,6 +29,7 @@ public class ShellTask : PlankTask
     protected override async Task RunTaskAsync(ITaskExecutionContext context, CancellationToken cancellationToken = default)
     {
         var shell = this.Shell ?? (Bearz.Std.Env.IsWindows ? "powershell" : "bash");
+       
         var cliCommand = await ShellCliCommand.RunScriptAsync(
                 shell,
                 this.Run,
@@ -39,7 +40,7 @@ public class ShellTask : PlankTask
                     if (this.Env.Count > 0)
                         si.WithEnv(this.Env);
                 },
-                cancellationToken)
+                cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
         cliCommand.ThrowOnInvalidExitCode();

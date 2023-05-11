@@ -1,7 +1,6 @@
-using Microsoft.Extensions.DependencyInjection;
-
 using Plank.Tasks.Internal;
 using Plank.Tasks.Messages;
+using Plank.Tasks.Runner.Runners;
 
 namespace Plank.Tasks.Runners;
 
@@ -21,7 +20,8 @@ public class TaskRunner : ITaskRunner
         CancellationToken cancellationToken = default)
     {
         options ??= new TaskRunOptions();
-        IMessageBus bus = context?.Bus ?? this.services.GetRequiredService<IMessageBus>();
+        context ??= new RootExecutionContext(this.services);
+        IMessageBus bus = context.Bus;
         var set = new List<ITask>();
 
         if (options.Targets.Count == 0)
@@ -44,9 +44,7 @@ public class TaskRunner : ITaskRunner
 
                 if (rootTask.Dependencies.Count == 0 || options.SkipDependencies)
                 {
-                    var ctx = context != null
-                        ? new TaskExecutionContext(rootTask, context)
-                        : new TaskExecutionContext(rootTask, this.services);
+                    var ctx = new TaskExecutionContext(rootTask, context);
 
                     var ct = cancellationToken;
                     if (rootTask.Timeout > 0)
@@ -66,6 +64,12 @@ public class TaskRunner : ITaskRunner
                     try
                     {
                         bus.Publish(new TaskStartedMessage(rootTask));
+
+                        if (ctx.Variables is Variables v)
+                        {
+                            var taskInfo = new Dictionary<string, object?>() { ["name"] = rootTask.Name, };
+                            v["task"] = taskInfo;
+                        }
 
                         await rootTask.RunAsync(ctx, ct)
                             .ConfigureAwait(false);
@@ -108,9 +112,10 @@ public class TaskRunner : ITaskRunner
                 }
             }
 
-            IExecutionContext? parentContext = context;
+            IExecutionContext parentContext = context;
             bool failed = false;
 
+            ITaskExecutionContext? previousTaskContext = null;
             foreach (var task in tasks)
             {
                 if (failed && !task.ContinueOnError)
@@ -120,9 +125,21 @@ public class TaskRunner : ITaskRunner
                     continue;
                 }
 
-                var ctx = parentContext != null
-                    ? new TaskExecutionContext(task, parentContext)
-                    : new TaskExecutionContext(task, this.services);
+                if (previousTaskContext is not null && previousTaskContext.Variables is IMutableVariables parentVariables)
+                {
+                    var outputData = previousTaskContext.Outputs.ToDictionary();
+                    if (!parentVariables.TryGetValue("outputs", out var outputObject))
+                    {
+                        outputObject = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
+                    }
+
+                    var outputs = (IDictionary<string, object?>)outputObject!;
+                    outputs[previousTaskContext.Task.Id] = outputData;
+                }
+
+                var ctx = new TaskExecutionContext(task, parentContext);
+
+                previousTaskContext = ctx;
 
                 var ct = cancellationToken;
                 if (task.Timeout > 0)
@@ -142,6 +159,12 @@ public class TaskRunner : ITaskRunner
                 try
                 {
                     bus.Publish(new TaskStartedMessage(task));
+
+                    if (ctx.Variables is IMutableVariables mut)
+                    {
+                        var taskInfo = new Dictionary<string, object?>() { ["name"] = task.Name, };
+                        mut["task"] = taskInfo;
+                    }
 
                     await task.RunAsync(ctx, ct)
                         .ConfigureAwait(false);
@@ -185,6 +208,11 @@ public class TaskRunner : ITaskRunner
         {
             bus.Publish(new ErrorMessage(ex));
             return TaskRunnerResult.Failed();
+        }
+        finally
+        {
+            if (context is IDisposable disposable)
+                disposable.Dispose();
         }
     }
 
