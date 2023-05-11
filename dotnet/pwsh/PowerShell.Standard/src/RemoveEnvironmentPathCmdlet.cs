@@ -18,7 +18,7 @@ public class RemoveEnvironmentPathCmdlet : PSCmdlet
 
     protected override void ProcessRecord()
     {
-        if (!Env.IsWindows() && this.Target != EnvironmentVariableTarget.Process)
+        if (!Env.IsWindows && this.Target != EnvironmentVariableTarget.Process)
         {
             this.WriteError(
                 new PlatformNotSupportedException(

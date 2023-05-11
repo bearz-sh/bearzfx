@@ -58,7 +58,7 @@ public class SetEnvironmentVariableCmdlet : PSCmdlet
                     SecretMasker.Default.Add(value);
                 }
 
-                if (Env.IsWindows())
+                if (Env.IsWindows)
                 {
                     Env.Set(name, value, this.Target);
                     return;
@@ -81,7 +81,7 @@ public class SetEnvironmentVariableCmdlet : PSCmdlet
             SecretMasker.Default.Add(this.Value);
         }
 
-        if (Env.IsWindows())
+        if (Env.IsWindows)
         {
             Env.Set(this.Name, this.Value, this.Target);
             return;

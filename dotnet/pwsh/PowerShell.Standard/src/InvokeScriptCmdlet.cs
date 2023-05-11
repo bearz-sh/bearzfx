@@ -135,7 +135,7 @@ if((Test-Path -LiteralPath variable:LASTEXITCODE))
     {
         if (this.Shell.IsNullOrWhiteSpace())
         {
-            if (Env.IsWindows())
+            if (Env.IsWindows)
             {
                 this.Shell = "powershell";
             }
@@ -160,9 +160,9 @@ if((Test-Path -LiteralPath variable:LASTEXITCODE))
 
         var tmpDir = System.IO.Path.GetTempPath();
         var tmpFile = FsPath.Combine(tmpDir, $"{System.IO.Path.GetRandomFileName()}.{resolver.Extension}");
-        if (!System.IO.File.Exists(tmpFile))
+        if (!File.Exists(tmpFile))
         {
-            System.IO.File.WriteAllText(tmpFile, script);
+            File.WriteAllText(tmpFile, script);
         }
 
         try
@@ -201,7 +201,7 @@ if((Test-Path -LiteralPath variable:LASTEXITCODE))
                 }
             }
 
-            if (this.AsSudo.ToBool() && !Env.IsWindows() && !UnixUser.IsRoot)
+            if (this.AsSudo.ToBool() && !Env.IsWindows && !UnixUser.IsRoot)
             {
                 args!.Prepend(exe);
                 exe = "sudo";

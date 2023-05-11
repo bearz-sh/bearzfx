@@ -66,7 +66,7 @@ public class InvokeProcessCmdlet : PSCmdlet
         if (exe is null)
             throw new NotFoundOnPathException(this.Executable);
 
-        if (this.AsSudo.ToBool() && !Env.IsWindows() && !UnixUser.IsRoot)
+        if (this.AsSudo.ToBool() && !Env.IsWindows && !UnixUser.IsRoot)
         {
             args.Prepend(exe);
             exe = "sudo";

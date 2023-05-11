@@ -13,6 +13,7 @@ public class TasksCommand : Command
         : base("tasks", "manages plank tasks")
     {
         this.AddCommand(new TaskRunCommand());
+        this.AddCommand(new TaskListCommand());
     }
 }
 

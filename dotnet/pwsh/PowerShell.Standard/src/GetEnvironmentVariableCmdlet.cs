@@ -24,7 +24,7 @@ public class GetEnvironmentVariableCmdlet : PSCmdlet
     {
         if (this.Name is null)
         {
-            if (Env.IsWindows())
+            if (Env.IsWindows)
             {
                 var variables = Environment.GetEnvironmentVariables(this.Target);
                 foreach (var key in variables.Keys)
@@ -57,7 +57,7 @@ public class GetEnvironmentVariableCmdlet : PSCmdlet
         }
         else
         {
-            if (Env.IsWindows())
+            if (Env.IsWindows)
             {
                 foreach (var name in this.Name)
                 {

@@ -166,13 +166,13 @@ public static class PsCmdletExtensions
         var hasCommandActionPreference = cmdlet.GetGlobalVariable("CommandActionPreference") != null;
 
         if (!hasIsWindows)
-            cmdlet.SetVariable(new PSVariable("Global:IsWindows", Env.IsWindows(), ScopedItemOptions.Constant));
+            cmdlet.SetVariable(new PSVariable("Global:IsWindows", Env.IsWindows, ScopedItemOptions.Constant));
 
         if (!hasIsLinux)
-            cmdlet.SetVariable(new PSVariable("Global:IsLinux", Env.IsLinux(), ScopedItemOptions.Constant));
+            cmdlet.SetVariable(new PSVariable("Global:IsLinux", Env.IsLinux, ScopedItemOptions.Constant));
 
         if (!hasIsMacOS)
-            cmdlet.SetVariable(new PSVariable("Global:IsMacOs", Env.IsMacOS(), ScopedItemOptions.Constant));
+            cmdlet.SetVariable(new PSVariable("Global:IsMacOs", Env.IsMacOS, ScopedItemOptions.Constant));
 
         if (!isCoreClr)
             cmdlet.SetVariable(new PSVariable("Global:IsCoreCLR", !hasIsWindows, ScopedItemOptions.Constant));

@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Bearz.Data;
+namespace Ze.Docker;
 
 public class Class1
 {

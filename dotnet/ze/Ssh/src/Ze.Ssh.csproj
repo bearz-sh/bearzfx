@@ -5,21 +5,20 @@
     <TargetFrameworks>$(LibFx)</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>true</ImplicitUsings>
-    <RootNamespace>Bearz.PowerShell</RootNamespace>
+    <RootNamespace>Ze.Ssh</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags></PackageTags>
     <Description>
-    Bearz.PowerShell
+    Ze.Ssh
     </Description>
     <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/CHANGELOG.md"))</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
-    <None Include="LICENSE.md" Pack="true" PackagePath="\" />
+    <None Include="README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -27,14 +26,4 @@
       <_Parameter1>$(AssemblyName).Tests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
-
-   <ItemGroup>
-        <PackageReference Include="PowerShellStandard.Library">
-            <PrivateAssets>All</PrivateAssets>
-        </PackageReference>
-    </ItemGroup>
-
-   <ItemGroup>
-     <ProjectReference Include="..\..\..\fx\Standard\src\Bearz.Standard.csproj" />
-   </ItemGroup>
 </Project>
