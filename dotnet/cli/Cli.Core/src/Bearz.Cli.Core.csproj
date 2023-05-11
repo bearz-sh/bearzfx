@@ -27,10 +27,6 @@
       <_Parameter1>$(AssemblyName).Tests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Bearz.Standard" />
-  </ItemGroup>
   
   <ItemGroup>
     <Compile Include="$(InternalDir)/Runtime/Versioning/PlatformAttributes.cs" Link="PlatformAttributes.cs" />

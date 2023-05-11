@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>ze</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\fx\Extensions.Hosting.CommandLine\src\Bearz.Extensions.Hosting.CommandLine.csproj" />
+    <ProjectReference Include="..\..\Package.Actions\src\Ze.Package.Actions.csproj" />
+    <ProjectReference Include="..\..\Tasks.Abstractions\src\Ze.Tasks.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Tasks.Runner.Abstractions\src\Ze.Tasks.Runner.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Tasks.Runner.Yaml\src\Ze.Tasks.Runner.Yaml.csproj" />
+    <ProjectReference Include="..\..\Tasks.Runner\src\Ze.Tasks.Runner.csproj" />
+    <ProjectReference Include="..\..\Tasks\src\Ze.Tasks.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog.Expressions" />
+    <PackageReference Include="Serilog.Extensions.Hosting" />
+    <PackageReference Include="Serilog.Sinks.Console" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\App" />
+  </ItemGroup>
+
+</Project>

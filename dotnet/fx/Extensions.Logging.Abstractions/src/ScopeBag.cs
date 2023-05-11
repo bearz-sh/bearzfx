@@ -82,10 +82,10 @@ public sealed class ScopeBag
     {
         this.bag["http.status_code"] = (int)response.StatusCode;
         this.bag["http.status"] = response.StatusCode.ToString();
-        this.bag["http.url"] = response.RequestMessage.RequestUri.ToString();
+        this.bag["http.url"] = response.RequestMessage?.RequestUri?.ToString();
         this.bag["http.response_content_length"] =
             response.Headers.GetValues("Content-Length").FirstOrDefault();
-        this.bag["http.method"] = response.RequestMessage.Method.ToString();
+        this.bag["http.method"] = response.RequestMessage?.Method.ToString();
         return this;
     }
 
@@ -112,7 +112,6 @@ public sealed class ScopeBag
         return this;
     }
 
-   
     public Dictionary<string, object?> ToDictionary()
     {
         return this.bag.ToDictionary(x => x.Key, x => x.Value);

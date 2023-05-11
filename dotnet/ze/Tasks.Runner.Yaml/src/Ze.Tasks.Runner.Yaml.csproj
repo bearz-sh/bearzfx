@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <LibFx Condition="$(LibFx) == ''">net7.0</LibFx>
+    <TargetFrameworks>$(LibFx)</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <RootNamespace>Ze.Tasks.Runner.Yaml</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags></PackageTags>
+    <Description>
+    Ze.Tasks.Runner.Yaml
+    </Description>
+    <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/CHANGELOG.md"))</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\cli\Cli.Core\src\Bearz.Cli.Core.csproj" />
+    <ProjectReference Include="..\..\..\fx\Standard\src\Bearz.Standard.csproj" />
+    <ProjectReference Include="..\..\..\fx\Text.DotEnv\src\Bearz.Text.DotEnv.csproj" />
+    <ProjectReference Include="..\..\..\handlebars\Handlebars.Helpers\src\Bearz.Handlebars.Helpers.csproj" />
+    <ProjectReference Include="..\..\Tasks.Abstractions\src\Ze.Tasks.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Tasks.Runner.Abstractions\src\Ze.Tasks.Runner.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Tasks.Runner\src\Ze.Tasks.Runner.csproj" />
+    <ProjectReference Include="..\..\Tasks\src\Ze.Tasks.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="YamlDotNet" />
+  </ItemGroup>
+</Project>

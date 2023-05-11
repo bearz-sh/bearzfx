@@ -4,10 +4,7 @@ namespace Bearz.Extensions.Logging;
 
 public class OperationStopwatch
 {
-    private Stopwatch stopwatch = new();
-
-
-    
+    private readonly Stopwatch stopwatch = new();
 
     public long ElapsedMilliseconds => this.stopwatch.ElapsedMilliseconds;
 
@@ -16,7 +13,7 @@ public class OperationStopwatch
     public TimeSpan Elapsed => this.stopwatch.Elapsed;
 
     public DateTime StartedAt { get; private set; }
-    
+
     public static implicit operator Stopwatch(OperationStopwatch operationStopwatch)
     {
         return operationStopwatch.stopwatch;
@@ -28,7 +25,7 @@ public class OperationStopwatch
         this.stopwatch.Start();
         return this;
     }
-    
+
     public OperationStopwatch Stop()
     {
         this.stopwatch.Stop();
@@ -46,6 +43,4 @@ public class OperationStopwatch
         this.stopwatch.Restart();
         return this;
     }
-
-    
 }

@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <LibFx Condition="$(LibFx) == ''">net7.0</LibFx>
+    <TargetFrameworks>$(LibFx)</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <RootNamespace>Ze.Package.Actions</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags></PackageTags>
+    <Description>
+    Ze.Package.Actions
+    </Description>
+    <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/CHANGELOG.md"))</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\fx\Standard\src\Bearz.Standard.csproj" />
+    <ProjectReference Include="..\..\..\fx\Text.DotEnv\src\Bearz.Text.DotEnv.csproj" />
+    <ProjectReference Include="..\..\..\handlebars\Handlebars.Helpers.Configuration\src\Bearz.Handlebars.Helpers.Configuration.csproj" />
+    <ProjectReference Include="..\..\..\handlebars\Handlebars.Helpers.Secrets\src\Bearz.Handlebars.Helpers.Secrets.csproj" />
+    <ProjectReference Include="..\..\..\handlebars\Handlebars.Helpers\src\Bearz.Handlebars.Helpers.csproj" />
+    <ProjectReference Include="..\..\Package\src\Ze.Package.csproj" />
+  </ItemGroup>
+</Project>

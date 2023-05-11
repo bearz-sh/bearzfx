@@ -40,7 +40,6 @@ public abstract class CliCommand : CommandBase
     protected IReadOnlyList<string> LinuxPaths { get; set; } = Array.Empty<string>();
 
     protected IReadOnlyList<string> DarwinPaths { get; set; } = Array.Empty<string>();
-    
 
     public static void AddGlobalPreCliCommandHook(IPreCliCommandHook hook)
     {
