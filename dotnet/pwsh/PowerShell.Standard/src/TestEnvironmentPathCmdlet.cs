@@ -5,6 +5,7 @@ using Bearz.Std;
 
 namespace Bearz.PowerShell.Standard;
 
+[Alias("has_path")]
 [Cmdlet(VerbsDiagnostic.Test, "EnvironmentPath")]
 [OutputType(typeof(bool))]
 public class TestEnvironmentPathCmdlet : PSCmdlet

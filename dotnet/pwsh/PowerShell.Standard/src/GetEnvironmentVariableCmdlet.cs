@@ -6,10 +6,10 @@ using Bearz.Std;
 
 namespace Bearz.PowerShell.Standard;
 
-[Alias("env_get")]
+[Alias("get_env")]
 [Cmdlet(VerbsCommon.Get, "EnvironmentVariable")]
 [OutputType(typeof(string))]
-public class GetEnvironmentVariableCmdlet : PSCmdlet
+public class enGetEnvironmentVariableCmdlet : PSCmdlet
 {
     [Parameter(Position = 0, ValueFromPipeline = true)]
     public string[]? Name { get; set; }
@@ -38,6 +38,7 @@ public class GetEnvironmentVariableCmdlet : PSCmdlet
                 return;
             }
 
+            Console.WriteLine(this.Target);
             if (this.Target == EnvironmentVariableTarget.Process)
             {
                 var variables = Environment.GetEnvironmentVariables(this.Target);
@@ -52,7 +53,7 @@ public class GetEnvironmentVariableCmdlet : PSCmdlet
                 return;
             }
 
-            var msg = "Non-Windows platforms only support setting process environment variables.";
+            var msg = "Non-Windows platforms only support getting process environment variables.";
             this.WriteError(new PlatformNotSupportedException(msg), this.Name);
         }
         else
@@ -75,9 +76,11 @@ public class GetEnvironmentVariableCmdlet : PSCmdlet
                     var value = Env.Get(name, this.Target) ?? this.Default;
                     this.WriteObject(value);
                 }
+
+                return;
             }
 
-            var msg = "Non-Windows platforms only support setting process environment variables.";
+            var msg = "Non-Windows platforms only support getting process environment variables.";
             this.WriteError(new PlatformNotSupportedException(msg), this.Name);
         }
     }

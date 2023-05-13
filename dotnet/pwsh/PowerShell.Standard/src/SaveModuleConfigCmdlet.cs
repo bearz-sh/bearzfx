@@ -10,7 +10,7 @@ using Path = System.IO.Path;
 
 namespace Bearz.PowerShell.Standard;
 
-[Cmdlet(VerbsCommon.Set, "ModuleConfig")]
+[Cmdlet(VerbsData.Save, "ModuleConfig")]
 [OutputType(typeof(void))]
 public class SaveModuleConfigCmdlet : PSCmdlet
 {

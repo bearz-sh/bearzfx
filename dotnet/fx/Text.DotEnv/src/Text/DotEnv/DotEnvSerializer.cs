@@ -30,6 +30,8 @@ public static class DotEnvSerializer
         using var sr = new StreamReader(value, Encoding.UTF8);
         return Deserialize(sr, type, options);
     }
+    
+    
 
     public static object? Deserialize(TextReader reader, Type type, DotEnvSerializerOptions? options = null)
     {

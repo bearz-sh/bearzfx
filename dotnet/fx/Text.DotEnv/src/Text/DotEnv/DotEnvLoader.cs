@@ -1,5 +1,6 @@
 using Bearz.Std;
 using Bearz.Text.DotEnv.Document;
+using Bearz.Text.DotEnv.Serialization;
 
 namespace Bearz.Text.DotEnv;
 
@@ -8,9 +9,9 @@ public static class DotEnvLoader
     public static EnvDocument Parse(DotEnvLoadOptions options)
     {
         if (options.Files.Count == 1 && options.Content is null)
-            return DotEnvSerializer.DeserializeDocument(options.Files[0], options);
+            return Serializer.DeserializeDocument(options.Files[0], options);
         else if (options.Files.Count == 0 && options.Content is not null)
-            return DotEnvSerializer.DeserializeDocument(options.Content, options);
+            return Serializer.DeserializeDocument(options.Content, options);
         else if (options.Files.Count == 0 && options.Content is null)
             return new EnvDocument();
 

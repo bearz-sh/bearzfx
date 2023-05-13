@@ -6,7 +6,11 @@
     <PackageVersion Include="Avalonia" Version="0.10.18" />
     <PackageVersion Include="Avalonia.Desktop" Version="0.10.18" />
     <PackageVersion Include="Avalonia.Diagnostics" Version="0.10.18" />
+    <PackageVersion Include="ClosedXML.Report" Version="0.2.6" />
+    <PackageVersion Include="Dapper" Version="2.0.123" />
     <PackageVersion Include="Docker.DotNet" Version="3.125.14" />
+    <PackageVersion Include="KeySharp" Version="1.0.5" />
+    <PackageVersion Include="Polly" Version="7.2.3" />
     <PackageVersion Include="Serilog.Expressions" Version="3.4.1" />
     <PackageVersion Include="XamlNameReferenceGenerator" Version="1.6.1" />
     <PackageVersion Include="AlphaFS" Version="2.2.6" />

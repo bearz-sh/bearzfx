@@ -9,6 +9,7 @@ using Bearz.Std;
 
 namespace Bearz.PowerShell.Standard;
 
+[Alias("get_module_config")]
 [Cmdlet(VerbsCommon.Get, "ModuleConfig")]
 [OutputType(typeof(Hashtable), typeof(PSObject), typeof(Array[]))]
 public class GetModuleConfigCmdlet : PSCmdlet

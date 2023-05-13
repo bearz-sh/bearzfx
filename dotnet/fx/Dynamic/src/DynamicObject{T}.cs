@@ -10,13 +10,14 @@ using Bearz.Reflection;
 
 namespace Bearz.Dynamic;
 
+[SuppressMessage("ReSharper", "ParameterHidesMember")]
 public class DynamicObject<T> : IReadOnlyDictionary<string, object?>,
     IDictionary<string, object?>,
     IDynamicMetaObjectProvider
 {
     [SuppressMessage("ReflectionAnalyzers.SystemReflection", "REFL013:The member is of the wrong type", Justification = "reviewed")]
     [SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", Justification = "reviewed")]
-    private static readonly PropertyInfo s_propertyInfo = typeof(DynamicObject<T>).GetProperty(
+    private static readonly PropertyInfo PropertyInfo = typeof(DynamicObject<T>).GetProperty(
         nameof(forwardee),
         BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)!;
 
@@ -114,13 +115,15 @@ public class DynamicObject<T> : IReadOnlyDictionary<string, object?>,
 
     public DynamicMetaObject GetMetaObject(Expression parameter)
     {
+        DynamicMetaObject x;
+
         this.forwardee ??= new ForwardingDynamicObject(this);
         return new ForwardingMetaObject(
             parameter,
             BindingRestrictions.Empty,
             this,
             this.forwardee,
-            exprA => Expression.Property(exprA, s_propertyInfo));
+            exprA => Expression.Property(exprA, PropertyInfo));
     }
 
     protected class ForwardingDynamicObject : DynamicObject

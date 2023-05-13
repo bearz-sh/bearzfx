@@ -5,7 +5,7 @@ using Bearz.Std;
 
 namespace Bearz.PowerShell.Standard;
 
-[Alias("env_expand")]
+[Alias("expand_env")]
 [Cmdlet(VerbsData.Expand, "EnvironmentVariable")]
 public class ExpandEnvironmentVariableCmdlet : PSCmdlet
 {

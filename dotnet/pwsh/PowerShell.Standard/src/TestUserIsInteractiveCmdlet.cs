@@ -7,6 +7,7 @@ using Bearz.Std;
 
 namespace Bearz.PowerShell.Standard;
 
+[Alias("is_user_interactive")]
 [Cmdlet(VerbsDiagnostic.Test, "UserIsInteractive")]
 [OutputType(typeof(bool))]
 public class TestUserIsInteractiveCmdlet : PSCmdlet

@@ -38,6 +38,8 @@ public class EnvNameValuePair : EnvDocumentEntry
 
     public bool IsSecret { get; set; } = false;
 
+    public int Order { get; set; } = 0;
+
     public new string Value
     {
         get

@@ -4,7 +4,7 @@ using Ze.Tasks.Messages;
 
 namespace Ze.Tasks;
 
-public static class DefaultTaskContextExecutionExtensions
+public static class TaskExecutionExtensions
 {
     public static void Skip(this ITaskExecutionContext ctx)
     {
@@ -43,6 +43,16 @@ public static class DefaultTaskContextExecutionExtensions
     public static void Log(this ITaskExecutionContext ctx, Exception exception, LogLevel level)
     {
         ctx.Bus.Publish(new TaskLogMessage(exception, level, ctx.Task));
+    }
+
+    public static void WriteLine(this ITaskExecutionContext ctx, WriteMessage message)
+    {
+        ctx.Bus.Publish(message);
+    }
+
+    public static void Notice(this ITaskExecutionContext ctx, NoticeMessage message)
+    {
+        ctx.Bus.Publish(message);
     }
 
     public static void Command(this ITaskExecutionContext ctx, string message)

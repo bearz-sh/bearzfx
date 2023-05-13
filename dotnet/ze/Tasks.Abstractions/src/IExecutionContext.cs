@@ -1,4 +1,5 @@
 using Bearz.Cli;
+using Bearz.Secrets;
 using Bearz.Virtual;
 
 using Microsoft.Extensions.Configuration;
@@ -15,4 +16,6 @@ public interface IExecutionContext : ICliExecutionContext
     IMessageBus Bus { get; }
 
     IVariables Variables { get; }
+
+    ISecretMasker SecretMasker { get; }
 }

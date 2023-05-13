@@ -5,6 +5,7 @@ using System.Security;
 
 namespace Bearz.PowerShell.Standard;
 
+[Alias("convert_from_secure_string")]
 [Cmdlet(VerbsData.ConvertFrom, "SecureString")]
 [OutputType(typeof(string), typeof(byte[]), typeof(char[]))]
 public class ConvertFromSecureStringCmdlet : PSCmdlet

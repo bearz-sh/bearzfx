@@ -32,9 +32,9 @@
   <ItemGroup>
     <Compile Include="$(InternalDir)/Index.cs" Link="Index.cs" />
     <Compile Include="$(InternalDir)/Range.cs" Link="Range.cs" />
-    <Compile Include="../../Standard/src/Std/EnvSubstitution.cs" Link="Std/EnvSubstitution.cs" />
-    <Compile Include="../../Standard/src/Std/EnvSubstitutionOptions.cs" Link="Std/EnvSubstitutionOptions.cs" />
-    <Compile Include="../../Standard/src/Std/Env.Variables.cs" Link="Std/Env.Variables.cs" />
+    <Compile Include="../../Standard/src/Std/EnvSubstitution.cs" Link="Internal/Std/EnvSubstitution.cs" />
+    <Compile Include="../../Standard/src/Std/EnvSubstitutionOptions.cs" Link="Internal/Std/EnvSubstitutionOptions.cs" />
+    <Compile Include="../../Standard/src/Std/Env.Variables.cs" Link="Internal/Std/Env.Variables.cs" />
   </ItemGroup>
   
   <ItemGroup Condition="$(NetLegacy) == 'true'">
@@ -46,5 +46,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\ComponentModel.DataAnnotations\src\Bearz.ComponentModel.DataAnnotations.csproj" />
   </ItemGroup>
 </Project>

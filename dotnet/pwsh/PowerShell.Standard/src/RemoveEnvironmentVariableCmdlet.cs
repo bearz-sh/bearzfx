@@ -8,7 +8,7 @@ using Bearz.Text;
 
 namespace Bearz.PowerShell.Standard;
 
-[Alias("env_remove")]
+[Alias("rm_env")]
 [Cmdlet(VerbsCommon.Remove, "EnvironmentVariable")]
 public class RemoveEnvironmentVariableCmdlet : PSCmdlet
 {

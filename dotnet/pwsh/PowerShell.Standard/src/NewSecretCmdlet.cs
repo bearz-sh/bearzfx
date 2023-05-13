@@ -12,12 +12,7 @@ namespace Bearz.PowerShell.Standard;
 [OutputType(typeof(string), typeof(char[]), typeof(SecureString), typeof(byte[]))]
 public class NewSecretCmdlet : PSCmdlet
 {
-    [Parameter(Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, ParameterSetName = "Character")]
-    [Parameter(Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true, ParameterSetName = "CharacterList")]
     public int Length { get; set; } = 16;
-
-    [Parameter(Position = 1, ValueFromPipelineByPropertyName = true, ParameterSetName = "Characters")]
-    public string? Character { get; set; }
 
     [Parameter(ValueFromPipelineByPropertyName = true, ParameterSetName = "CharacterList")]
     public IEnumerable<char>? CharacterList { get; set; }
@@ -25,16 +20,13 @@ public class NewSecretCmdlet : PSCmdlet
     [Parameter(Position = 2, ValueFromPipelineByPropertyName = true)]
     public ScriptBlock? Validator { get; set; } = null!;
 
-    [Parameter(ValueFromPipelineByPropertyName = true, ParameterSetName = "Character")]
-    [Parameter(ValueFromPipelineByPropertyName = true, ParameterSetName = "CharacterList")]
+    [Parameter]
     public SwitchParameter AsString { get; set; }
 
-    [Parameter(ValueFromPipelineByPropertyName = true, ParameterSetName = "Character")]
-    [Parameter(ValueFromPipelineByPropertyName = true, ParameterSetName = "CharacterList")]
+    [Parameter]
     public SwitchParameter AsBytes { get; set; }
 
-    [Parameter(ValueFromPipelineByPropertyName = true, ParameterSetName = "Character")]
-    [Parameter(ValueFromPipelineByPropertyName = true, ParameterSetName = "CharacterList")]
+    [Parameter]
     public SwitchParameter AsSecureString { get; set; }
 
     protected override void ProcessRecord()
@@ -52,10 +44,6 @@ public class NewSecretCmdlet : PSCmdlet
             {
                 pg.Add(list);
             }
-        }
-        else if (!this.Character.IsNullOrWhiteSpace())
-        {
-            pg.Add(this.Character);
         }
         else
         {
@@ -96,6 +84,6 @@ public class NewSecretCmdlet : PSCmdlet
         }
 
         var secret = pg.Generate(this.Length);
-        this.WriteObject(secret, false);
+        this.WriteObject(secret, true);
     }
 }

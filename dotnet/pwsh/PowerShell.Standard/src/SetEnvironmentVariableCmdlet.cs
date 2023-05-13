@@ -8,7 +8,7 @@ using Bearz.Std;
 
 namespace Bearz.PowerShell.Standard;
 
-[Alias("env_set")]
+[Alias("set_env")]
 [Cmdlet(VerbsCommon.Set, "EnvironmentVariable")]
 public class SetEnvironmentVariableCmdlet : PSCmdlet
 {

@@ -6,6 +6,7 @@ using Bearz.Extra.Strings;
 
 namespace Bearz.PowerShell.Standard;
 
+[Alias("is_directory")]
 [Cmdlet(VerbsDiagnostic.Test, "Directory")]
 [OutputType(typeof(bool))]
 public class TestDirectoryCmdlet : PSCmdlet

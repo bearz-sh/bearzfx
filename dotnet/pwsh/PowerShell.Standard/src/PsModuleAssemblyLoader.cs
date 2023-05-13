@@ -6,25 +6,25 @@ using System.Reflection;
 
 namespace Bearz.PowerShell.Standard;
 
-public abstract class PsModuleAssemblyLoader : IModuleAssemblyInitializer, IModuleAssemblyCleanup
+public class PsModuleAssemblyLoader : IModuleAssemblyInitializer, IModuleAssemblyCleanup
 {
-    private static readonly HashSet<string> s_dependencies;
-    private static readonly string s_dependencyFolder;
-    private static readonly AssemblyLoadContextProxy? s_proxy;
+    private static readonly HashSet<string> Dependencies;
+    private static readonly string DependencyFolder;
+    private static readonly AssemblyLoadContextProxy? Proxy;
 
 #pragma warning disable S3963
     static PsModuleAssemblyLoader()
 #pragma warning restore S3963
     {
         var assembly = typeof(PsModuleAssemblyLoader).Assembly;
-        s_dependencyFolder = Path.Combine(Path.GetDirectoryName(assembly.Location));
-        s_dependencies = new(StringComparer.Ordinal);
-        foreach (string filePath in Directory.EnumerateFiles(s_dependencyFolder, "*.dll"))
+        DependencyFolder = Path.Combine(Path.GetDirectoryName(assembly.Location));
+        Dependencies = new(StringComparer.Ordinal);
+        foreach (string filePath in Directory.EnumerateFiles(DependencyFolder, "*.dll"))
         {
-            s_dependencies.Add(AssemblyName.GetAssemblyName(filePath).FullName);
+            Dependencies.Add(AssemblyName.GetAssemblyName(filePath).FullName);
         }
 
-        s_proxy = AssemblyLoadContextProxy.Create(assembly.FullName);
+        Proxy = AssemblyLoadContextProxy.Create(assembly.FullName);
     }
 
     public void OnImport()
@@ -43,7 +43,7 @@ public abstract class PsModuleAssemblyLoader : IModuleAssemblyInitializer, IModu
         if (IsAssemblyMatching(assemblyName, args.RequestingAssembly))
         {
             string fileName = assemblyName.Name + ".dll";
-            string filePath = Path.Combine(s_dependencyFolder, fileName);
+            string filePath = Path.Combine(DependencyFolder, fileName);
 
             if (File.Exists(filePath))
             {
@@ -52,8 +52,8 @@ public abstract class PsModuleAssemblyLoader : IModuleAssemblyInitializer, IModu
                 // - In .NET, load the assembly into the custom assembly load context.
                 // - In .NET Framework, assembly conflict is not a problem, so we load the assembly
                 //   by 'Assembly.LoadFrom', the same as what powershell.exe would do.
-                return s_proxy is not null
-                    ? s_proxy.LoadFromAssemblyPath(filePath)
+                return Proxy is not null
+                    ? Proxy.LoadFromAssemblyPath(filePath)
 #pragma warning disable S3885
                     : Assembly.LoadFrom(filePath);
 #pragma warning restore S3885
@@ -71,8 +71,8 @@ public abstract class PsModuleAssemblyLoader : IModuleAssemblyInitializer, IModu
         //   from this module.
         // - When the requesting assembly is not available, we just have to depend on the assembly name only.
         return requestingAssembly is not null
-            ? requestingAssembly.FullName.StartsWith("conflict,") && s_dependencies.Contains(assemblyName.FullName)
-            : s_dependencies.Contains(assemblyName.FullName);
+            ? requestingAssembly.FullName.StartsWith("conflict,") && Dependencies.Contains(assemblyName.FullName)
+            : Dependencies.Contains(assemblyName.FullName);
     }
 
     internal class AssemblyLoadContextProxy

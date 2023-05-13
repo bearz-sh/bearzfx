@@ -68,6 +68,50 @@ public static class PsCmdletExtensions
         Dictionary<string, object?> boundParameters)
         => cmdlet.MyInvocation.BoundParameters;
 
+    public static bool IsDebug(this PSCmdlet cmdlet, bool checkPreference = true)
+    {
+        bool debug = false;
+        if (cmdlet.MyInvocation.BoundParameters.TryGetValue("Debug", out var debugValue))
+        {
+            if (debugValue is bool debugBool)
+                debug = debugBool;
+            else if (debugValue is string debugString)
+                debug = debugString.Equals("true", StringComparison.OrdinalIgnoreCase);
+
+            return debug;
+        }
+
+        if (!checkPreference)
+            return false;
+
+        if (cmdlet.GetVariableValue("DebugPreference") is ActionPreference debugPreference)
+            return debugPreference != ActionPreference.SilentlyContinue;
+
+        return false;
+    }
+
+    public static bool IsVerbose(this PSCmdlet cmdlet, bool checkPreference = true)
+    {
+        bool debug = false;
+        if (cmdlet.MyInvocation.BoundParameters.TryGetValue("Verbose", out var debugValue))
+        {
+            if (debugValue is bool debugBool)
+                debug = debugBool;
+            else if (debugValue is string debugString)
+                debug = debugString.Equals("true", StringComparison.OrdinalIgnoreCase);
+
+            return debug;
+        }
+
+        if (!checkPreference)
+            return false;
+
+        if (cmdlet.GetVariableValue("VerbosePreference") is ActionPreference debugPreference)
+            return debugPreference != ActionPreference.SilentlyContinue;
+
+        return false;
+    }
+
     public static PSCmdlet WriteError(this PSCmdlet cmdlet, Exception exception)
     {
         var errorRecord = new ErrorRecord(exception, exception.GetType().Name, ErrorCategory.NotSpecified, null);

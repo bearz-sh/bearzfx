@@ -1,3 +1,4 @@
+using Bearz.Secrets;
 using Bearz.Virtual;
 
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,7 @@ public abstract class ExecutionContext : IExecutionContext, IDisposable
         this.Process = this.Services.GetService<IProcess>() ?? new VirtualProcess(this.Env);
         this.Path = this.Services.GetService<IPath>() ?? new VirtualPath(this.Env);
         this.Fs = this.Services.GetService<IFileSystem>() ?? new VirtualFileSystem(this.Path);
+        this.SecretMasker = this.Services.GetService<ISecretMasker>() ?? Bearz.Secrets.SecretMasker.Default;
         this.Log = NullLogger.Instance;
         this.Variables = new Variables();
 
@@ -46,6 +48,7 @@ public abstract class ExecutionContext : IExecutionContext, IDisposable
         this.Config = executionContext.Config;
         this.Log = NullLogger.Instance;
         this.Bus = executionContext.Bus;
+        this.SecretMasker = executionContext.SecretMasker;
         this.Variables = new Variables(executionContext.Variables.ToDictionary());
     }
 
@@ -66,6 +69,8 @@ public abstract class ExecutionContext : IExecutionContext, IDisposable
     public IConfiguration Config { get; }
 
     public IVariables Variables { get; set; }
+
+    public ISecretMasker SecretMasker { get; set; }
 
     public void Dispose()
     {

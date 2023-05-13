@@ -72,6 +72,7 @@ public class TasksYamlFileParser
                 case "description":
                     task.Description = child.Value.ToString();
                     break;
+                case "needs":
                 case "deps":
                 case "dependencies":
                     {
@@ -100,10 +101,12 @@ public class TasksYamlFileParser
 
                     task.Timeout = int.Parse(child.Value.ToString());
                     break;
+                case "continue-on-error":
                 case "continueOnError":
                     task.ContinueOnError = bool.Parse(child.Value.ToString());
                     break;
                 case "inputs":
+                case "with":
                     foreach (var kvp in this.VisitInputBlocks(child.Value))
                     {
                         task.Inputs[kvp.Key] = kvp.Value;

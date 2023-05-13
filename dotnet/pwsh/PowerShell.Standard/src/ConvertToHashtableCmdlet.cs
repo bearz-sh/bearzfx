@@ -4,7 +4,7 @@ using System.Management.Automation;
 
 namespace Ze.PowerShell.Core;
 
-[Alias("as-hashtable", "to_hashtable")]
+[Alias("as_hashtable", "to_hashtable")]
 [Cmdlet(VerbsData.ConvertTo, "ZeHashtable")]
 [OutputType(typeof(void))]
 public class ConvertToHashtableCmdlet : PSCmdlet
