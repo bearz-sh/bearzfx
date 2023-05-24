@@ -14,9 +14,8 @@ using Bearz.Text.DotEnv.Tokens;
 
 namespace Bearz.Text.DotEnv.Serialization;
 
-public class Serializer
+public static class Serializer
 {
-
     public static string Serialize<T>(T obj, DotEnvSerializerOptions? options = null)
     {
         using var sw = new StringWriter();
@@ -45,9 +44,9 @@ public class Serializer
     public static void Serialize(Stream stream, object? obj, Type type, DotEnvSerializerOptions? options = null)
     {
         using var sw = new StreamWriter(stream, Encoding.UTF8, -1, true);
-        Serialize(stream, obj, type, options);
+        Serialize(sw, obj, type, options);
     }
-    
+
     public static void Serialize(TextWriter writer, object? obj, Type type, DotEnvSerializerOptions? options = null)
     {
         if (obj is null)
@@ -104,10 +103,9 @@ public class Serializer
             var serializedAttr = prop.GetCustomAttribute<SerializationAttribute>();
             if (serializedAttr is not null)
             {
-                if (!serializedAttr.Name.IsNullOrWhiteSpace())
+                if (!serializedAttr.Name.IsNullOrWhiteSpace() && serializedAttr.Name.Any(o => char.IsLower(o) || !char.IsLetterOrDigit(o)))
                 {
-                    if (serializedAttr.Name.Any(o => char.IsLower(o) || !char.IsLetterOrDigit(o)))
-                        name = NormalizePropertyName(serializedAttr.Name, sb);
+                    name = NormalizePropertyName(serializedAttr.Name, sb);
                 }
 
                 list.Add(new EnvNameValuePair(name.AsSpan(), value.AsSpan()) { Order = serializedAttr.Order });
@@ -130,7 +128,9 @@ public class Serializer
         }
     }
 
-    public static void SerializeDictionary(IEnumerable<KeyValuePair<string, string?>> dictionary, TextWriter writer,
+    public static void SerializeDictionary(
+        IEnumerable<KeyValuePair<string, string?>> dictionary,
+        TextWriter writer,
         DotEnvSerializerOptions? options = null)
     {
         foreach (var item in dictionary)
@@ -144,7 +144,9 @@ public class Serializer
         }
     }
 
-    public static void SerializeDictionary(IEnumerable<KeyValuePair<string, object?>> dictionary, TextWriter writer,
+    public static void SerializeDictionary(
+        IEnumerable<KeyValuePair<string, object?>> dictionary,
+        TextWriter writer,
         DotEnvSerializerOptions? options = null)
     {
         foreach (var item in dictionary)
@@ -158,7 +160,9 @@ public class Serializer
         }
     }
 
-    public static void SerializeDocument(EnvDocument document, TextWriter writer,
+    public static void SerializeDocument(
+        EnvDocument document,
+        TextWriter writer,
         DotEnvSerializerOptions? options = null)
     {
         foreach (var item in document)
@@ -187,23 +191,123 @@ public class Serializer
             }
         }
     }
-    
-    public static object? Deserialize(string value, Type type, DotEnvSerializerOptions? options = null)
+
+    public static object? Deserialize(
+        string value,
+        Type type,
+        DotEnvSerializerOptions? options = null)
     {
         var env = DeserializeDocument(value, options);
         return Deserialize(env, type);
     }
-    
+
     public static object? Deserialize(Stream stream, Type type, DotEnvSerializerOptions? options = null)
     {
         var env = DeserializeDocument(stream, options);
         return Deserialize(env, type);
     }
-    
+
     public static object? Deserialize(TextReader reader, Type type, DotEnvSerializerOptions? options = null)
     {
         var env = DeserializeDocument(reader, options);
         return Deserialize(env, type);
+    }
+
+    public static object? Deserialize(EnvDocument document, Type type)
+    {
+        if (type.IsAssignableFrom(typeof(IDictionary)))
+            return DeserializeDictionary(document, type);
+
+        if (type.IsGenericTypeDefinition)
+        {
+            if (type.IsAssignableFrom(typeof(IDictionary<string, string>)))
+            {
+                var dict = (IDictionary<string, string>)Activator.CreateInstance(type)!;
+                foreach (var (name, value) in document.AsNameValuePairEnumerator())
+                    dict.Add(name, value);
+
+                return dict;
+            }
+
+            if (type.IsAssignableFrom(typeof(IDictionary<string, object>)))
+            {
+                var dict = (IDictionary<string, object>)Activator.CreateInstance(type)!;
+                foreach (var (name, value) in document.AsNameValuePairEnumerator())
+                    dict.Add(name, value);
+
+                return dict;
+            }
+
+            if (type.IsAssignableFrom(typeof(IDictionary<string, string?>)))
+            {
+                var dict = (IDictionary<string, string?>)Activator.CreateInstance(type)!;
+                foreach (var (name, value) in document.AsNameValuePairEnumerator())
+                    dict.Add(name, value);
+
+                return dict;
+            }
+        }
+
+        if (type.IsPrimitive || type.IsEnum || type == typeof(string) || type == typeof(IList) || type.IsArray ||
+            type.IsAbstract)
+        {
+            throw new ArgumentException("Type cannot be a primitive, enum, string, or IList.", nameof(type));
+        }
+
+        var obj = Activator.CreateInstance(type);
+        if (obj is null)
+            throw new ArgumentException("Type must be instantiable.", nameof(type));
+
+        var props = type.GetProperties();
+        var sb = new StringBuilder();
+        foreach (var prop in props)
+        {
+            if (!prop.CanWrite)
+                continue;
+
+            if (prop.GetCustomAttribute<EnvIgnoreAttribute>() != null ||
+                prop.GetCustomAttribute<IgnoreAttribute>() != null)
+            {
+                continue;
+            }
+
+            var envAttr = prop.GetCustomAttribute<EnvAttribute>();
+            if (envAttr != null && !envAttr.Name.IsNullOrWhiteSpace() &&
+                document.TryGetValue(envAttr.Name, out var value1))
+            {
+                SetValue(prop, obj, value1);
+                continue;
+            }
+
+            var serializationAttr = prop.GetCustomAttribute<SerializationAttribute>();
+            if (serializationAttr != null && !serializationAttr.Name.IsNullOrWhiteSpace())
+            {
+                if (document.TryGetValue(serializationAttr.Name, out var value))
+                {
+                    SetValue(prop, obj, value);
+                    continue;
+                }
+
+                if (char.IsLower(serializationAttr.Name[0]))
+                {
+                    var updatedName = NormalizePropertyName(serializationAttr.Name, sb);
+                    if (document.TryGetValue(updatedName, out value))
+                    {
+                        SetValue(prop, obj, value);
+                        continue;
+                    }
+                }
+            }
+
+            var name = prop.Name;
+            name = NormalizePropertyName(name, sb);
+            if (document.TryGetValue(name, out var value2))
+            {
+                SetValue(prop, obj, value2);
+            }
+        }
+
+        return obj;
     }
 
     public static EnvDocument DeserializeDocument(ReadOnlySpan<char> value, DotEnvSerializerOptions? options = null)
@@ -305,103 +409,6 @@ public class Serializer
         }
 
         return doc;
-    }
-
-    public static object? Deserialize(EnvDocument document, Type type)
-    {
-        if (type.IsAssignableFrom(typeof(IDictionary)))
-            return DeserializeDictionary(document, type);
-
-        if (type.IsGenericTypeDefinition)
-        {
-            if (type.IsAssignableFrom(typeof(IDictionary<string, string>)))
-            {
-                var dict = (IDictionary<string, string>)Activator.CreateInstance(type)!;
-                foreach (var (name, value) in document.AsNameValuePairEnumerator())
-                    dict.Add(name, value);
-
-                return dict;
-            }
-
-            if (type.IsAssignableFrom(typeof(IDictionary<string, object>)))
-            {
-                var dict = (IDictionary<string, object>)Activator.CreateInstance(type)!;
-                foreach (var (name, value) in document.AsNameValuePairEnumerator())
-                    dict.Add(name, value);
-
-                return dict;
-            }
-
-            if (type.IsAssignableFrom(typeof(IDictionary<string, string?>)))
-            {
-                var dict = (IDictionary<string, string?>)Activator.CreateInstance(type)!;
-                foreach (var (name, value) in document.AsNameValuePairEnumerator())
-                    dict.Add(name, value);
-
-                return dict;
-            }
-        }
-
-        if (type.IsPrimitive || type.IsEnum || type == typeof(string) || type == typeof(IList) || type.IsArray ||
-            type.IsAbstract)
-        {
-            throw new ArgumentException("Type cannot be a primitive, enum, string, or IList.", nameof(type));
-        }
-
-        var obj = Activator.CreateInstance(type);
-        if (obj is null)
-            throw new ArgumentException("Type must be instantiable.", nameof(type));
-
-        var props = type.GetProperties();
-        var sb = new StringBuilder();
-        foreach (var prop in props)
-        {
-            if (!prop.CanWrite)
-                continue;
-
-            if (prop.GetCustomAttribute<EnvIgnoreAttribute>() != null ||
-                prop.GetCustomAttribute<IgnoreAttribute>() != null)
-            {
-                continue;
-            }
-
-            var envAttr = prop.GetCustomAttribute<EnvAttribute>();
-            if (envAttr != null && !envAttr.Name.IsNullOrWhiteSpace() &&
-                document.TryGetValue(envAttr.Name, out var value1))
-            {
-                SetValue(prop, obj, value1);
-                continue;
-            }
-
-            var serializationAttr = prop.GetCustomAttribute<SerializationAttribute>();
-            if (serializationAttr != null && !serializationAttr.Name.IsNullOrWhiteSpace())
-            {
-                if (document.TryGetValue(serializationAttr.Name, out var value))
-                {
-                    SetValue(prop, obj, value);
-                    continue;
-                }
-
-                if (char.IsLower(serializationAttr.Name[0]))
-                {
-                    var updatedName = NormalizePropertyName(serializationAttr.Name, sb);
-                    if (document.TryGetValue(updatedName, out value))
-                    {
-                        SetValue(prop, obj, value);
-                        continue;
-                    }
-                }
-            }
-
-            var name = prop.Name;
-            name = NormalizePropertyName(name, sb);
-            if (document.TryGetValue(name, out var value2))
-            {
-                SetValue(prop, obj, value2);
-            }
-        }
-
-        return obj;
     }
 
     public static IDictionary DeserializeDictionary(EnvDocument document, Type type)

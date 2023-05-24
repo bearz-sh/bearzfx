@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <LibFx Condition="$(LibFx) == ''">net7.0</LibFx>
-    <TargetFrameworks>$(LibFx)</TargetFrameworks>
+    <LibFx Condition="$(CoreFx) == ''">net7.0</LibFx>
+    <TargetFrameworks>$(CoreFx)</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>true</ImplicitUsings>
     <RootNamespace>Bearz.Extensions.Hosting.Web</RootNamespace>
@@ -17,6 +17,10 @@
     <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/CHANGELOG.md"))</PackageReleaseNotes>
   </PropertyGroup>
 
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>

@@ -12,6 +12,7 @@
     <PackageVersion Include="KeySharp" Version="1.0.5" />
     <PackageVersion Include="Polly" Version="7.2.3" />
     <PackageVersion Include="Serilog.Expressions" Version="3.4.1" />
+    <PackageVersion Include="SSH.NET" Version="2020.0.2" />
     <PackageVersion Include="XamlNameReferenceGenerator" Version="1.6.1" />
     <PackageVersion Include="AlphaFS" Version="2.2.6" />
     <PackageVersion Include="AltCover" Version="8.6.14" />
